@@ -17,7 +17,7 @@ export function SportsSection({sportName, image}){
       <div className={styles.sportsSectionBody}>
         {
           matchList.map((e,i)=>{
-            return <div>
+            return <div key={i}>
               <p>{e}</p>
               <button>Bet Now</button>
             </div>
