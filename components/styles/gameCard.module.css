@@ -1,0 +1,18 @@
+.gameDiv{
+    width: 250px;
+    aspect-ratio: 1;
+    background-position: center;
+    background-size: cover;
+    border-radius: 10px;
+    transition: all 300ms ease-in-out;
+}
+.gameDiv:hover{
+    cursor: pointer;
+    background-size: 130%;
+}
+
+@media screen and (max-width: 480px) {
+   .gameDiv{
+     width: 150px;
+   }
+}

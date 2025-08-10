@@ -1,0 +1,84 @@
+.oddMainComp {
+  padding: 10px;
+  background-color: #012167;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.OddDetails {
+  display: flex;
+  position: relative;
+}
+.liveIndicator {
+  position: absolute;
+  border-radius: 50%;
+  padding: 10px;
+  width: 10px;
+  aspect-ratio: 1;
+  background-color: #00b728;
+}
+.teamMatchDetails {
+  padding-left: 30px;
+  padding-bottom: 20px;
+}
+.teamMatchDetails p {
+  font-size: 1.5rem;
+  padding-bottom: 5px;
+}
+.teamMatchDetails span {
+}
+.OddData {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.oddsPair {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+}
+.oddsPair button {
+  width: 48%;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  color: #012167;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.oddsPair button:first-child {
+  background-color: #02d4f4;
+}
+.oddsPair button:last-child {
+  background-color: #fcabff;
+}
+.oddsPair button:first-child:hover {
+  background-color: #008ae6;
+  cursor: pointer;
+}
+.oddsPair button:last-child:hover {
+  background-color: #ad5199;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  .oddsPair{
+    width: 32%;
+}
+.oddsPair button{
+      font-size: 1rem;
+      border-radius: 18px;
+      padding: 5px 10px;
+  }
+  .teamMatchDetails{
+    padding-bottom: 10px;
+  }
+  .teamMatchDetails p {
+    font-size: 1.2rem;
+  }
+  .teamMatchDetails span{
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,16 @@
+.mainDiv{
+    position: fixed;
+    bottom: 5%;
+    right: 20px;
+    z-index: 10;
+    background-color: transparent;
+}
+.mainDiv img{
+    width: 70px;
+    height: 70px;
+}
+.mainDiv img:hover{
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+}

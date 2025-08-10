@@ -1,0 +1,20 @@
+.mainDiv{
+    padding: 40px;
+}
+.mainDiv h2{
+    color: white;
+}
+.gameList{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 480px) {
+  .gameList{
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+  }
+  .gameList div{
+    margin-bottom: 20px;
+  }
+}

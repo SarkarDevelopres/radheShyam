@@ -1,0 +1,119 @@
+.banenrSection{
+  padding: 0px 20px;
+  padding-top: 20px;
+}
+.cardsSection,.gamesection{
+  padding: 20px;
+  overflow-x: hidden;
+}
+.cardList{
+  display: flex;
+  overflow-x: auto;
+  width: 100%;
+  padding: 10px 0px;
+  scroll-behavior: smooth;
+}
+.cardList::-webkit-scrollbar{
+  display: none;
+}
+/* .cardList::-webkit-scrollbar-track{
+  width: 10px;
+}
+.cardList::-webkit-scrollbar-thumb{
+  width: 10px;
+} */
+
+.card{
+  width: 480px;
+  aspect-ratio: 1.8;
+  background-position: center;
+  background-size: cover;
+  flex-shrink: 0;
+  margin-right: 20px;
+  border-radius: 15px;
+}
+.card:last-child{
+  margin-right: 0px;
+}
+.card:hover{
+  box-shadow: 0px 0px 4px 4px rgba(90, 174, 243, 0.534);
+  cursor: pointer;
+}
+.gamesection h2{
+  color: white;
+  margin-bottom: 15px;
+}
+.gameList{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.sportsSection{
+  padding: 20px;
+}
+.sportsSectionHeader{
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-image: linear-gradient(100deg,#3AE5FF,#012167);
+  margin-bottom: 10px;
+}
+.sportsSectionHeader h2{
+  color: #012167;
+  padding-right: 10px;
+}
+.sportsSectionHeader img{
+  width: 30px;
+}
+.sportsSectionBody{
+  padding: 0px 10px;
+}
+.sportsSectionBody div{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0px;
+  align-items: center;
+}
+.sportsSectionBody div p{
+  font-size: 20px;
+}
+.sportsSectionBody div button{
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  background-color: #3AE5FF;
+  color: #012167;
+  font-weight: 700;
+  font-size: 15px;
+}
+.sportsSectionBody div button:hover{
+  cursor: pointer;
+  background-color: #012167;
+  color:#3AE5FF;
+}
+
+@media screen and (max-width: 480px) {
+  .gameList{
+    justify-content: space-evenly;
+  }
+  .gameList div{
+    margin-bottom: 20px;
+  }
+  .card{
+    width: 250px;
+  }
+  .cardList{
+    padding: 0px;
+  }
+  .sportsSectionBody div p{
+    font-size: 15px;
+    width: 70%;
+  }
+  .sportsSectionBody div button{
+    font-size: 15px;
+    width: 80px;
+  }
+}
