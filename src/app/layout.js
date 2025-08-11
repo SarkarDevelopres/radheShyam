@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import WhatsAppComp from "../../components/WhatsAppComp";
+import MobileNav from "../../components/MobileNav";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <Navbar/>
         <WhatsAppComp/>
         {children}
+        <MobileNav/>
         <Footer/>
       </body>
     </html>

@@ -1,0 +1,58 @@
+.mainDiv{
+    display: none;
+    background-color: #02194F;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+}
+.mainDiv *{
+    font-size: 25px;
+    
+}
+.navLinksList{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    padding: 20px 0px;
+}
+.navLinksList div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 25%;
+    transition: all 30ms ease-in-out;
+}
+.navLinksList span{
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #02194F;
+    width: 100%;
+}
+
+.capsule{
+    width: 25%;
+    padding: 10px;
+    border-radius: 30px;
+    z-index: 2;
+    position: absolute;
+    background-color: #02D4F4;
+    top: 10%;
+    bottom: 10%;
+    left: 0%;
+    color: #02194F;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+    justify-content: center;
+    margin: 0px !important;
+    transition: all 300ms ease-in-out;
+}
+@media screen and (max-width: 480px) {
+    .mainDiv{
+        display: flex;
+    }
+}
