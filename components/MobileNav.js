@@ -7,7 +7,7 @@ import { CgCardHearts } from "react-icons/cg";
 import { IoMenu } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
 
-function MobileNav() {
+function MobileNav({onMenuClick,onClose}) {
     const [currentTab, setCurrentTab] = useState("Home")
     const router = useRouter();
     const cap = useRef(null);
@@ -16,19 +16,23 @@ function MobileNav() {
         setCurrentTab(name);
         if (name == "Home") {
             cap.current.style.left = "0%";
+            onClose();
             router.push("/")
         }
         else if (name == "In-Play") {
             cap.current.style.left = "25%";
+            onClose();
             router.push("/sports")
         }
         else if (name == "Games") {
             cap.current.style.left = "50%";
+            onClose();
             router.push("/games")
 
         }
         else {
             cap.current.style.left = "75%";
+            onMenuClick();
 
         }
     }

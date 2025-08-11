@@ -1,9 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import WhatsAppComp from "../../components/WhatsAppComp";
-import MobileNav from "../../components/MobileNav";
+import ClientShell from "../../components/ClientShell";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,20 +16,18 @@ const geistMono = localFont({
 export const metadata = {
   title: "RadheShyamExchange",
   description: "Future Proof Exchange App",
-   icons: {
+  icons: {
     icon: '/favicon.png',
   },
 };
 
 export default function RootLayout({ children }) {
+
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar/>
-        <WhatsAppComp/>
-        {children}
-        <MobileNav/>
-        <Footer/>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );
