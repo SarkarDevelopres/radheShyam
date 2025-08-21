@@ -3,7 +3,7 @@ import React, { use, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css'
 
-function page() {
+function Login() {
     const router = useRouter();
 
     const [userName, setUserName] = useState("");
@@ -58,4 +58,4 @@ function page() {
     )
 }
 
-export default page
+export default Login
