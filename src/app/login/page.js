@@ -13,7 +13,7 @@ function Login() {
         if (!userName || !password) {
             alert("Enter Credentials");
         }
-        let req = await fetch(`${process.env.NEXT_PUBLIC_PORT}/api/auth/login`, {
+        let req = await fetch(`/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'  // or other content type if needed
