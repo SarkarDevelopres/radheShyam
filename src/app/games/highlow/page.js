@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BetOptions } from "../7updown/page";
 
 /** ---------- CONFIG ---------- */
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT; // if you have NEXT_PUBLIC_SERVER_URL, prefer that
+const SERVER_URL = '/'; // if you have NEXT_PUBLIC_SERVER_URL, prefer that
 const GAME = "HIGH_LOW";
 const TABLE_ID = "default";
 const ASSETS = {
