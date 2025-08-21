@@ -10,6 +10,7 @@ const nextConfig = {
         source: '/api/data/:path*',
         destination: 'http://18.234.69.192:4000/api/data/:path*',
       },
+       { source: '/socket.io/:path*', destination: 'http://18.234.69.192:4000/socket.io/:path*' },
     ];
   },
 };
