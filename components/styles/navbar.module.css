@@ -1,64 +1,89 @@
-.mainDiv{
-    width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    background-image: linear-gradient(109deg,#3AE5FF,#00224E);
+.mainDiv {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-image: linear-gradient(109deg, #3ae5ff, #00224e);
 }
 .navbarLogo {
-    display: flex;
-    color: white;
-    align-items: center;
+  display: flex;
+  color: white;
+  align-items: center;
 }
-.appName{
-    padding-left: 10px;
-    font-style: italic;
-    color: #00539e;
-    font-size: 1.5rem;
+.appName {
+  padding-left: 10px;
+  font-style: italic;
+  color: #00539e;
+  font-size: 1.5rem;
 }
-.appName h2:last-child{
-    width: 100%;
-    text-align: end;
-    color: #ffcc53;
-    font-size: 1.5rem;
+.appName h2:last-child {
+  width: 100%;
+  text-align: end;
+  color: #ffcc53;
+  font-size: 1.5rem;
 }
-.navbarLogo img{
-    width: 100px;
-    aspect-ratio: 1.7;
+.navbarLogo img {
+  width: 100px;
+  aspect-ratio: 1.7;
 }
-.navLinks{
-    min-width: 280px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
+.navLinks {
+  min-width: 280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
 }
-.navLinks button{
-    padding: 10px;
-    border-radius: 20px;
-    width: 80px;
-    border: none;
-    outline: none;
-    background-color: #02D4F4;
-    color: #192946;
-    font-weight: 800;
+.navLinks a:hover {
+  color: #00539e;
+}
+.btn {
+  padding: 10px;
+  border-radius: 20px;
+  width: 80px;
+  border: none;
+  outline: none;
+  background-color: #02d4f4;
+  color: #192946;
+  font-weight: 700;
+  text-align: center;
+  transition: all 300ms ease-in-out;
+}
+
+.btn:hover {
+  cursor: pointer;
+  background-color: #00539e;
+  color: #02d4f4;
+}
+.balanceSpan{
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #00539e;
+  width: 80px;
+  padding: 10px;
+  color: white;
+}
+.balanceSpan svg{
+  font-size: 1.4rem;
+  color: #ffcc53;
 }
 
 @media screen and (max-width: 480px) {
-  .gameList{
+  .gameList {
     justify-content: space-evenly;
     flex-wrap: wrap;
   }
-  .gameList div{
+  .gameList div {
     margin-bottom: 20px;
   }
-  .appName{
+  .appName {
     display: none;
   }
-  .navLinks a{
+  .navLinks a {
     display: none;
   }
-  .navLinks{
+  .navLinks {
     min-width: 0px;
   }
 }

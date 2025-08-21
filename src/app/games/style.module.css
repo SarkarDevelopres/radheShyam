@@ -1,20 +1,171 @@
-.mainDiv{
-    padding: 40px;
+.mainDiv {
+  padding: 40px;
 }
-.mainDiv h2{
-    color: white;
+.mainDiv h2 {
+  color: white;
 }
-.gameList{
+.gameList {
   display: flex;
   justify-content: space-between;
 }
 
 @media screen and (max-width: 480px) {
-  .gameList{
+  .gameList {
     justify-content: space-evenly;
     flex-wrap: wrap;
   }
-  .gameList div{
+  .gameList div {
     margin-bottom: 20px;
   }
+}
+
+/* 7 Up Down */
+
+.gameBody {
+  padding: 20px;
+}
+
+.gameDisplay {
+  width: 100%;
+  aspect-ratio: 1;
+  /* background-color: blue; */
+  border-radius: 10px;
+  position: relative;
+}
+.betDisplay {
+  padding: 20px 0px;
+}
+.betBoxes {
+  padding: 10px;
+  border-radius: 10px;
+  background-image: url("../../../public/betbackground.jpg");
+  background-position: center;
+  background-size: cover;
+    transition: all 300ms ease-in-out;
+  /* opacity: 0.5; */
+}
+.betButtons {
+  padding: 10px;
+  border-radius: 10px;
+  background-image: linear-gradient(0deg, #012167, #0242cd);
+}
+.mainBetOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    transition: all 300ms ease-in-out;
+
+}
+.betButtons span {
+  font-size: 1.2rem;
+  color: white;
+  padding-left: 10px;
+}
+.betButtons button {
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  width: 100px;
+  color: #012167;
+  background-color: #02d4f4;
+  font-weight: 600;
+    transition: all 300ms ease-in-out;
+}
+.betButtons button:hover{
+  background-color: #00b728;
+  cursor: pointer;
+}
+.stakeDiv{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  transition: all 300ms ease-in-out;
+}
+
+.stakeChoice {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0px;
+}
+.stakeChoice button {
+  width: 80px;
+  min-width: 50px;
+  padding: 5px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  color: #012167;
+  background-color: #a1d2f3;
+}
+.stakeChoice button:hover {
+  background-color: #00b728;
+  cursor: pointer;
+}
+
+.selectedStake {
+  background-color: #00b728 !important;
+  color: white;
+}
+.selectedTeam {
+  outline: 2px solid #00b728;
+  background-color: #00ff99 !important;
+}
+
+.stakeChoice{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.placeBtn{
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.placeBtn button:hover {
+  background-color: #00b728;
+  cursor: pointer;
+}
+.placeBtn button:last-child:hover{
+  background-color: #b41e00;
+}
+
+.resultDiv{
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 10;
+  opacity: 0;
+  background-color: black;
+  transition: all 200ms ease-in-out;
+}
+.resultDiv span{
+  font-size: 10rem;
+  font-weight: 600;
+  color: #ae1400;
+  text-shadow: #02d4f4;
+}
+.gameDisplay video{
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+}
+
+.canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #0b1220;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
 }

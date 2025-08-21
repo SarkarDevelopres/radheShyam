@@ -4,6 +4,7 @@
   border-radius: 10px;
   margin-bottom: 20px;
   width: 100%;
+  transition: all 300ms ease-in-out;
 }
 .OddDetails {
   display: flex;
@@ -36,7 +37,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 30%;
+  width: 100%;
 }
 .oddsPair button {
   width: 48%;
@@ -62,23 +63,78 @@
   background-color: #ad5199;
   cursor: pointer;
 }
+.stakeChoice {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+.stakeChoice button {
+  min-width: 50px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  color: #012167;
+  background-color: #a1d2f3;
+}
+.stakeChoice button:hover {
+  background-color: #00b728;
+  cursor: pointer;
+}
+.placeBtn {
+  width: 100%;
+  /* padding: 0px 20px; */
+  display: flex;
+  justify-content: space-between;
+}
+.placeBtn button {
+  padding: 10px;
+  width: 48%;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background-color: #008ae6;
+  color: #012167;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.placeBtn button:last-child{
+  background-color: #ad5199;
+
+}
+.placeBtn button:hover {
+  background-color: #00b728;
+  cursor: pointer;
+}
+.placeBtn button:last-child:hover{
+  background-color: #b41e00;
+}
+.selectedStake {
+  background-color: #00b728 !important;
+  color: white;
+}
+.selectedTeam {
+  outline: 2px solid #00b728;
+  background-color: #00ff99 !important;
+}
+
 
 @media screen and (max-width: 480px) {
-  .oddsPair{
-    width: 32%;
-}
-.oddsPair button{
-      font-size: 1rem;
-      border-radius: 18px;
-      padding: 5px 10px;
+  .stakeChoice {
+    padding: 10px;
   }
-  .teamMatchDetails{
+  .oddsPair button {
+    font-size: 1rem;
+    border-radius: 18px;
+    padding: 5px 10px;
+  }
+  .teamMatchDetails {
     padding-bottom: 10px;
   }
   .teamMatchDetails p {
     font-size: 1.2rem;
   }
-  .teamMatchDetails span{
+  .teamMatchDetails span {
     font-size: 0.8rem;
   }
 }

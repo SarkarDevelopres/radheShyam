@@ -1,0 +1,64 @@
+.mainDiv {
+  padding: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginBox {
+  padding: 20px;
+  background-color: #012167;
+  border-radius: 20px;
+  width: 60%;
+}
+.loginBox h2 {
+  text-align: center;
+  font-size: 25px;
+}
+
+.inputFields {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputFields input {
+  background: #192946;
+  padding: 10px;
+  width: 90%;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #02d4f4;
+}
+
+.inputFields button {
+  padding: 10px;
+  width: 120px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #02d4f4;
+  color: #192946;
+  transition: all 300ms ease-in-out;
+  font-size: 18px;
+  font-weight: 700;
+}
+.inputFields button:hover {
+  cursor: pointer;
+  background-color: #00539e;
+  color: #02d4f4;
+}
+
+@media screen and (max-width: 480px) {
+  .mainDiv {
+    padding: 100px 10px;
+  }
+  .loginBox{
+    width: 80%;
+  }
+}

@@ -1,26 +1,52 @@
-.mainWindow{
-    position: fixed;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    background-color: rgb(0,0,0,0.4);
-    z-index: 20;
+.mainWindow {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: rgb(0, 0, 0, 0.4);
+  z-index: 20;
 }
-.sideMenu{
-    position: fixed;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    width: 50%;
-    background-color: #012167;
-    padding: 20px 10px;
+.sideMenu {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 50%;
+  background-color: #012167;
+  padding: 0px 0px;
 }
-.menuHead{
+.menuHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px 10px;
+}
+.menuHead svg {
+  font-size: 1.3rem;
+}
+.menuBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.menuBody button{
+    width: 100%;
+    background-color: #00539e;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    border: none;
+    outline: none;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    transition: all 300ms ease-in-out;
 }
-.menuHead svg{
-    font-size: 1.3rem;
+.menuBody button svg{
+    margin-right: 10px;
+}
+.menuBody button:hover{
+    background-color: #001032;
+    color: #02D4F4;
 }
