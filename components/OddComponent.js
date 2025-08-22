@@ -6,6 +6,9 @@ function OddComponent({ data }) {
     const [team, setTeam] = useState(null);
     const [showStake, setShowStake] = useState(false);
     const router = useRouter();
+    const moveIt = () => {
+        router.push(`/sports/game/${data.matchId}`)
+    }
     const isLoggedIn = () => {
         if (typeof window === "undefined") return false;
         let userToken = localStorage.getItem("userToken");
@@ -64,7 +67,7 @@ function OddComponent({ data }) {
     }
 
     return (
-        <div className={styles.oddMainComp}>
+        <div className={styles.oddMainComp} onClick={()=>moveIt()}>
             <div className={styles.OddDetails}>
                 <span className={styles.liveIndicator} />
                 <div className={styles.teamMatchDetails}>
