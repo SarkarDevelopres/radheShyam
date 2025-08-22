@@ -12,7 +12,7 @@ function Navbar() {
   const checkBalance = async (token) => {
     console.log(token);
     
-    let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/data/balance`, {
+    let req = await fetch(`/api/data/balance`, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'  // or other content type if needed

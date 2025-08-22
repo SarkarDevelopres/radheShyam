@@ -3,7 +3,7 @@ import React, { use, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css'
 
-function page() {
+function Login() {
     const router = useRouter();
 
     const [userName, setUserName] = useState("");
@@ -13,7 +13,7 @@ function page() {
         if (!userName || !password) {
             alert("Enter Credentials");
         }
-        let req = await fetch(`${process.env.NEXT_PUBLIC_PORT}/api/auth/login`, {
+        let req = await fetch(`/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'  // or other content type if needed
@@ -58,4 +58,4 @@ function page() {
     )
 }
 
-export default page
+export default Login
