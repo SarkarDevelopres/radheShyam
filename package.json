@@ -20,5 +20,17 @@
   "devDependencies": {
     "eslint": "^8",
     "eslint-config-next": "14.2.31"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SarkarDevelopres/radheShyam.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SarkarDevelopres/radheShyam/issues"
+  },
+  "homepage": "https://github.com/SarkarDevelopres/radheShyam#readme"
 }

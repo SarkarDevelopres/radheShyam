@@ -7,7 +7,9 @@ function OddComponent({ data }) {
     const [showStake, setShowStake] = useState(false);
     const router = useRouter();
     const moveIt = () => {
-        router.push(`/sports/game/${data.matchId}`)
+        // router.push(`/sports/game/${data.matchId}`)
+        console.log("Pushed called");
+        
     }
     const isLoggedIn = () => {
         if (typeof window === "undefined") return false;
