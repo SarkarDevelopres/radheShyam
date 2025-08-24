@@ -10,6 +10,7 @@ import { BetOptions } from "../7updown/page";
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 import { GiSpikedDragonHead, GiTigerHead, GiClubs, GiSpades, GiHearts, GiDiamonds } from "react-icons/gi";
 import { TbPlayCardOff } from "react-icons/tb";
+import Spinner from 'react-bootstrap/Spinner';
 
 
 /** ---------- CONFIG ---------- */
@@ -140,6 +141,11 @@ class HLCanvas {
         this.state.phase = "result";
         this.state.nextCard = nextFaceKey;
         this.state.win = (win === true);
+        this._flip(this.slotB, () => { this.render(); });
+    }
+
+    flipCardBack() {
+        this._flip(this.slotA, () => { this.render(); });
         this._flip(this.slotB, () => { this.render(); });
     }
 
@@ -278,8 +284,8 @@ export default function DragonTigerPage() {
     const [options] = useState(["DRAGON", "TIE", "TIGER"]);
     const [options2] = useState(["TIGER BLACK", "TIGER RED"]);
     const [options3] = useState(["DRAGON BLACK", "DRAGON RED"]);
-    const [options4] = useState(["TIGER CLUB", "TIGER HEARTS", "TIGER SPADES", "TIGER DIAMONDS"]);
-    const [options5] = useState(["DRAGON CLUB", "DRAGON HEARTS", "DRAGON SPADES", "DRAGON DIAMONDS"]);
+    const [options4] = useState(["TIGER CLUBS", "TIGER HEARTS", "TIGER SPADES", "TIGER DIAMONDS"]);
+    const [options5] = useState(["DRAGON CLUBS", "DRAGON HEARTS", "DRAGON SPADES", "DRAGON DIAMONDS"]);
     const [bet, setBet] = useState(null);
     const [round, setRound] = useState(null);
     const [amnt, setAmnt] = useState(0);
@@ -287,6 +293,7 @@ export default function DragonTigerPage() {
     const [balance, setBalance] = useState(0);
     const [loading, setLoading] = useState(true);
     const [isLocked, setLocked] = useState(false);
+    const [picked, setPicked] = useState(false);
 
     // crisp canvas (square container handled via CSS)
     useEffect(() => {
@@ -324,80 +331,108 @@ export default function DragonTigerPage() {
 
         socket.on("connect", () => {
             socket.emit("join", { game: GAME, tableId: TABLE_ID });
+
+
             console.log("Connected to Room DRAGONTIGER");
 
         });
 
         socket.on("round:start", (payload) => {
+            const uid2 = getUid();
+            if (uid2) {
+                socket.emit("wallet:get", uid2, (res) => {
+                    if (res?.ok) setBalance(res.balance || 0);
+                });
+            }
+            setLoading(false);
+
+            canvasRef.current.style.backgroundColor = "#0b1920";
             hlRef.current?.startRound();
             const rid = payload?._id || payload?.id || payload?.roundId;
             if (rid) {
                 roundIdRef.current = rid;
                 setRound({ id: rid, ...payload });
             }
-            //   if (payload?.baseCard) {
-            //     const key = faceKeyFromServer(payload.baseCard);
-            //     hlRef.current?.revealBase(key);
-            //   }
-            //   lockedRef.current = false;
             setLocked(false);
         });
 
-        // socket.on("highlow:base", (payload) => {
-        //   const rid = payload?.roundId || payload?.id;
-        //   if (rid) {
-        //     roundIdRef.current = rid;
-        //     setRound((r) => r ? { ...r, id: rid } : { id: rid });
-        //   }
-        //   if (payload?.baseCard) {
-        //     const key = faceKeyFromServer(payload.baseCard);
-        //     hlRef.current?.revealBase(key);
-        //   }
-        //   lockedRef.current = false;
-        //   setLocked(false);
-        // });
 
-        // socket.on("round:lock", () => {
-        //   lockedRef.current = true;
-        //   setLocked(true);
-        // });
-
-        socket.on("dragontiger:reveal", (payload) => {
-            if (payload?.roundId) roundIdRef.current = payload.roundId;
-            const nextKey = faceKeyFromServer(payload?.nextCard);
-            if (payload?.dragonCard) {
-                const key = faceKeyFromServer(payload.baseCard);
-                hlRef.current?.revealBase(key);
-            }
-            if (payload?.tigerCard) {
-                const key = faceKeyFromServer(payload.nextCard);
-                hlRef.current?.revealBase(key);
-            }
-            const pick = hlRef.current?.state?.userPick;
-            const outcome = String(payload?.outcome || "").toUpperCase();
-            let win = null;
-            if (pick && (outcome === "HIGH" || outcome === "LOW")) {
-                win = outcome.toLowerCase() === pick.toLowerCase();
-            }
-            hlRef.current?.showResult(nextKey, win);
+        socket.on("round:lock", () => {
+            lockedRef.current = true;
+            setLoading(true);
+            setLocked(true);
         });
+
 
         socket.on("round:result", (payload) => {
+            console.log("PAYLOAD:", payload);
+            setLoading(false);
             if (payload?.roundId) roundIdRef.current = payload.roundId;
-            const nextKey = faceKeyFromServer(payload?.nextCard);
-            const pick = hlRef.current?.state?.userPick;
-            const outcome = String(payload?.outcome || "").toUpperCase();
-            let win = null;
-            if (pick && (outcome === "HIGH" || outcome === "LOW")) {
-                win = outcome.toLowerCase() === pick.toLowerCase();
-            }
-            hlRef.current?.showResult(nextKey, win);
 
-            // unlock for next round will happen on round:end, but if your engine starts immediately, you can also reset here later
+            // Show cards (keep your helpers)
+            const baseKey = faceKeyFromServer(payload?.dragon);
+            const nextKey = faceKeyFromServer(payload?.tiger);
+            hlRef.current?.revealBase(baseKey);
+            hlRef.current?.showResult(nextKey);
+
+            // User pick like "TIGER_HEARTS", "DRAGON_BLACK", "TIGER"
+            const pick = String(hlRef.current?.state?.userPick || "").toUpperCase();
+            console.log("PICK:", pick);
+
+            // Result side can be payload.result, payload.outcome, or payload?.outcome?.result
+            const resultSide = String(
+                payload?.result ?? payload?.outcome ?? payload?.outcome?.result ?? ""
+            ).toUpperCase();
+
+            // Normalize dragon/tiger detail objects (support both top-level and under outcome)
+            const dragonObj = payload?.dragon ?? payload?.outcome?.dragon ?? {};
+            const tigerObj = payload?.tiger ?? payload?.outcome?.tiger ?? {};
+
+            // Fix occasional 'suits' typo, normalize to UPPER
+            const dragonSuit = String(dragonObj.suit ?? dragonObj.suits ?? "").toUpperCase();
+            const tigerSuit = String(tigerObj.suit ?? tigerObj.suits ?? "").toUpperCase();
+
+            // Prefer provided group; else derive from suit
+            const deriveGroup = (suit) => {
+                const s = String(suit).toUpperCase();
+                if (s === "HEARTS" || s === "DIAMONDS") return "RED";
+                if (s === "CLUBS" || s === "SPADES") return "BLACK";
+                return "";
+            };
+            const dragonGroup = String(dragonObj.group ?? deriveGroup(dragonSuit)).toUpperCase();
+            const tigerGroup = String(tigerObj.group ?? deriveGroup(tigerSuit)).toUpperCase();
+
+            // Evaluate win
+            let win = false;
+
+            // Exact side win: "DRAGON" / "TIGER" / "TIE" etc.
+            if (pick === resultSide) {
+                win = true;
+            }
+            // Group bets
+            else if (pick === "DRAGON_RED" && dragonGroup === "RED") win = true;
+            else if (pick === "DRAGON_BLACK" && dragonGroup === "BLACK") win = true;
+            else if (pick === "TIGER_RED" && tigerGroup === "RED") win = true;
+            else if (pick === "TIGER_BLACK" && tigerGroup === "BLACK") win = true;
+            // Suit bets
+            else if (dragonSuit && pick === `DRAGON_${dragonSuit}`) win = true;
+            else if (tigerSuit && pick === `TIGER_${tigerSuit}`) win = true;
+
+            // console.log(canvasRef.current.style)
+            // Simple feedback color (optional)
+            try {
+                if (canvasRef.current) {
+                    canvasRef.current.style.backgroundColor = win ? "#0d2914" : "#2b0d0d";
+                }
+            } catch (_) { }
+
+            // console.log("RESULT SIDE:", resultSide, "D:", { dragonSuit, dragonGroup }, "T:", { tigerSuit, tigerGroup }, "WIN:", win);
         });
+
 
         socket.on("round:end", () => {
             lockedRef.current = false;
+            hlRef.current?.flipCardBack();
             setLocked(false);
         });
 
@@ -437,6 +472,14 @@ export default function DragonTigerPage() {
         return round.status !== "OPEN" || lockMs <= 0;
     }, [round, lockMs]);
 
+    function normalizeBetName(bet) {
+        if (!bet) return "";
+        return String(bet)
+            .trim()              // remove extra spaces
+            .toUpperCase()       // TIGER HEARTS
+            .replace(/\s+/g, "_"); // TIGER_HEARTS
+    }
+
     // Compatible with BetOptions → it calls onPlaceBet() with no args.
     const placeBet = async () => {
         const token = isLoggedIn();
@@ -451,7 +494,7 @@ export default function DragonTigerPage() {
         }
         // must have a selected option + amount
         if (bet === null || amnt <= 0) {
-            toast.error("Select High/Low and a stake.");
+            toast.error("Select valid option and a stake.");
             return;
         }
 
@@ -481,7 +524,8 @@ export default function DragonTigerPage() {
         }
 
         const uid = getUid();
-        const market = selection.toLowerCase(); // "high" | "low"
+        const lowerBet = selection.toLowerCase(); // "high" | "low"
+        const market = normalizeBetName(lowerBet);
 
         // local UI hint
         hlRef.current?.setPick?.(market);
@@ -506,6 +550,7 @@ export default function DragonTigerPage() {
                 }
                 setBet(null);
                 setAmnt(0);
+                setLocked(true);
                 toast.success(`Bet placed on ${selection} for ${s}.`, {
                     autoClose: 3000,
                     pauseOnFocusLoss: false,
@@ -531,6 +576,9 @@ export default function DragonTigerPage() {
 
             <div className={styles.gameBody}>
                 <div className={styles.gameDisplay}>
+                    {loading && <div className={styles.loadDiv}>
+                        <Spinner animation="border" variant="primary" className={styles.spinnerDiv} />
+                    </div>}
                     <canvas className={styles.canvas} ref={canvasRef} />
                 </div>
 

@@ -10,6 +10,7 @@ import { BetOptions } from "../7updown/page";
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 import { GiClubs, GiSpades, GiHearts, GiDiamonds } from "react-icons/gi";
 import { TbPlayCardOff } from "react-icons/tb";
+import Spinner from 'react-bootstrap/Spinner';
 
 
 /** ---------- CONFIG ---------- */
@@ -316,6 +317,7 @@ export default function HighLowPage() {
     });
 
     socket.on("round:start", (payload) => {
+      setLoading(false);
       hlRef.current?.startRound();
       const rid = payload?._id || payload?.id || payload?.roundId;
       if (rid) {
@@ -346,6 +348,7 @@ export default function HighLowPage() {
 
     socket.on("round:lock", () => {
       lockedRef.current = true;
+      setLoading(true);
       setLocked(true);
     });
 
@@ -362,6 +365,7 @@ export default function HighLowPage() {
     });
 
     socket.on("round:result", (payload) => {
+      setLoading(false);
       if (payload?.roundId) roundIdRef.current = payload.roundId;
       const nextKey = faceKeyFromServer(payload?.nextCard);
       const pick = hlRef.current?.state?.userPick;
@@ -485,6 +489,7 @@ export default function HighLowPage() {
         }
         setBet(null);
         setAmnt(0);
+        setLocked(true);
         toast.success(`Bet placed on ${selection} for ${s}.`, {
           autoClose: 3000,
           pauseOnFocusLoss: false,
@@ -510,6 +515,9 @@ export default function HighLowPage() {
 
       <div className={styles.gameBody}>
         <div className={styles.gameDisplay}>
+          {loading && <div className={styles.loadDiv}>
+            <Spinner animation="border" variant="primary" className={styles.spinnerDiv} />
+          </div>}
           <canvas className={styles.canvas} ref={canvasRef} />
         </div>
 
