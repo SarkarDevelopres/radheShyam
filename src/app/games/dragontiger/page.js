@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import React,{ useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import styles from "../style.module.css";
 import { useRouter } from "next/navigation";
