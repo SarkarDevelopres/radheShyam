@@ -1,34 +1,33 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import styles from './login.module.css'
+import styles from '../../login/login.module.css'
 
-function Login() {
+function AdminLogin() {
     const router = useRouter();
 
-    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        if (!userName || !password) {
+        if (!email || !password) {
             alert("Enter Credentials");
         }
-        let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/auth/login`, {
+        let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/auth/adminLogin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'  // or other content type if needed
             },
             body: JSON.stringify({
-                "username": userName,
+                "email": email,
                 "password": password
             })
         });
         let res = await req.json();
 
         if (res.success) {
-            localStorage.setItem("userToken", res.token);
-            localStorage.setItem("balance", res.balance);
-            window.location.replace("/");
+            localStorage.setItem("adminToken", res.token);
+            window.location.replace("/admin");
         } else {
             alert(res.message);
             router.refresh();
@@ -38,12 +37,12 @@ function Login() {
     return (
         <div className={styles.mainDiv}>
             <div className={styles.loginBox}>
-                <h2>Welcome !</h2>
+                <h2>Welcome Admin !</h2>
                 <div className={styles.inputFields}>
                     <input
-                        placeholder='Enter Username'
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder='Enter Email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                         placeholder='Enter Password'
@@ -58,4 +57,4 @@ function Login() {
     )
 }
 
-export default Login
+export default AdminLogin

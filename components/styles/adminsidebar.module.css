@@ -1,0 +1,28 @@
+.sideBarMainDiv{
+    width: 12%;
+    height: 100%;
+    background-color: #073e8d;
+    position: relative;
+    /* top: 69px; */
+}
+.linksBar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+.linksBar a{
+    width: 100%;
+}
+
+.linksBar span{
+    display: block;
+    width: 100%;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.linksBar span:hover{
+    cursor: pointer;
+    background-color: #010f76;
+}

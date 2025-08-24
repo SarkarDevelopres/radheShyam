@@ -13,27 +13,34 @@ function Navbar() {
   const pathName = usePathname();
   const [socket, setSocket] = useState(null);
   const socketRef = useRef(null);
+  const [isUser, setIsUser] = useState(true)
   // init socket
   useEffect(() => {
-    const s = io(SERVER_URL);
-    socketRef.current = s;
-    const fetchNow = () => {
-      const uid = "689ed0deca58facca988473c";
-      if (!uid) return;
-      s.emit("wallet:fetch", { userId: uid }, (res) => {
-        if (res?.ok) setBalance(Number(res._doc.balance) || 0);
-      });
-    };
+    let user = localStorage.getItem("userToken");
+    if (user) {
+      const s = io(SERVER_URL);
+      socketRef.current = s;
+      const fetchNow = () => {
+        const uid = "689ed0deca58facca988473c";
+        if (!uid) return;
+        s.emit("wallet:fetch", { userId: uid }, (res) => {
+          if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+        });
+      };
 
-    s.on("connect", fetchNow);
-    s.on("bet:place", fetchNow); // refresh when result lands
-    s.on("round:result", fetchNow); // refresh when result lands
+      s.on("connect", fetchNow);
+      s.on("bet:place", fetchNow); // refresh when result lands
+      s.on("round:result", fetchNow); // refresh when result lands
 
-    return () => {
-      s.off("connect", fetchNow);
-      s.off("round:result", fetchNow);
-      s.disconnect();
-    };
+      return () => {
+        s.off("connect", fetchNow);
+        s.off("round:result", fetchNow);
+        s.disconnect();
+      };
+    } else {
+      setIsUser(false)
+    }
+
   }, []);
 
 
@@ -57,13 +64,13 @@ function Navbar() {
         <Link href="/">Home</Link>
         <Link href="/sports">In-Play</Link>
         <Link href="/games">Games</Link>
-        {tokenExists ? (
+        {isUser ? (
           <div className={styles.balanceSpan}>
             <TbCoinRupee />
             <span>{balance}</span>
           </div>
         ) : (
-          <Link href="/login" className={styles.btn}>Log In</Link>
+          tokenExists ?<Link href="/login" className={styles.btn}>Log In</Link>:<Link href='/admin'>Profile</Link>
         )}
       </div>
     </div>

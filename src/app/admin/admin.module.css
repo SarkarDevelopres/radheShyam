@@ -1,0 +1,432 @@
+.mainDiv {
+    display: flex;
+    position: relative;
+    background-color: #073e8d;
+}
+
+.adminMainContent {
+    width: 88%;
+    padding: 20px 50px;
+    background-color: #121212;
+}
+
+.adminMainContent h2 {
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.dataCardList {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0px;
+}
+
+.dataCard {
+    display: flex;
+    /* justify-content: space-between; */
+    width: 23%;
+    background-color: #2e2d2f;
+    padding: 20px 10px;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.dataIcon {
+    font-size: 35px;
+    color: #6e6e8a;
+}
+
+.dataDetails {
+    padding-left: 15px;
+}
+
+.dataDetails p {
+    margin-bottom: 10px;
+}
+
+.graphZone,
+.historyZone,
+.settingsZone {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.graphDiv,
+.lastDataListDiv,
+.containerDiv,
+.promoListDiv {
+    width: 48%;
+    height: 300px;
+    border-radius: 15px;
+    background-color: #2e2d2f;
+    padding: 10px;
+}
+
+.lastDataListDiv,
+.promoListDiv {
+    padding: 0px;
+}
+
+.lastDataListDiv h3 {
+    font-weight: 400;
+    /* margin-bottom: 20px; */
+    padding: 20px;
+}
+.lastDataListDiv{
+    overflow-y:auto;
+}
+.historyTable {
+    /* padding: 10px 0px; */
+    width: 100%;
+}
+
+.gameCompDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 20px;
+}
+
+
+.dataCard:hover,
+.lastDataListDiv:hover,
+.graphDiv:hover {
+    cursor: pointer;
+    background-color: #222223;
+}
+
+.employeeSeacrhBar {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #2e2d2f;
+    margin: 20px 0px;
+}
+
+.employeeSeacrhBar input {
+    padding: 10px;
+    font-size: 15px;
+    width: 28%;
+    border: none;
+    outline: none;
+    background-color: #373637;
+    border-radius: 8px;
+}
+
+.employeeSeacrhBar button {
+    width: 12%;
+    border-radius: 10px;
+    background-color: #6b14b7;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+}
+
+.employeeSeacrhBar button svg {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.employeeSeacrhBar button:hover {
+    cursor: pointer;
+    background-color: #430976;
+}
+
+.employeeTable {
+    width: 100%;
+    background-color: #2e2d2f;
+    border-radius: 10px;
+    overflow-x: auto;
+    /* optional if responsive */
+}
+
+.tableRow:hover {
+    cursor: pointer;
+    background-color: #222223;
+}
+
+.employeeTable table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    /* or fixed if you want uniform column width */
+}
+
+.employeeTable th,
+.employeeTable td {
+    padding: 12px 16px;
+    border: 1px solid #444;
+    /* optional */
+    text-align: left;
+    color: #fff;
+}
+
+.containerDiv {
+    padding: 20px;
+}
+
+.containerDiv h3 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 22px;
+    /* padding: 0px; */
+}
+
+.promoListH3 {
+    /* margin-bottom: 20px; */
+    font-weight: 600;
+    font-size: 22px;
+    padding: 20px;
+}
+
+.settingsZone {
+    margin: 20px 0px;
+}
+
+.detailsDataList {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 80%;
+}
+
+.individualDataComp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.individualDataComp div {
+    width: 45%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.individualDataComp p {
+    font-size: 18px;
+}
+
+.individualDataComp div input {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    outline: none;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    display: block;
+    width: 150px;
+}
+
+.individualDataComp div button {
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    width: 100px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    background-color: #6b14b7;
+}
+
+.individualDataComp button:hover {
+    cursor: pointer;
+    background-color: #430976;
+}
+
+.addPromoInput {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    outline: none;
+    /* border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px; */
+    display: block;
+    width: 100%;
+}
+
+.buttonAddDiv {
+    width: 100%;
+    display: flex;
+    /* align-items: center; */
+    justify-content: flex-end;
+}
+
+.addPromoBtn {
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    width: 45%;
+    /* border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px; */
+    background-color: #6b14b7;
+}
+
+.individualDataComp select {
+    width: 150px;
+    padding: 10px;
+    padding-right: 20px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.promoListContainer {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.promoListContainer::-webkit-scrollbar {
+    width: 10px;
+}
+
+.promoListContainer::-webkit-scrollbar-track {
+    background-color: #2e2d2f;
+    border-radius: 10px;
+}
+
+.promoListContainer::-webkit-scrollbar-thumb {
+    background-color: #430976;
+    border-radius: 10px;
+}
+
+.promoListContainer div:last-of-type {
+    border-bottom: none !important;
+}
+
+.promoActionBtnsDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+}
+
+.promoActionBtnsDiv svg {
+    font-size: 30px;
+    color: brown;
+}
+
+.promoActionBtnsDiv svg:hover {
+    color: rgb(103, 3, 3);
+    cursor: pointer;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #6b14b7;
+}
+
+input:checked+.slider::before {
+    transform: translateX(26px);
+}
+
+
+.bigContainer {
+    width: 90%;
+    /* padding: 20px; */
+    background-color: #1E1E1E;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+.bigContainer h3 {
+    padding: 20px;
+}
+
+.gameLogContainer {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.gameLogTable {
+    width: 100%;
+    border: none;
+}
+
+.gameLogTable thead {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background-color: #231a2b;
+}
+.gameLogTable thead th {
+    text-align: center;
+    padding: 20px 10px;
+    /* position: -webkit-sticky; */
+    /* top: 0; */
+}
+
+.gameLogTable tbody {
+    width: 100%;
+}
+.gameLogTable tbody td {
+    padding: 20px 10px;
+    text-align: center;
+}
+.gameLogTable tbody tr:hover{
+    cursor: pointer;
+    background-color: #222223;
+}
+
+.gameLogContainer::-webkit-scrollbar {
+    width: 10px;
+}
+.gameLogContainer::-webkit-scrollbar-track {
+    background-color: #2e2d2f;
+    border-radius: 10px;
+}
+
+.gameLogContainer::-webkit-scrollbar-thumb {
+    background-color: #430976;
+    border-radius: 10px;
+}
