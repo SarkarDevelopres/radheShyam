@@ -250,33 +250,47 @@ export default function DragonTigerPage() {
     const roundIdRef = useRef(null);
 
     const icons1 = [
-        <GiSpikedDragonHead style={{ color: "red" }} />,
-        <TbPlayCardOff style={{ color: "white" }} />,
-        <GiTigerHead style={{ color: "orange" }} />,
-    ]
+  <GiSpikedDragonHead key="dragon" style={{ color: "red" }} />,
+  <TbPlayCardOff key="snap" style={{ color: "white" }} />,
+  <GiTigerHead key="tiger" style={{ color: "orange" }} />,
+];
 
-    const icons2 = [
-        <><GiClubs style={{ color: "black" }} /> <GiSpades style={{ color: "black" }} /></>,
-        <><GiHearts style={{ color: "red" }} /><GiDiamonds style={{ color: "red" }} /></>
-    ]
+const icons2 = [
+  <React.Fragment key="black">
+    <GiClubs style={{ color: "black" }} /> 
+    <GiSpades style={{ color: "black" }} />
+  </React.Fragment>,
+  <React.Fragment key="red">
+    <GiHearts style={{ color: "red" }} />
+    <GiDiamonds style={{ color: "red" }} />
+  </React.Fragment>,
+];
 
-    const icons4 = [
-        <GiClubs style={{ color: "black" }} />,
-        <GiHearts style={{ color: "red" }} />,
-        <GiSpades style={{ color: "black" }} />,
-        <GiDiamonds style={{ color: "red" }} />
-    ]
-    const icons3 = [
-        <><GiClubs style={{ color: "black" }} /> <GiSpades style={{ color: "black" }} /></>,
-        <><GiHearts style={{ color: "red" }} /><GiDiamonds style={{ color: "red" }} /></>
-    ]
+const icons3 = [
+  <React.Fragment key="clubs-spades">
+    <GiClubs style={{ color: "black" }} /> 
+    <GiSpades style={{ color: "black" }} />
+  </React.Fragment>,
+  <React.Fragment key="hearts-diamonds">
+    <GiHearts style={{ color: "red" }} />
+    <GiDiamonds style={{ color: "red" }} />
+  </React.Fragment>,
+];
 
-    const icons5 = [
-        <GiClubs style={{ color: "black" }} />,
-        <GiHearts style={{ color: "red" }} />,
-        <GiSpades style={{ color: "black" }} />,
-        <GiDiamonds style={{ color: "red" }} />
-    ]
+const icons4 = [
+  <GiClubs key="club" style={{ color: "black" }} />,
+  <GiHearts key="heart" style={{ color: "red" }} />,
+  <GiSpades key="spade" style={{ color: "black" }} />,
+  <GiDiamonds key="diamond" style={{ color: "red" }} />,
+];
+
+const icons5 = [
+  <GiClubs key="club" style={{ color: "black" }} />,
+  <GiHearts key="heart" style={{ color: "red" }} />,
+  <GiSpades key="spade" style={{ color: "black" }} />,
+  <GiDiamonds key="diamond" style={{ color: "red" }} />,
+];
+
 
 
     const lockedRef = useRef(false);

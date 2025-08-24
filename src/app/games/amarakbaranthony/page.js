@@ -228,27 +228,35 @@ export default function AmarAkbarAnthonyPage() {
   const socketRef = useRef(null);
   const roundIdRef = useRef(null);
 
-  const icons1 = [
-    <FaCaretUp style={{ color: "red" }} />,
-    <TbPlayCardOff style={{ color: "white" }} />,
-    <FaCaretDown style={{ color: "black" }} />,
-  ]
   function getUid() {
     // if (typeof window === "undefined") return null;
     return "689ed0deca58facca988473c";
   }
+  
+  const icons1 = [
+  <FaCaretUp key="up" style={{ color: "red" }} />,
+  <TbPlayCardOff key="snap" style={{ color: "white" }} />,
+  <FaCaretDown key="down" style={{ color: "black" }} />,
+];
 
-  const icons2 = [
-    <><GiClubs style={{ color: "black" }} /> <GiSpades style={{ color: "black" }} /></>,
-    <><GiHearts style={{ color: "red" }} /><GiDiamonds style={{ color: "red" }} /></>
-  ]
-
-  const icons3 = [
-    <GiClubs style={{ color: "black" }} />,
-    <GiHearts style={{ color: "red" }} />,
-    <GiSpades style={{ color: "black" }} />,
+const icons2 = [
+  <React.Fragment key="black">
+    <GiClubs style={{ color: "black" }} /> 
+    <GiSpades style={{ color: "black" }} />
+  </React.Fragment>,
+  <React.Fragment key="red">
+    <GiHearts style={{ color: "red" }} />
     <GiDiamonds style={{ color: "red" }} />
-  ]
+  </React.Fragment>,
+];
+
+const icons3 = [
+  <GiClubs key="club" style={{ color: "black" }} />,
+  <GiHearts key="heart" style={{ color: "red" }} />,
+  <GiSpades key="spade" style={{ color: "black" }} />,
+  <GiDiamonds key="diamond" style={{ color: "red" }} />,
+];
+
 
   const [userId, setUserId] = useState("");
 
