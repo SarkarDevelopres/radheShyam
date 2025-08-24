@@ -6,6 +6,7 @@ import WhatsAppComp from "./WhatsAppComp";
 import Footer from "./Footer";
 import MenuWindow from "./MenuWindow";
 import { ToastContainer, Bounce } from 'react-toastify';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ClientShell({ children }) {
 

@@ -7,7 +7,7 @@ function Games() {
       {name:"highlow",image:"highlow.webp"},
       {name:"7updown",image:"7updown.webp"},
       {name:"dragontiger",image:"dragontiger.webp"},
-      {name:"andarbahar",image:"andarbahar.webp"},
+      {name:"amarakbaranthony",image:"aaa.webp"},
       {name:"2cardteenpatti",image:"2cardteenpatti.webp"}
     ])
   return (

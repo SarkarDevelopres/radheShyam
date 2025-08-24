@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import styles from "../style.module.css";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BetOptions } from '../7updown/page'
+import { FaCaretUp, FaCaretDown } from "react-icons/fa";
+import { GiClubs, GiSpades, GiHearts, GiDiamonds } from "react-icons/gi";
+import { TbPlayCardOff } from "react-icons/tb";
+import Spinner from 'react-bootstrap/Spinner';
+
 
 /** ---------- CONFIG ---------- */
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT; // ✔ URL (https://.. or wss://..)
@@ -69,7 +74,9 @@ const ASSETS = {
   "q_clubs": "/cards/queen_of_clubs2.png",
   "k_clubs": "/cards/king_of_clubs2.png",
 };
-
+function fmtSec(ms) {
+  return Math.max(0, Math.ceil(ms / 1000));
+}
 /** ------------ Canvas (single-card) ------------ */
 class AAACanvas {
   constructor(canvas, assets) {
@@ -120,6 +127,17 @@ class AAACanvas {
     this.state = { phase: "bet", cardFaceKey: null, userPick: null, win: null };
     this.slot.flip = 0;
     this.render();
+  }
+
+  flipBack() {
+    this.state.phase = "idle";
+    // start with current face
+    const oldFace = this.state.cardFaceKey;
+    this._flip(this.slot, () => {
+      // at midpoint, swap to back
+      this.state.cardFaceKey = null;
+      this.render();
+    });
   }
 
   showResult(faceKey, win) {
@@ -190,12 +208,7 @@ class AAACanvas {
     ctx.font = "14px system-ui";
     ctx.fillStyle = "#9AA4AF";
     ctx.textAlign = "center";
-    const msg =
-      this.state.phase === "bet" ? "Bets open…" :
-      this.state.phase === "result" ? (this.state.win === null ? "Result" : (this.state.win ? "You Win" : "You Lose")) :
-      "Waiting…";
-    ctx.fillText(msg, w/2, this.slot.y + this.cardH + 18);
-    ctx.restore();
+        // ctx.restore();
   }
 }
 
@@ -215,9 +228,40 @@ export default function AmarAkbarAnthonyPage() {
   const socketRef = useRef(null);
   const roundIdRef = useRef(null);
 
+  const icons1 = [
+    <FaCaretUp style={{ color: "red" }} />,
+    <TbPlayCardOff style={{ color: "white" }} />,
+    <FaCaretDown style={{ color: "black" }} />,
+  ]
+  function getUid() {
+    // if (typeof window === "undefined") return null;
+    return "689ed0deca58facca988473c";
+  }
+
+  const icons2 = [
+    <><GiClubs style={{ color: "black" }} /> <GiSpades style={{ color: "black" }} /></>,
+    <><GiHearts style={{ color: "red" }} /><GiDiamonds style={{ color: "red" }} /></>
+  ]
+
+  const icons3 = [
+    <GiClubs style={{ color: "black" }} />,
+    <GiHearts style={{ color: "red" }} />,
+    <GiSpades style={{ color: "black" }} />,
+    <GiDiamonds style={{ color: "red" }} />
+  ]
+
+  const [userId, setUserId] = useState("");
+
   const [options] = useState(["AMAR", "AKBAR", "ANTHONY"]);
+  const [options2] = useState(["BLACK", "RED"]);
+  const [options3] = useState(["CLUB", "HEARTS", "SPADES", "DIAMONDS"]);
   const [bet, setBet] = useState(null);
+  const [round, setRound] = useState(null);
   const [amnt, setAmnt] = useState(0);
+  const [now, setNow] = useState(Date.now());
+  const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [isLocked, setLocked] = useState(false);
 
   // canvas DPI + resize handling
   useEffect(() => {
@@ -238,6 +282,12 @@ export default function AmarAkbarAnthonyPage() {
     return () => ro.disconnect();
   }, []);
 
+  // Smooth countdown tick
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 200);
+    return () => clearInterval(t);
+  }, []);
+
   // socket + events
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -249,17 +299,40 @@ export default function AmarAkbarAnthonyPage() {
 
     socket.on("connect", () => {
       socket.emit("join", { game: GAME, tableId: TABLE_ID });
+
+      // Get wallet once on connect
+      const uid2 = getUid();
+      if (uid2) {
+        socket.emit("wallet:fetch", { userId: uid2 }, (res) => {
+          if (res?.ok) {
+            console.log(res);
+            
+            setBalance(res._doc.balance || 0)
+          };
+        });
+      }
     });
 
     // Bets opened
     socket.on("round:start", (payload) => {
+      setLocked(false)
       // payload likely contains {_id, game, tableId, startAt, ...}
+      setLoading(false)
       roundIdRef.current = payload?._id || payload?.id || roundIdRef.current;
+      setRound(payload);
       aaaRef.current?.startRound();
+    });
+
+    socket.on("round:lock", () => {
+      console.log("Betting locked");
+      setLoading(true)
+      setLocked(true)
+      setRound((prev) => (prev ? { ...prev, status: "LOCKED" } : prev));
     });
 
     // Final reveal/result (engine emits this with { outcome, card, roundId })
     socket.on("round:result", (payload) => {
+      setLoading(false)
       if (payload?.roundId) roundIdRef.current = payload.roundId;
       const faceKey = faceKeyFromServer(payload?.card || payload?.result?.card || payload?.meta?.card);
       const pick = String(aaaRef.current?.state?.userPick || "").toUpperCase();
@@ -268,6 +341,16 @@ export default function AmarAkbarAnthonyPage() {
       if (pick && (outcome === "AMAR" || outcome === "AKBAR" || outcome === "ANTHONY")) {
         win = (pick === outcome);
       }
+      // const uid2 = getUid();
+      // if (uid2) {
+      //   socket.emit("wallet:fetch", { userId: uid2 }, (res) => {
+      //     if (res?.ok) {
+      //       console.log(res);
+            
+      //       setBalance(res._doc.balance || 0)
+      //     };
+      //   });
+      // }
       aaaRef.current?.showResult(faceKey, win);
     });
 
@@ -297,7 +380,20 @@ export default function AmarAkbarAnthonyPage() {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("userToken");
   }
+  const lockMs = useMemo(() => {
+    if (!round) return 0;
+    return (round.betsCloseAt ?? 0) - now;
+  }, [round, now]);
 
+  const resultMs = useMemo(() => {
+    if (!round) return 0;
+    return (round.resultAt ?? 0) - now;
+  }, [round, now]);
+
+  const locked = useMemo(() => {
+    if (!round) return true;
+    return round.status !== "OPEN" || lockMs <= 0;
+  }, [round, lockMs]);
   const placeBet = async (pick, sOverride) => {
     // 1) auth
     const token = isLoggedIn?.();
@@ -309,8 +405,8 @@ export default function AmarAkbarAnthonyPage() {
 
     // 2) pick validation (AMAR/AKBAR/ANTHONY)
     const market = String(pick || "").toUpperCase();
-    if (!["AMAR","AKBAR","ANTHONY"].includes(market)) {
-      toast?.error?.("Select AMAR, AKBAR or ANTHONY.");
+    if (!["AMAR", "AKBAR", "ANTHONY","BLACK","RED","HEARTS","CLUBS","SPADES","DIAMONDS"].includes(market)) {
+      toast?.error?.("Select valid bet.");
       return;
     }
 
@@ -323,7 +419,7 @@ export default function AmarAkbarAnthonyPage() {
       return;
     }
 
-    if (typeof locked !== "undefined" && (locked || lockedRef?.current)) {
+    if (locked) {
       toast?.warn?.("Betting is locked for this round.");
       return;
     }
@@ -374,11 +470,25 @@ export default function AmarAkbarAnthonyPage() {
 
   return (
     <div className={styles.mainDiv}>
-      <ToastContainer />
+
       <h2>Amar Akbar Anthony</h2>
+
+      <div className={styles.metaRow}>
+        <div>Balance: {balance}</div>
+        <div>
+          {round
+            ? locked
+              ? `Locked · result in ${fmtSec(resultMs)}s`
+              : `Closes in ${fmtSec(lockMs)}s`
+            : "Waiting for round..."}
+        </div>
+      </div>
 
       <div className={styles.gameBody}>
         <div className={styles.gameDisplay}>
+          {loading && <div className={styles.loadDiv}>
+            <Spinner animation="border" variant="primary" className={styles.spinnerDiv} />
+          </div>}
           <canvas className={styles.canvas} ref={canvasRef} />
         </div>
 
@@ -394,6 +504,42 @@ export default function AmarAkbarAnthonyPage() {
                 amnt={amnt}
                 setAmnt={setAmnt}
                 onPlaceBet={() => placeBet(label)}
+                optionArray={options}
+                isLocked={isLocked}
+              />
+            ))}
+          </div>
+          <div className={styles.betBoxes}>
+            {options2.map((label, i) => (
+              <BetOptions
+                key={i}
+                name={label}
+                bet={bet}
+                index={i}
+                setBet={setBet}
+                amnt={amnt}
+                setAmnt={setAmnt}
+                onPlaceBet={() => placeBet(label)}
+                icon={icons2}
+                optionArray={options2}
+                isLocked={isLocked}
+              />
+            ))}
+          </div>
+          <div className={styles.betBoxes}>
+            {options3.map((label, i) => (
+              <BetOptions
+                key={i}
+                name={label}
+                bet={bet}
+                index={i}
+                setBet={setBet}
+                amnt={amnt}
+                setAmnt={setAmnt}
+                onPlaceBet={() => placeBet(label)}
+                icon={icons3}
+                optionArray={options3}
+                isLocked={isLocked}
               />
             ))}
           </div>

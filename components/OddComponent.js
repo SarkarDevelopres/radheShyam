@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import styles from "./styles/odd.module.css"
+import styles from "./styles/odd.module.css";
 import { useRouter } from 'next/navigation';
 function OddComponent({ data }) {
     const [amnt, setAmnt] = useState(0);
@@ -93,8 +93,8 @@ function OddComponent({ data }) {
                 </div>
             </div>
             {
-                showStake && <div>
-                    <div className={styles.stakeChoice}>
+                showStake && <div className={styles.stakeWrapper}>
+                    <div className={styles.stakeChoice} style={{flexWrap:"wrap"}}>
                         {[100, 200, 300, 400, 500, 1000].map((amt) => (
                             <button
                                 key={amt}

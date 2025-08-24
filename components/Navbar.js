@@ -1,39 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from "./styles/navbar.module.css"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import { TbCoinRupee } from "react-icons/tb";
+import { io } from "socket.io-client";
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 
 function Navbar() {
   const [tokenExists, setTokenExists] = useState(false);
   const [balance, setBalance] = useState(null);
   const pathName = usePathname();
+  const [socket, setSocket] = useState(null);
+  const socketRef = useRef(null);
+  // init socket
+  useEffect(() => {
+    const s = io(SERVER_URL);
+    socketRef.current = s;
+    const fetchNow = () => {
+      const uid = "689ed0deca58facca988473c";
+      if (!uid) return;
+      s.emit("wallet:fetch", { userId: uid }, (res) => {
+        if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+      });
+    };
 
-  const checkBalance = async (token) => {
-    console.log(token);
-    
-    let req = await fetch(`/api/data/balance`, {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'  // or other content type if needed
-    },
-      body: JSON.stringify({
-        "token": token,
-      })
-    });
-    
-    let res = await req.json();
-    console.log(res);
-    if (res.success) {
-      setBalance(res.data.balance)
-    }
-  }
+    s.on("connect", fetchNow);
+    s.on("bet:place", fetchNow); // refresh when result lands
+    s.on("round:result", fetchNow); // refresh when result lands
+
+    return () => {
+      s.off("connect", fetchNow);
+      s.off("round:result", fetchNow);
+      s.disconnect();
+    };
+  }, []);
+
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem("userToken");
       setTokenExists(!!token);
-      checkBalance(token)
     }
   }, [pathName]);
 
@@ -47,7 +54,6 @@ function Navbar() {
         </div>
       </div>
       <div className={styles.navLinks}>
-        {/* <button className={styles.btn} onClick={logOut}>Log Out</button> */}
         <Link href="/">Home</Link>
         <Link href="/sports">In-Play</Link>
         <Link href="/games">Games</Link>
@@ -59,10 +65,9 @@ function Navbar() {
         ) : (
           <Link href="/login" className={styles.btn}>Log In</Link>
         )}
-
       </div>
     </div>
   )
 }
 
-export default Navbar
+export default Navbar;

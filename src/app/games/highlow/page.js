@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import styles from "../style.module.css";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BetOptions } from "../7updown/page";
+import { FaCaretUp, FaCaretDown } from "react-icons/fa";
+import { GiClubs, GiSpades, GiHearts, GiDiamonds } from "react-icons/gi";
+import { TbPlayCardOff } from "react-icons/tb";
+
 
 /** ---------- CONFIG ---------- */
-const SERVER_URL = '/'; // if you have NEXT_PUBLIC_SERVER_URL, prefer that
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT; // if you have NEXT_PUBLIC_SERVER_URL, prefer that
 const GAME = "HIGH_LOW";
 const TABLE_ID = "default";
 const ASSETS = {
@@ -70,6 +74,10 @@ const ASSETS = {
 /** -------------------------------- */
 
 const CARD_ASPECT = 160 / 224;
+
+function fmtSec(ms) {
+  return Math.max(0, Math.ceil(ms / 1000));
+}
 
 class HLCanvas {
   constructor(canvas, assets) {
@@ -196,7 +204,7 @@ class HLCanvas {
     this.slotA.y = padding;
 
     this.slotB.x = padding + perSlotW + gap + (perSlotW - cardW) / 2;
-    this.slotB.y = padding;
+    this.slotB.y = padding + (cardH / 2);
 
     this._labelA = { x: this.slotA.x + cardW / 2, y: this.slotA.y + cardH + 16 };
     this._labelB = { x: this.slotB.x + cardW / 2, y: this.slotB.y + cardH + 16 };
@@ -235,15 +243,37 @@ export default function HighLowPage() {
   const socketRef = useRef(null);
   const roundIdRef = useRef(null);
 
-  const [round, setRound] = useState(null);
-  const [locked, setLocked] = useState(false);
+  const icons1 = [
+    <FaCaretUp style={{ color: "red" }} />,
+    <TbPlayCardOff style={{ color: "white" }} />,
+    <FaCaretDown style={{ color: "black" }} />,
+  ]
+
+  const icons2 = [
+    <><GiClubs style={{ color: "black" }} /> <GiSpades style={{ color: "black" }} /></>,
+    <><GiHearts style={{ color: "red" }} /><GiDiamonds style={{ color: "red" }} /></>
+  ]
+
+  const icons3 = [
+    <GiClubs style={{ color: "black" }} />,
+    <GiHearts style={{ color: "red" }} />,
+    <GiSpades style={{ color: "black" }} />,
+    <GiDiamonds style={{ color: "red" }} />
+  ]
+
+
   const lockedRef = useRef(false);
 
-  const [options] = useState(["HIGH", "LOW"]);
+  const [options] = useState(["HIGH", "SNAP", "LOW"]);
+  const [options2] = useState(["BLACK", "RED"]);
+  const [options3] = useState(["CLUB", "HEARTS", "SPADES", "DIAMONDS"]);
   const [bet, setBet] = useState(null);
+  const [round, setRound] = useState(null);
   const [amnt, setAmnt] = useState(0);
-
-  const [balance, setBalance] = useState(null); // optional; updated from server if provided
+  const [now, setNow] = useState(Date.now());
+  const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [isLocked, setLocked] = useState(false);
 
   // crisp canvas (square container handled via CSS)
   useEffect(() => {
@@ -267,6 +297,11 @@ export default function HighLowPage() {
   }, []);
 
   useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 200);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
     if (!canvasRef.current) return;
 
     hlRef.current = new HLCanvas(canvasRef.current, ASSETS);
@@ -276,6 +311,8 @@ export default function HighLowPage() {
 
     socket.on("connect", () => {
       socket.emit("join", { game: GAME, tableId: TABLE_ID });
+      console.log("Connected to Room HIGHLOW");
+
     });
 
     socket.on("round:start", (payload) => {
@@ -343,6 +380,7 @@ export default function HighLowPage() {
       setLocked(false);
     });
 
+
     return () => {
       socket.off("round:start");
       socket.off("highlow:base");
@@ -363,6 +401,20 @@ export default function HighLowPage() {
     // if (typeof window === "undefined") return "demo-user";
     return "689ed0deca58facca988473c"
   }
+  const lockMs = useMemo(() => {
+    if (!round) return 0;
+    return (round.betsCloseAt ?? 0) - now;
+  }, [round, now]);
+
+  const resultMs = useMemo(() => {
+    if (!round) return 0;
+    return (round.resultAt ?? 0) - now;
+  }, [round, now]);
+
+  const locked = useMemo(() => {
+    if (!round) return true;
+    return round.status !== "OPEN" || lockMs <= 0;
+  }, [round, lockMs]);
 
   // Compatible with BetOptions → it calls onPlaceBet() with no args.
   const placeBet = async () => {
@@ -372,14 +424,17 @@ export default function HighLowPage() {
       router.push("/login");
       return;
     }
-
+    if (locked) {
+      toast?.warn?.("Betting is locked for this round.");
+      return;
+    }
     // must have a selected option + amount
     if (bet === null || amnt <= 0) {
       toast.error("Select High/Low and a stake.");
       return;
     }
 
-    const selection = options[bet]; // "HIGH" | "LOW"
+    const selection = bet; // "HIGH" | "LOW"
     if (!selection) {
       toast.error("Invalid selection.");
       return;
@@ -440,8 +495,18 @@ export default function HighLowPage() {
 
   return (
     <div className={styles.mainDiv}>
-      <ToastContainer />
       <h2>High Low</h2>
+
+      <div className={styles.metaRow}>
+        <div>Balance: {balance}</div>
+        <div>
+          {round
+            ? locked
+              ? `Locked · result in ${fmtSec(resultMs)}s`
+              : `Closes in ${fmtSec(lockMs)}s`
+            : "Waiting for round..."}
+        </div>
+      </div>
 
       <div className={styles.gameBody}>
         <div className={styles.gameDisplay}>
@@ -460,6 +525,43 @@ export default function HighLowPage() {
                 amnt={amnt}
                 setAmnt={setAmnt}
                 onPlaceBet={placeBet}   // BetOptions will call with no args
+                icon={icons1}
+                optionArray={options}
+                isLocked={isLocked}
+              />
+            ))}
+          </div>
+          <div className={styles.betBoxes}>
+            {options2.map((label, i) => (
+              <BetOptions
+                key={i}
+                name={label}
+                bet={bet}
+                setBet={setBet}
+                index={i}
+                amnt={amnt}
+                setAmnt={setAmnt}
+                onPlaceBet={placeBet}   // BetOptions will call with no args
+                icon={icons2}
+                optionArray={options2}
+                isLocked={isLocked}
+              />
+            ))}
+          </div>
+          <div className={styles.betBoxes}>
+            {options3.map((label, i) => (
+              <BetOptions
+                key={i}
+                name={label}
+                bet={bet}
+                setBet={setBet}
+                index={i}
+                amnt={amnt}
+                setAmnt={setAmnt}
+                onPlaceBet={placeBet}   // BetOptions will call with no args
+                icon={icons3}
+                optionArray={options3}
+                isLocked={isLocked}
               />
             ))}
           </div>
