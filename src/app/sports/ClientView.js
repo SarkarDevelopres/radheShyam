@@ -33,6 +33,8 @@ function ClientView({initialData}) {
             fetchData("soccer");
         }
         else {
+            console.log(v);
+            
             tennis.current.style.color = "#00224E";
             cricket.current.style.color = "#02D4F4";
             football.current.style.color = "#02D4F4";
@@ -43,7 +45,7 @@ function ClientView({initialData}) {
     }
 
     const fetchData = async (sports) => {
-        console.log(sports);
+        console.log("SPORTS: ",sports);
         
         let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/${sports}`);
 
@@ -52,7 +54,8 @@ function ClientView({initialData}) {
             setOddsData([...res.data]);
         }
         else{
-            alert(res.error);
+            console.log(res);
+            
             router.refresh();
         }
 

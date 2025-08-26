@@ -2,7 +2,10 @@ import ClientView from "./ClientView";
 
 async function getPosts() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/cricket`, { cache: "no-store" }); // SSR
-  return res.json();
+  const req = await res.json();
+  console.log("Result: ",req);
+  
+  return req;
   
 }
 

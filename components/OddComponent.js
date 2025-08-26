@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import styles from "./styles/odd.module.css";
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
 function OddComponent({ data }) {
     const [amnt, setAmnt] = useState(0);
     const [team, setTeam] = useState(null);
@@ -9,7 +10,7 @@ function OddComponent({ data }) {
     const moveIt = () => {
         // router.push(`/sports/game/${data.matchId}`)
         console.log("Pushed called");
-        
+
     }
     const isLoggedIn = () => {
         if (typeof window === "undefined") return false;
@@ -43,6 +44,9 @@ function OddComponent({ data }) {
             body: JSON.stringify({
                 token: loggedIn,
                 matchId: data.matchId,
+                title: data.title,
+                market: data.market,
+                bookmakerKey: data.bookmakerKey,
                 selection: data.odds[team].name,
                 stake: amnt,
                 odds,
@@ -55,11 +59,20 @@ function OddComponent({ data }) {
             return;
         }
 
+        if (response.ok) {
+            console.log(response);
+            
+            toast.success("Bet Successfully Placed!");
+            setAmnt(0);
+            setTeam(null);
+            setShowStake(false);
+        }
+
         // If you use Server Components / data fetching on the page:
         //   router.refresh();
 
         // If you need a hard reload instead:
-        window.location.reload();
+        // window.location.reload();
     }
 
     const cancel = () => {
@@ -69,10 +82,10 @@ function OddComponent({ data }) {
     }
 
     return (
-        <div className={styles.oddMainComp} onClick={()=>moveIt()}>
+        <div className={styles.oddMainComp} onClick={() => moveIt()}>
             <div className={styles.OddDetails}>
                 <span className={styles.liveIndicator} />
-                <div className={styles.teamMatchDetails}>
+                <div className={styles.teamMatchDetails} >
                     <p>{`${data.home} vs ${data.away}`}</p>
                     <span>{`${data.displayableTime} | ${data.title}`}</span>
                 </div>
@@ -94,7 +107,7 @@ function OddComponent({ data }) {
             </div>
             {
                 showStake && <div className={styles.stakeWrapper}>
-                    <div className={styles.stakeChoice} style={{flexWrap:"wrap"}}>
+                    <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
                         {[100, 200, 300, 400, 500, 1000].map((amt) => (
                             <button
                                 key={amt}
