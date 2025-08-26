@@ -47,7 +47,7 @@ export default function Home() {
       <section className={styles.cardsSection}>
         <div className={styles.cardList} ref={cardListRef}>
           <div className={styles.card} style={{ backgroundImage: `url(/board-card.png)` }} 
-          onClick={()=>router.push('/games/flight')}
+          onClick={()=>router.push('/board')}
           ></div>
           <div className={styles.card} style={{ backgroundImage: `url(/casino-card.jpg)` }} 
           onClick={()=>router.push('/games')} ></div>

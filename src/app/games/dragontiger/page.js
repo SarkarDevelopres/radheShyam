@@ -467,10 +467,11 @@ const icons5 = [
         return localStorage.getItem("userToken");
     }
 
-    function getUid() {
-        // if (typeof window === "undefined") return "demo-user";
-        return "689ed0deca58facca988473c"
-    }
+  function getUid() {
+    if (typeof window === "undefined") return "demo-user";
+    let userToken = localStorage.getItem("userToken");
+    return userToken;
+  }
     const lockMs = useMemo(() => {
         if (!round) return 0;
         return (round.betsCloseAt ?? 0) - now;
@@ -578,7 +579,6 @@ const icons5 = [
             <h2>Dragon Tiger</h2>
 
             <div className={styles.metaRow}>
-                <div>Balance: {balance}</div>
                 <div>
                     {round
                         ? locked

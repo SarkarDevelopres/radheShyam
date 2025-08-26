@@ -1,432 +1,546 @@
 .mainDiv {
-    display: flex;
-    position: relative;
-    background-color: #073e8d;
+  display: flex;
+  position: relative;
+  background-color: #073e8d;
 }
 
 .adminMainContent {
-    width: 88%;
-    padding: 20px 50px;
-    background-color: #121212;
+  width: 88%;
+  padding: 20px 50px;
+  background-color: #121212;
+  position: relative;
 }
 
 .adminMainContent h2 {
-    font-weight: 500;
-    font-size: 30px;
+  font-weight: 500;
+  font-size: 30px;
 }
 
 .dataCardList {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0px;
 }
 
 .dataCard {
-    display: flex;
-    /* justify-content: space-between; */
-    width: 23%;
-    background-color: #2e2d2f;
-    padding: 20px 10px;
-    align-items: center;
-    border-radius: 10px;
+  display: flex;
+  /* justify-content: space-between; */
+  width: 23%;
+  background-color: #2e2d2f;
+  padding: 20px 10px;
+  align-items: center;
+  border-radius: 10px;
 }
 
 .dataIcon {
-    font-size: 35px;
-    color: #6e6e8a;
+  font-size: 35px;
+  color: #6e6e8a;
 }
 
 .dataDetails {
-    padding-left: 15px;
+  padding-left: 15px;
 }
 
 .dataDetails p {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .graphZone,
 .historyZone,
 .settingsZone {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
 }
 
 .graphDiv,
 .lastDataListDiv,
 .containerDiv,
 .promoListDiv {
-    width: 48%;
-    height: 300px;
-    border-radius: 15px;
-    background-color: #2e2d2f;
-    padding: 10px;
+  width: 48%;
+  height: 300px;
+  border-radius: 15px;
+  background-color: #2e2d2f;
+  padding: 10px;
 }
 
 .lastDataListDiv,
 .promoListDiv {
-    padding: 0px;
+  padding: 0px;
 }
 
 .lastDataListDiv h3 {
-    font-weight: 400;
-    /* margin-bottom: 20px; */
-    padding: 20px;
+  font-weight: 400;
+  /* margin-bottom: 20px; */
+  padding: 20px;
 }
-.lastDataListDiv{
-    overflow-y:auto;
+.lastDataListDiv {
+  overflow-y: auto;
 }
 .historyTable {
-    /* padding: 10px 0px; */
-    width: 100%;
+  /* padding: 10px 0px; */
+  width: 100%;
+}
+
+.historyTable tr {
+  text-align: center;
 }
 
 .gameCompDiv {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 8px 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 20px;
 }
-
 
 .dataCard:hover,
 .lastDataListDiv:hover,
 .graphDiv:hover {
-    cursor: pointer;
-    background-color: #222223;
+  cursor: pointer;
+  background-color: #222223;
 }
 
 .employeeSeacrhBar {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    background-color: #2e2d2f;
-    margin: 20px 0px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #2e2d2f;
+  margin: 20px 0px;
 }
 
 .employeeSeacrhBar input {
-    padding: 10px;
-    font-size: 15px;
-    width: 28%;
-    border: none;
-    outline: none;
-    background-color: #373637;
-    border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+  width: 28%;
+  border: none;
+  outline: none;
+  background-color: #373637;
+  border-radius: 8px;
 }
 
 .employeeSeacrhBar button {
-    width: 12%;
-    border-radius: 10px;
-    background-color: #6b14b7;
-    border: none;
-    outline: none;
-    font-size: 17px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0px 10px;
+  width: 12%;
+  border-radius: 10px;
+  background-color: #6b14b7;
+  border: none;
+  outline: none;
+  font-size: 17px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 10px;
 }
 
 .employeeSeacrhBar button svg {
-    font-size: 20px;
-    margin-right: 10px;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .employeeSeacrhBar button:hover {
-    cursor: pointer;
-    background-color: #430976;
+  cursor: pointer;
+  background-color: #430976;
 }
 
 .employeeTable {
-    width: 100%;
-    background-color: #2e2d2f;
-    border-radius: 10px;
-    overflow-x: auto;
-    /* optional if responsive */
+  width: 100%;
+  background-color: #2e2d2f;
+  border-radius: 10px;
+  overflow-x: auto;
+  /* optional if responsive */
 }
 
 .tableRow:hover {
-    cursor: pointer;
-    background-color: #222223;
+  cursor: pointer;
+  background-color: #222223;
 }
 
 .employeeTable table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
-    /* or fixed if you want uniform column width */
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  /* or fixed if you want uniform column width */
 }
 
 .employeeTable th,
 .employeeTable td {
-    padding: 12px 16px;
-    border: 1px solid #444;
-    /* optional */
-    text-align: left;
-    color: #fff;
+  padding: 12px 16px;
+  border: 1px solid #444;
+  /* optional */
+  text-align: left;
+  color: #fff;
 }
 
 .containerDiv {
-    padding: 20px;
+  padding: 20px;
 }
 
 .containerDiv h3 {
-    margin-bottom: 20px;
-    font-weight: 600;
-    font-size: 22px;
-    /* padding: 0px; */
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 22px;
+  /* padding: 0px; */
 }
 
 .promoListH3 {
-    /* margin-bottom: 20px; */
-    font-weight: 600;
-    font-size: 22px;
-    padding: 20px;
+  /* margin-bottom: 20px; */
+  font-weight: 600;
+  font-size: 22px;
+  padding: 20px;
 }
 
 .settingsZone {
-    margin: 20px 0px;
+  margin: 20px 0px;
 }
 
 .detailsDataList {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 80%;
 }
 
 .individualDataComp {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px;
 }
 
 .individualDataComp div {
-    width: 45%;
-    display: flex;
-    justify-content: space-between;
+  width: 45%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .individualDataComp p {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .individualDataComp div input {
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    outline: none;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    display: block;
-    width: 150px;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  outline: none;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  display: block;
+  width: 150px;
 }
 
 .individualDataComp div button {
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    width: 100px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    background-color: #6b14b7;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  width: 100px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  background-color: #6b14b7;
 }
 
 .individualDataComp button:hover {
-    cursor: pointer;
-    background-color: #430976;
+  cursor: pointer;
+  background-color: #430976;
 }
 
 .addPromoInput {
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    outline: none;
-    /* border-top-right-radius: 0px;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  outline: none;
+  /* border-top-right-radius: 0px;
     border-bottom-right-radius: 0px; */
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .buttonAddDiv {
-    width: 100%;
-    display: flex;
-    /* align-items: center; */
-    justify-content: flex-end;
+  width: 100%;
+  display: flex;
+  /* align-items: center; */
+  justify-content: flex-end;
 }
 
 .addPromoBtn {
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    width: 45%;
-    /* border-top-left-radius: 0px;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  width: 45%;
+  /* border-top-left-radius: 0px;
     border-bottom-left-radius: 0px; */
-    background-color: #6b14b7;
+  background-color: #6b14b7;
 }
 
 .individualDataComp select {
-    width: 150px;
-    padding: 10px;
-    padding-right: 20px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
+  width: 150px;
+  padding: 10px;
+  padding-right: 20px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .promoListContainer {
-    height: 200px;
-    overflow-y: scroll;
+  height: 200px;
+  overflow-y: scroll;
 }
 
 .promoListContainer::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 .promoListContainer::-webkit-scrollbar-track {
-    background-color: #2e2d2f;
-    border-radius: 10px;
+  background-color: #2e2d2f;
+  border-radius: 10px;
 }
 
 .promoListContainer::-webkit-scrollbar-thumb {
-    background-color: #430976;
-    border-radius: 10px;
+  background-color: #430976;
+  border-radius: 10px;
 }
 
 .promoListContainer div:last-of-type {
-    border-bottom: none !important;
+  border-bottom: none !important;
 }
 
 .promoActionBtnsDiv {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 20%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 20%;
 }
 
 .promoActionBtnsDiv svg {
-    font-size: 30px;
-    color: brown;
+  font-size: 30px;
+  color: brown;
 }
 
 .promoActionBtnsDiv svg:hover {
-    color: rgb(103, 3, 3);
-    cursor: pointer;
+  color: rgb(103, 3, 3);
+  cursor: pointer;
 }
 
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
 
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
 }
 
 .slider::before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
-input:checked+.slider {
-    background-color: #6b14b7;
+input:checked + .slider {
+  background-color: #6b14b7;
 }
 
-input:checked+.slider::before {
-    transform: translateX(26px);
+input:checked + .slider::before {
+  transform: translateX(26px);
 }
-
 
 .bigContainer {
-    width: 90%;
-    /* padding: 20px; */
-    background-color: #1E1E1E;
-    margin-top: 20px;
-    border-radius: 15px;
+  width: 90%;
+  /* padding: 20px; */
+  background-color: #1e1e1e;
+  margin-top: 20px;
+  border-radius: 15px;
 }
 
 .bigContainer h3 {
-    padding: 20px;
+  padding: 20px;
 }
 
 .gameLogContainer {
-    width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .gameLogTable {
-    width: 100%;
-    border: none;
+  width: 100%;
+  border: none;
 }
 
 .gameLogTable thead {
-    width: 100%;
-    position: sticky;
-    top: 0;
-    background-color: #231a2b;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: #231a2b;
 }
 .gameLogTable thead th {
-    text-align: center;
-    padding: 20px 10px;
-    /* position: -webkit-sticky; */
-    /* top: 0; */
+  text-align: center;
+  padding: 20px 10px;
+  /* position: -webkit-sticky; */
+  /* top: 0; */
 }
 
 .gameLogTable tbody {
-    width: 100%;
+  width: 100%;
 }
 .gameLogTable tbody td {
-    padding: 20px 10px;
-    text-align: center;
+  padding: 20px 10px;
+  text-align: center;
 }
-.gameLogTable tbody tr:hover{
-    cursor: pointer;
-    background-color: #222223;
+.gameLogTable tbody tr:hover {
+  cursor: pointer;
+  background-color: #222223;
 }
 
 .gameLogContainer::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 .gameLogContainer::-webkit-scrollbar-track {
-    background-color: #2e2d2f;
-    border-radius: 10px;
+  background-color: #2e2d2f;
+  border-radius: 10px;
 }
 
 .gameLogContainer::-webkit-scrollbar-thumb {
-    background-color: #430976;
-    border-radius: 10px;
+  background-color: #430976;
+  border-radius: 10px;
+}
+
+.addUserContainer {
+  margin-top: 30px;
+}
+.addUserContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.addUserDiv {
+  padding: 20px;
+  background-color: #2e2d2f;
+  border-radius: 10px;
+}
+.addUserDiv input {
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid rgb(255, 255, 255, 0.3);
+  outline: none;
+  width: 48%;
+}
+.inputDiv {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.addUserDiv button {
+  width: 48%;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #073e8d;
+  font-weight: 600;
+}
+.addUserDiv button:hover {
+  background-color: #02285e;
+}
+
+.userModalWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0, 0, 0, 0.5);
+  top: 0px;
+  left: 0px;
+}
+.userModalDiv {
+  position: relative;
+  width: 300px;
+  padding: 20px;
+  background-color: #2e2d2f;
+  border-radius: 20px;
+}
+.userModalDiv svg{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 25px;
+    cursor: pointer;
+}
+.detailsField{
+    display: flex;
+    align-items: center;
+}
+.detailsField span {
+  color: #fff;
+}
+.detailsField p{
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0px;
+    padding-left: 10px;
+}
+.modalDetailsDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.modalInputfields {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.modalInputfields input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(255, 255, 255, 0.3);
+  outline: none;
+  width: 50%;
+}
+.modalInputfields button,
+.modalDeleteBtn {
+  width: 45%;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #073e8d;
+}
+
+.modalDeleteBtn {
+  width: 100%;
+}
+
+.userModalDiv button:hover {
+  background-color: #02285e;
 }

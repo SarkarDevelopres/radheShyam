@@ -13,41 +13,49 @@ function Navbar() {
   const pathName = usePathname();
   const [socket, setSocket] = useState(null);
   const socketRef = useRef(null);
-  const [isUser, setIsUser] = useState(true)
+  const balanceRef = useRef(null);
+  const [isUser, setIsUser] = useState(false)
   // init socket
-  useEffect(() => {
-    let user = localStorage.getItem("userToken");
-    if (user) {
-      const s = io(SERVER_URL);
-      socketRef.current = s;
-      const fetchNow = () => {
-        const uid = "689ed0deca58facca988473c";
-        if (!uid) return;
-        s.emit("wallet:fetch", { userId: uid }, (res) => {
-          if (res?.ok) setBalance(Number(res._doc.balance) || 0);
-        });
-      };
+useEffect(() => {
+  const user = localStorage.getItem("userToken");
+  if (!user) return;
 
-      s.on("connect", fetchNow);
-      s.on("bet:place", fetchNow); // refresh when result lands
-      s.on("round:result", fetchNow); // refresh when result lands
+  setIsUser(true);
+  // console.log(user);
+  
+  const s = io(SERVER_URL, { auth: { token: user } });
+  socketRef.current = s;
 
-      return () => {
-        s.off("connect", fetchNow);
-        s.off("round:result", fetchNow);
-        s.disconnect();
-      };
-    } else {
-      setIsUser(false)
-    }
+  const fetchNow = () => {
+    s.emit("wallet:fetch", { userId: user }, (res) => {
+      console.log(res);
+      
+      if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+    });
+  };
 
-  }, []);
+  fetchNow();
+  s.on("connect", fetchNow);
+  s.on("wallet:update", (res) => {
+    console.log("Results Came: ",res._doc.balance);
+    
+    if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+  });
+
+  return () => {
+    s.off("connect", fetchNow);
+    s.off("wallet:update");
+    s.disconnect();
+  };
+}, []);
+
 
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem("userToken");
+      const token = localStorage.getItem("adminToken");
       setTokenExists(!!token);
+      
     }
   }, [pathName]);
 
@@ -67,10 +75,10 @@ function Navbar() {
         {isUser ? (
           <div className={styles.balanceSpan}>
             <TbCoinRupee />
-            <span>{balance}</span>
+            <span ref={balanceRef}>{balance}</span>
           </div>
         ) : (
-          tokenExists ?<Link href="/login" className={styles.btn}>Log In</Link>:<Link href='/admin'>Profile</Link>
+          tokenExists ?<Link href='/admin'>Profile</Link>:<Link href="/login" className={styles.btn}>Log In</Link>
         )}
       </div>
     </div>

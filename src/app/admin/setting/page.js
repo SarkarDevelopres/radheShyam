@@ -155,25 +155,7 @@ function Setting() {
                         </div>
                     </div>
                 </div>
-                <div className={styles.settingsZone}>
-                    <div className={styles.promoListDiv}>
-                        <h3 className={styles.promoListH3}>Promo Code List</h3>
-                        <div className={styles.gameCompDiv} style={{ backgroundColor: "#231a2b" }}>
-                            <span className={styles.gameCompData}>Sl No</span>
-                            <span className={styles.gameCompData}>PromoCode</span>
-                            <span className={styles.gameCompData} style={{paddingRight:40}}>Actions</span>
-                        </div>
-                        <div className={styles.promoListContainer}>
 
-                            {
-                                promoCodeList.map((e, index) => {
-                                    return <GameComponent key={index} index={index} id={e.PromoCode} active={e.active} />
-                                })
-                            }
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     )

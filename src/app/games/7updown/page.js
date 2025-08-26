@@ -82,10 +82,11 @@ function isLoggedIn() {
   return localStorage.getItem("userToken");
 }
 
-function getUid() {
-  // if (typeof window === "undefined") return null;
-  return "689ed0deca58facca988473c";
-}
+  function getUid() {
+    if (typeof window === "undefined") return "demo-user";
+    let userToken = localStorage.getItem("userToken");
+    return userToken;
+  }
 
 
 class AAACanvas {
@@ -261,7 +262,7 @@ export function BetOptions({ name, bet, icon, setBet, index, amnt, setAmnt, onPl
       {showStake && (
         <div className={styles.stakeDiv}>
           <div className={styles.stakeChoice}>
-            {[100, 200, 300, 400, 500, 1000].map((amt) => (
+            {[100, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 1000000].map((amt) => (
               <button
                 key={amt}
                 onClick={() => setAmnt(amt)}
@@ -333,7 +334,7 @@ const icons3 = [
   const [amnt, setAmnt] = useState(0);
   const [options] = useState(["UP", "SEVEN", "DOWN"]);
   const [options2] = useState(["BLACK", "RED"]);
-  const [options3] = useState(["CLUB", "HEARTS", "SPADES", "DIAMONDS"]);
+  const [options3] = useState(["CLUBS", "HEARTS", "SPADES", "DIAMONDS"]);
   const [bet, setBet] = useState(null);
 
   const canvasRef = useRef(null);
@@ -521,7 +522,6 @@ const icons3 = [
       <h2>7 Up Down</h2>
 
       <div className={styles.metaRow}>
-        <div>Balance: {balance}</div>
         <div>
           {round
             ? locked

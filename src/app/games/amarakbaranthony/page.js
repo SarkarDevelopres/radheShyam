@@ -229,10 +229,10 @@ export default function AmarAkbarAnthonyPage() {
   const roundIdRef = useRef(null);
 
   function getUid() {
-    // if (typeof window === "undefined") return null;
-    return "689ed0deca58facca988473c";
+    if (typeof window === "undefined") return "demo-user";
+    let userToken = localStorage.getItem("userToken");
+    return userToken;
   }
-  
   const icons1 = [
   <FaCaretUp key="up" style={{ color: "red" }} />,
   <TbPlayCardOff key="snap" style={{ color: "white" }} />,
@@ -262,7 +262,7 @@ const icons3 = [
 
   const [options] = useState(["AMAR", "AKBAR", "ANTHONY"]);
   const [options2] = useState(["BLACK", "RED"]);
-  const [options3] = useState(["CLUB", "HEARTS", "SPADES", "DIAMONDS"]);
+  const [options3] = useState(["CLUBS", "HEARTS", "SPADES", "DIAMONDS"]);
   const [bet, setBet] = useState(null);
   const [round, setRound] = useState(null);
   const [amnt, setAmnt] = useState(0);
@@ -482,7 +482,6 @@ const icons3 = [
       <h2>Amar Akbar Anthony</h2>
 
       <div className={styles.metaRow}>
-        <div>Balance: {balance}</div>
         <div>
           {round
             ? locked

@@ -1,28 +1,38 @@
-.sideBarMainDiv{
-    width: 12%;
-    height: 100%;
-    background-color: #073e8d;
-    position: relative;
-    /* top: 69px; */
+.sideBarMainDiv {
+  width: 12%;
+  height: 100%;
+  background-color: #073e8d;
+  position: relative;
+  /* top: 69px; */
 }
-.linksBar{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+.linksBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
-.linksBar a{
-    width: 100%;
-}
-
-.linksBar span{
-    display: block;
-    width: 100%;
-    padding: 20px;
-    font-size: 20px;
+.linksBar a {
+  width: 100%;
 }
 
-.linksBar span:hover{
-    cursor: pointer;
-    background-color: #010f76;
+.linksBar span {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.linksBar span:hover, .sideBarMainDiv button:hover {
+  cursor: pointer;
+  background-color: #010f76;
+}
+
+.sideBarMainDiv button {
+  border: none;
+  display: block;
+  width: 100%;
+  padding: 20px;
+  font-size: 20px;
+  background-color: transparent;
+  color: #3AE5FF;
 }
