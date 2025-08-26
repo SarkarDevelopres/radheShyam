@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import AdminSideBar from '../../../../components/AdminSideBar'
 import styles from '../admin.module.css'
 import { MdSearch } from "react-icons/md";
-function page() {
+function EmpPage() {
     const [employeeList, setEmployeeList] = useState([
         {id:63926391, name:"Nawed Arshad", email:"nawedarshad123@gmail.com", phone:973200290}, {id:63456731, name:"Sagnik Sarkar", email:"sagniksarkar123@gmail.com", phone:7001809047},
         {id:66974513, name:"Test User", email:"testmail@123@gmail.com", phone:7001864357},{id:63926391, name:"Nawed Arshad", email:"nawedarshad123@gmail.com", phone:973200290}, {id:63456731, name:"Sagnik Sarkar", email:"sagniksarkar123@gmail.com", phone:7001809047},
@@ -54,4 +54,4 @@ function page() {
     )
 }
 
-export default page
+export default EmpPage

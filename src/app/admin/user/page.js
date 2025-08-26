@@ -123,7 +123,7 @@ export function UserModal({ userData, closeWindow, fetchUsers }) {
     )
 }
 
-function page() {
+function UserPage() {
     const router = useRouter();
     const fetchTotalUsers = async () => {
         try {
@@ -304,4 +304,4 @@ function page() {
     )
 }
 
-export default page
+export default UserPage
