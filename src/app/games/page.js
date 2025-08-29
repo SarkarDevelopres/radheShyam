@@ -7,8 +7,7 @@ function Games() {
       {name:"highlow",image:"highlow.webp"},
       {name:"7updown",image:"7updown.webp"},
       {name:"dragontiger",image:"dragontiger.webp"},
-      {name:"amarakbaranthony",image:"aaa.webp"},
-      {name:"2cardteenpatti",image:"2cardteenpatti.webp"}
+      {name:"amarakbaranthony",image:"aaa.webp"}
     ])
   return (
     <div className={styles.mainDiv}>

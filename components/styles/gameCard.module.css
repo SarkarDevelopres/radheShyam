@@ -5,6 +5,7 @@
     background-size: cover;
     border-radius: 10px;
     transition: all 300ms ease-in-out;
+    margin-bottom: 20px;
 }
 .gameDiv:hover{
     cursor: pointer;
