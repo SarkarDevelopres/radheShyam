@@ -8,7 +8,7 @@ import MenuWindow from "./MenuWindow";
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function ClientShell({ children }) {
+function ClientShell({ children, number }) {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -26,7 +26,7 @@ function ClientShell({ children }) {
         pauseOnHover = {false}
         theme="colored"
         transition={Bounce} />
-      <WhatsAppComp />
+      <WhatsAppComp no={number} />
       {children}
       {menuOpen && (<MenuWindow onClose={() => setMenuOpen(false)} />)}
       <MobileNav onMenuClick={() => setMenuOpen(true)} onClose={() => setMenuOpen(false)} />

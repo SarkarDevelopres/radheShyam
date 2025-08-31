@@ -5,6 +5,7 @@ import { FaHome, FaCoins } from "react-icons/fa";
 import { TbPlayCard } from "react-icons/tb";
 import { CgCardHearts } from "react-icons/cg";
 import { IoMenu } from "react-icons/io5";
+import { MdSportsCricket } from "react-icons/md";
 import { useRouter, usePathname } from 'next/navigation';
 
 function MobileNav({ onMenuClick, onClose }) {
@@ -23,18 +24,23 @@ function MobileNav({ onMenuClick, onClose }) {
             router.push("/")
         }
         else if (name == "In-Play") {
-            cap.current.style.left = "25%";
+            cap.current.style.left = "20%";
+            onClose();
+            router.push("/live")
+        }
+        else if (name == "Sports") {
+            cap.current.style.left = "40%";
             onClose();
             router.push("/sports")
         }
         else if (name == "Games") {
-            cap.current.style.left = "50%";
+            cap.current.style.left = "60%";
             onClose();
             router.push("/games")
 
         }
         else {
-            cap.current.style.left = "75%";
+            cap.current.style.left = "80%";
             onMenuClick();
 
         }
@@ -45,13 +51,17 @@ function MobileNav({ onMenuClick, onClose }) {
             setCurrentTab("Home");
             cap.current.style.left = "0%";
         }
-        else if (pathName == "/sports") {
+        else if (pathName == "/live") {
             setCurrentTab("In-Play");
-            cap.current.style.left = "25%";
+            cap.current.style.left = "20%";
+        }
+        else if (pathName == "/sports") {
+            setCurrentTab("Sports");
+            cap.current.style.left = "40%";
         }
         else if (pathName == "/games") {
             setCurrentTab("Games");
-            cap.current.style.left = "50%";
+            cap.current.style.left = "60%";
 
         }
     }, [pathName])
@@ -75,6 +85,15 @@ function MobileNav({ onMenuClick, onClose }) {
                             <span>In-Play</span>
                         ) : (
                             <FaCoins onClick={() => handleChange("In-Play")} />
+                        )
+                    }
+                </div>
+                <div>
+                    {
+                        currentTab == "Sports" ? (
+                            <span>Sports</span>
+                        ) : (
+                            <MdSportsCricket onClick={() => handleChange("Sports")} />
                         )
                     }
                 </div>

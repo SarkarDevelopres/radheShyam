@@ -1,6 +1,6 @@
 "use client";
 
-import React,{ useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import styles from "../style.module.css";
 import { useRouter } from "next/navigation";
@@ -208,7 +208,7 @@ class AAACanvas {
     ctx.font = "14px system-ui";
     ctx.fillStyle = "#9AA4AF";
     ctx.textAlign = "center";
-        // ctx.restore();
+    // ctx.restore();
   }
 }
 
@@ -234,28 +234,28 @@ export default function AmarAkbarAnthonyPage() {
     return userToken;
   }
   const icons1 = [
-  <FaCaretUp key="up" style={{ color: "red" }} />,
-  <TbPlayCardOff key="snap" style={{ color: "white" }} />,
-  <FaCaretDown key="down" style={{ color: "black" }} />,
-];
+    <FaCaretUp key="up" style={{ color: "red" }} />,
+    <TbPlayCardOff key="snap" style={{ color: "white" }} />,
+    <FaCaretDown key="down" style={{ color: "black" }} />,
+  ];
 
-const icons2 = [
-  <React.Fragment key="black">
-    <GiClubs style={{ color: "black" }} /> 
-    <GiSpades style={{ color: "black" }} />
-  </React.Fragment>,
-  <React.Fragment key="red">
-    <GiHearts style={{ color: "red" }} />
-    <GiDiamonds style={{ color: "red" }} />
-  </React.Fragment>,
-];
+  const icons2 = [
+    <React.Fragment key="black">
+      <GiClubs style={{ color: "black" }} />
+      <GiSpades style={{ color: "black" }} />
+    </React.Fragment>,
+    <React.Fragment key="red">
+      <GiHearts style={{ color: "red" }} />
+      <GiDiamonds style={{ color: "red" }} />
+    </React.Fragment>,
+  ];
 
-const icons3 = [
-  <GiClubs key="club" style={{ color: "black" }} />,
-  <GiHearts key="heart" style={{ color: "red" }} />,
-  <GiSpades key="spade" style={{ color: "black" }} />,
-  <GiDiamonds key="diamond" style={{ color: "red" }} />,
-];
+  const icons3 = [
+    <GiClubs key="club" style={{ color: "black" }} />,
+    <GiHearts key="heart" style={{ color: "red" }} />,
+    <GiSpades key="spade" style={{ color: "black" }} />,
+    <GiDiamonds key="diamond" style={{ color: "red" }} />,
+  ];
 
 
   const [userId, setUserId] = useState("");
@@ -270,6 +270,13 @@ const icons3 = [
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isLocked, setLocked] = useState(false);
+
+  const normalizePick = (p) => {
+    const P = String(p || "").toUpperCase();
+    if (P === "UP") return "HIGH";
+    if (P === "DOWN") return "LOW";
+    return P; // SEVEN, RED/BLACK, suits etc.
+  };
 
   // canvas DPI + resize handling
   useEffect(() => {
@@ -314,7 +321,7 @@ const icons3 = [
         socket.emit("wallet:fetch", { userId: uid2 }, (res) => {
           if (res?.ok) {
             console.log(res);
-            
+
             setBalance(res._doc.balance || 0)
           };
         });
@@ -344,21 +351,26 @@ const icons3 = [
       if (payload?.roundId) roundIdRef.current = payload.roundId;
       const faceKey = faceKeyFromServer(payload?.card || payload?.result?.card || payload?.meta?.card);
       const pick = String(aaaRef.current?.state?.userPick || "").toUpperCase();
-      const outcome = String(payload?.outcome || payload?.result?.outcome || "").toUpperCase();
       let win = null;
-      if (pick && (outcome === "AMAR" || outcome === "AKBAR" || outcome === "ANTHONY")) {
-        win = (pick === outcome);
+      console.log("PICK:", pick);
+      console.log("RESULT:", payload);
+      const cardObj = { ...payload.card };
+      const suit = String(cardObj.suit).toUpperCase();
+      const deriveGroup = (s) => {
+        if (s === "HEARTS" || s === "DIAMONDS") return "RED";
+        if (s === "CLUBS" || s === "SPADES") return "BLACK";
+        return "";
+      };
+      const outcome = payload?.akbar ? "AKBAR" : payload?.amar ? "AMAR" : payload?.anthony ? "ANTHONY" : "";
+      let group = deriveGroup(suit)
+      if (pick === outcome || pick === suit || pick === group) {
+        win = true;
       }
-      // const uid2 = getUid();
-      // if (uid2) {
-      //   socket.emit("wallet:fetch", { userId: uid2 }, (res) => {
-      //     if (res?.ok) {
-      //       console.log(res);
-            
-      //       setBalance(res._doc.balance || 0)
-      //     };
-      //   });
-      // }
+
+      if (aaaRef.current.state.userPick) {
+        canvasRef.current.style.transition = "background-color 300ms ease";
+        canvasRef.current.style.backgroundColor = win ? "#057a22ff" : "#740d0dff";
+      }
       aaaRef.current?.showResult(faceKey, win);
     });
 
@@ -413,7 +425,7 @@ const icons3 = [
 
     // 2) pick validation (AMAR/AKBAR/ANTHONY)
     const market = String(pick || "").toUpperCase();
-    if (!["AMAR", "AKBAR", "ANTHONY","BLACK","RED","HEARTS","CLUBS","SPADES","DIAMONDS"].includes(market)) {
+    if (!["AMAR", "AKBAR", "ANTHONY", "BLACK", "RED", "HEARTS", "CLUBS", "SPADES", "DIAMONDS"].includes(market)) {
       toast?.error?.("Select valid bet.");
       return;
     }

@@ -70,7 +70,8 @@ useEffect(() => {
       </div>
       <div className={styles.navLinks}>
         <Link href="/">Home</Link>
-        <Link href="/sports">In-Play</Link>
+        <Link href="/live">In-Play</Link>
+        <Link href="/sports">Sports</Link>
         <Link href="/games">Games</Link>
         {isUser ? (
           <div className={styles.balanceSpan}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React,{ useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { io } from "socket.io-client";
 import styles from "../style.module.css";
 import { useRouter } from "next/navigation";
@@ -245,28 +245,28 @@ export default function HighLowPage() {
   const roundIdRef = useRef(null);
 
   const icons1 = [
-  <FaCaretUp key="up" style={{ color: "red" }} />,
-  <TbPlayCardOff key="snap" style={{ color: "white" }} />,
-  <FaCaretDown key="down" style={{ color: "black" }} />,
-];
+    <FaCaretUp key="up" style={{ color: "red" }} />,
+    <TbPlayCardOff key="snap" style={{ color: "white" }} />,
+    <FaCaretDown key="down" style={{ color: "black" }} />,
+  ];
 
-const icons2 = [
-  <React.Fragment key="black">
-    <GiClubs style={{ color: "black" }} />
-    <GiSpades style={{ color: "black" }} />
-  </React.Fragment>,
-  <React.Fragment key="red">
-    <GiHearts style={{ color: "red" }} />
-    <GiDiamonds style={{ color: "red" }} />
-  </React.Fragment>,
-];
+  const icons2 = [
+    <React.Fragment key="black">
+      <GiClubs style={{ color: "black" }} />
+      <GiSpades style={{ color: "black" }} />
+    </React.Fragment>,
+    <React.Fragment key="red">
+      <GiHearts style={{ color: "red" }} />
+      <GiDiamonds style={{ color: "red" }} />
+    </React.Fragment>,
+  ];
 
-const icons3 = [
-  <GiClubs key="club" style={{ color: "black" }} />,
-  <GiHearts key="heart" style={{ color: "red" }} />,
-  <GiSpades key="spade" style={{ color: "black" }} />,
-  <GiDiamonds key="diamond" style={{ color: "red" }} />,
-];
+  const icons3 = [
+    <GiClubs key="club" style={{ color: "black" }} />,
+    <GiHearts key="heart" style={{ color: "red" }} />,
+    <GiSpades key="spade" style={{ color: "black" }} />,
+    <GiDiamonds key="diamond" style={{ color: "red" }} />,
+  ];
 
 
 
@@ -325,6 +325,7 @@ const icons3 = [
 
     socket.on("round:start", (payload) => {
       setLoading(false);
+      canvasRef.current.style.backgroundColor = "#0b1920";
       hlRef.current?.startRound();
       const rid = payload?._id || payload?.id || payload?.roundId;
       if (rid) {
@@ -375,12 +376,30 @@ const icons3 = [
       setLoading(false);
       if (payload?.roundId) roundIdRef.current = payload.roundId;
       const nextKey = faceKeyFromServer(payload?.nextCard);
-      const pick = hlRef.current?.state?.userPick;
-      const outcome = String(payload?.outcome || "").toUpperCase();
+      const pick = String(hlRef.current?.state?.userPick).toUpperCase();
+      console.log(pick);
+      console.log("Result: ", payload);
+      const cardObj = { ...payload.nextCard };
+      const suit = String(cardObj.suit).toUpperCase();
+      const deriveGroup = (s) => {
+        if (s === "HEARTS" || s === "DIAMONDS") return "RED";
+        if (s === "CLUBS" || s === "SPADES") return "BLACK";
+        return "";
+      };
       let win = null;
-      if (pick && (outcome === "HIGH" || outcome === "LOW")) {
-        win = outcome.toLowerCase() === pick.toLowerCase();
+      let group = deriveGroup(suit)
+      if (pick === payload?.outcome || pick === suit || pick === group) {
+        win = true;
       }
+
+      if (hlRef.current.state.userPick) {
+        canvasRef.current.style.backgroundColor = win ? "#057a22ff" : "#740d0dff";
+      }
+      console.log("SUIT: ",suit);
+
+      // if (pick && (outcome === "HIGH" || outcome === "LOW")) {
+      //   win = outcome.toLowerCase() === pick.toLowerCase();
+      // }
       hlRef.current?.showResult(nextKey, win);
 
       // unlock for next round will happen on round:end, but if your engine starts immediately, you can also reset here later
@@ -490,6 +509,7 @@ const icons3 = [
       (res) => {
         if (!res?.ok) {
           toast.error(res?.error || "Failed to place bet.");
+          hlRef.current?.setPick?.(null);
           return;
         }
         if (typeof res.balance !== "undefined") {

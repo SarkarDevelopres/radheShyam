@@ -1,10 +1,12 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import styles from "./styles/whatsapp.module.css"
 import Link from 'next/link'
-function WhatsAppComp() {
+function WhatsAppComp({no}) {
+
   return (
-    <Link className={styles.mainDiv} href='https://wa.me/917001809047/' target="_blank">
-        <img src='/whatsapp-icon.png'/>
+    <Link className={styles.mainDiv} href={`https://wa.me/${no}/`} target="_blank">
+      <img src='/whatsapp-icon.png' />
     </Link>
   )
 }

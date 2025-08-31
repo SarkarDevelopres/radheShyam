@@ -9,6 +9,7 @@ function AdminSideBar({ page }) {
     let user = (<span>Users</span>)
     let set = (<span>Settings</span>)
     let game = (<span>Games</span>)
+    let tv = (<span>Live TV</span>)
     let trans = (<span>Transaction</span>)
     if (page == "home") {
         home = (<span style={{ backgroundColor: '#010f76' }}>General</span>)
@@ -21,6 +22,9 @@ function AdminSideBar({ page }) {
     }
     else if (page == "game") {
         game = (<span style={{ backgroundColor: '#010f76' }}>Games</span>)
+    }
+    else if (page == "tv") {
+        tv = (<span style={{ backgroundColor: '#010f76' }}>Live TV</span>)
     }
     else if (page == "trans") {
         trans = (<span style={{ backgroundColor: '#010f76' }}>Transaction</span>)
@@ -46,6 +50,7 @@ function AdminSideBar({ page }) {
                 <Link href={'/admin/employee'}>{emp}</Link>
                 <Link href={'/admin/user'}>{user}</Link>
                 <Link href={'/admin/games'}>{game}</Link>
+                <Link href={'/admin/tv'}>{tv}</Link>
                 <Link href={'/admin/transaction'}>{trans}</Link>
                 <Link href={'/admin/setting'}>{set}</Link>
                 <button onClick={logOut}>Log Out</button>

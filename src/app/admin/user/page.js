@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import AdminS_ideBar from '../../../../components/AdminSideBar'
+import AdminSideBar from '../../../../components/AdminSideBar'
 import styles from '../admin.module.css'
 import { MdSearch } from "react-icons/md";
 import { toast } from 'react-toastify';
@@ -218,7 +218,7 @@ function UserPage() {
 
     return (
         <div className={styles.mainDiv}>
-            <AdminS_ideBar page={"usr"} />
+            <AdminSideBar page={"usr"} />
             <div className={styles.adminMainContent}>
                 {
                     showUserModal && <UserModal userData={currentUser} closeWindow={() => setShowUserModal(false)} fetchUsers={fetchTotalUsers} />

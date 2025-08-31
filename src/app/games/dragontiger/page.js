@@ -435,8 +435,9 @@ const icons5 = [
             // console.log(canvasRef.current.style)
             // Simple feedback color (optional)
             try {
-                if (canvasRef.current) {
-                    canvasRef.current.style.backgroundColor = win ? "#0d2914" : "#2b0d0d";
+                if (canvasRef.current && hlRef.current.state.userPick) {
+                    canvasRef.current.style.transition = "background-color 300ms ease";
+                    canvasRef.current.style.backgroundColor = win ? "#057a22ff" : "#740d0dff";
                 }
             } catch (_) { }
 

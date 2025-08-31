@@ -25,7 +25,7 @@
 .dataCard {
   display: flex;
   /* justify-content: space-between; */
-  width: 23%;
+  width: 22%;
   background-color: #2e2d2f;
   padding: 20px 10px;
   align-items: center;
@@ -39,10 +39,50 @@
 
 .dataDetails {
   padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .dataDetails p {
   margin-bottom: 10px;
+}
+
+.dataCard:last-child{
+  width: 48%;
+}
+
+.dataCard:last-child  .dataDetails{
+  width: 100%;
+  padding-left: 0px;
+}
+
+.noField{
+  display: flex;
+}
+
+.noField button{
+  width: 18%;
+  border-radius: 10px;
+  padding: 5px;
+  border: none;
+  outline: none;
+  background-color: #3AE5FF;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  color: #02285e;
+}
+
+.noField button:hover{
+  background-color: #073e8d;
+  color: white;
+}
+
+.dataDetails input{
+  width: 80%;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(255,255,255,0.3);
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .graphZone,
@@ -543,4 +583,10 @@ input:checked + .slider::before {
 
 .userModalDiv button:hover {
   background-color: #02285e;
+}
+
+.eventsListDiv{
+  border-radius: 15px;
+  background-color: #2e2d2f;
+  padding: 20px;
 }

@@ -45,7 +45,9 @@ export default function Home() {
   const [oddsData, setOddsData] = useState({
     cricket:[],
     soccer:[],
-    tennis:[]
+    tennis:[],
+    basketball:[],
+    baseball:[],
   });
 
   const fetchData = async (sports) => {
@@ -65,6 +67,12 @@ export default function Home() {
       else if (sports=="tennis") {
         setOddsData((p) => ({ ...p, tennis: [...res.data] }));
       }
+      else if (sports=="basketball") {
+        setOddsData((p) => ({ ...p, basketball: [...res.data] }));
+      }
+      else if (sports=="baseball") {
+        setOddsData((p) => ({ ...p, baseball: [...res.data] }));
+      }
     }
     else {
       console.log(res);
@@ -79,6 +87,8 @@ export default function Home() {
     fetchData("cricket");
     fetchData("soccer");
     fetchData("tennis");
+    fetchData("baseball");
+    fetchData("basketball");
   }, [])
 
   return (
@@ -111,6 +121,8 @@ export default function Home() {
       <SportsSection sportName={"Cricket"} image={"/cricketicon.png"} matchList={oddsData.cricket}/>
       <SportsSection sportName={"Football"} image={"/fotballicon.png"} matchList={oddsData.soccer}/>
       <SportsSection sportName={"Tennis"} image={"/tennisicon.png"} matchList={oddsData.tennis}/>
+      <SportsSection sportName={"Basketball"} image={"/basketballicon.png"} matchList={oddsData.basketball}/>
+      <SportsSection sportName={"Baseball"} image={"/baseballicon.png"} matchList={oddsData.baseball}/>
     </div>
   );
 }

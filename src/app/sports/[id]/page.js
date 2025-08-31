@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from './sportStyles.module.css'
 import { Spinner } from 'react-bootstrap'
+import Loading from '../../../../components/Loading'
 function GameComp() {
   const tvRef = useRef(null);
   const spinRef = useRef(null);
@@ -9,9 +10,10 @@ function GameComp() {
   const btnRef = useRef(null);
 
   const [tvOn, setTvOn] = useState(false);
-  const [gameDetails, setGameDetails] = useState({
-    home:'',
-    away:''
+  const [isLoading, setIsLoading] = useState(true);
+  const [oddsData, setOddsData] = useState({
+    home: '',
+    away: ''
   });
   const openTV = () => {
     if (!tvOn) {
@@ -27,10 +29,16 @@ function GameComp() {
       btnSpan.current.style.marginLeft = "0px";
     }
   }
-  const fetchData = async (sports) => {
-    console.log("SPORTS: ", sports);
-
-    let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/${sports}`);
+  const fetchData = async (id) => {
+    let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/matchOdds`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'  // or other content type if needed
+      },
+      body: JSON.stringify({
+        "matchId": id
+      })
+    });
 
     let res = await req.json();
     if (res.success) {
@@ -46,14 +54,16 @@ function GameComp() {
   useEffect(() => {
     let home = localStorage.getItem("home");
     let away = localStorage.getItem("away");
-    setGameDetails({
-      home:home,
-      away:away
+    setOddsData({
+      home: home,
+      away: away
     })
+    // setIsLoading(false)
   }, [])
 
   return (
     <div className={styles.mainDiv}>
+      {isLoading && <Loading />}
       <div className={styles.liveTVDiv}>
         <div className={styles.tvHead}>
           <h3>Live TV</h3>
@@ -72,14 +82,14 @@ function GameComp() {
         </div>
         <div className={styles.oddsComp}>
           <div className={styles.teamDiv}>
-            <p>{gameDetails.home}</p>
+            <p>{oddsData.home}</p>
             <div className={styles.betButtons}>
               <button>2.8</button>
               <button>3.5</button>
             </div>
           </div>
           <div className={styles.teamDiv}>
-            <p>{gameDetails.away}</p>
+            <p>{oddsData.away}</p>
             <div className={styles.betButtons}>
               <button>2.1</button>
               <button>2.7</button>

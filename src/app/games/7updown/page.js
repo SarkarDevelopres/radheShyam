@@ -82,11 +82,11 @@ function isLoggedIn() {
   return localStorage.getItem("userToken");
 }
 
-  function getUid() {
-    if (typeof window === "undefined") return "demo-user";
-    let userToken = localStorage.getItem("userToken");
-    return userToken;
-  }
+function getUid() {
+  if (typeof window === "undefined") return "demo-user";
+  let userToken = localStorage.getItem("userToken");
+  return userToken;
+}
 
 
 class AAACanvas {
@@ -134,6 +134,7 @@ class AAACanvas {
   }
 
   setPick(pick) { this.state.userPick = pick; this.render(); }
+  setWin(flag) { this.state.win = (flag === null ? null : !!flag); this.render(); }
   startRound() {
     this.state = { phase: "bet", cardFaceKey: null, userPick: null, win: null };
     this.slot.flip = 0;
@@ -146,7 +147,7 @@ class AAACanvas {
     this.state.cardFaceKey = faceKey;
     this._flip(this.slot, () => { this.render(); });
   }
-  
+
   flipBack() {
     this.state.phase = "idle";
     // start with current face
@@ -216,14 +217,6 @@ class AAACanvas {
 
     // Optional status text
     ctx.save();
-    ctx.font = "14px system-ui";
-    ctx.fillStyle = "#9AA4AF";
-    ctx.textAlign = "center";
-    const msg =
-      this.state.phase === "bet" ? "Bets open…" :
-        this.state.phase === "result" ? (this.state.win === null ? "Result" : (this.state.win ? "You Win" : "You Lose")) :
-          "Waiting…";
-    ctx.fillText(msg, w / 2, this.slot.y + this.cardH + 18);
     ctx.restore();
   }
 }
@@ -302,34 +295,32 @@ function SevenUpDown() {
   const router = useRouter();
 
   const icons1 = [
-  <FaCaretUp key="up" style={{ color: "red" }} />,
-  <TbPlayCard7 key="snap" style={{ color: "white" }} />,
-  <FaCaretDown key="down" style={{ color: "black" }} />,
-];
+    <FaCaretUp key="up" style={{ color: "red" }} />,
+    <TbPlayCard7 key="snap" style={{ color: "white" }} />,
+    <FaCaretDown key="down" style={{ color: "black" }} />,
+  ];
 
-const icons2 = [
-  <React.Fragment key="black">
-    <GiClubs style={{ color: "black" }} /> 
-    <GiSpades style={{ color: "black" }} />
-  </React.Fragment>,
-  <React.Fragment key="red">
-    <GiHearts style={{ color: "red" }} />
-    <GiDiamonds style={{ color: "red" }} />
-  </React.Fragment>,
-  <GiClubs key="club" style={{ color: "black" }} />,
-  <GiHearts key="heart" style={{ color: "red" }} />,
-  <GiSpades key="spade" style={{ color: "black" }} />,
-  <GiDiamonds key="diamond" style={{ color: "red" }} />,
-];
+  const icons2 = [
+    <React.Fragment key="black">
+      <GiClubs style={{ color: "black" }} />
+      <GiSpades style={{ color: "black" }} />
+    </React.Fragment>,
+    <React.Fragment key="red">
+      <GiHearts style={{ color: "red" }} />
+      <GiDiamonds style={{ color: "red" }} />
+    </React.Fragment>,
+    <GiClubs key="club" style={{ color: "black" }} />,
+    <GiHearts key="heart" style={{ color: "red" }} />,
+    <GiSpades key="spade" style={{ color: "black" }} />,
+    <GiDiamonds key="diamond" style={{ color: "red" }} />,
+  ];
 
-const icons3 = [
-  <GiClubs key="club" style={{ color: "black" }} />,
-  <GiHearts key="heart" style={{ color: "red" }} />,
-  <GiSpades key="spade" style={{ color: "black" }} />,
-  <GiDiamonds key="diamond" style={{ color: "red" }} />,
-];
-
-
+  const icons3 = [
+    <GiClubs key="club" style={{ color: "black" }} />,
+    <GiHearts key="heart" style={{ color: "red" }} />,
+    <GiSpades key="spade" style={{ color: "black" }} />,
+    <GiDiamonds key="diamond" style={{ color: "red" }} />,
+  ];
 
   const [amnt, setAmnt] = useState(0);
   const [options] = useState(["UP", "SEVEN", "DOWN"]);
@@ -337,19 +328,29 @@ const icons3 = [
   const [options3] = useState(["CLUBS", "HEARTS", "SPADES", "DIAMONDS"]);
   const [bet, setBet] = useState(null);
 
+  const betRef = useRef(bet);
   const canvasRef = useRef(null);
   const aaaRef = useRef(null);
   const socketRef = useRef(null);
   const roundIdRef = useRef(null);
   const resultRef = useRef(null);
+  const currentPickRef = useRef(null);
+  const currentPickRoundRef = useRef(null);
 
   const [userId, setUserId] = useState("");
-  const [round, setRound] = useState(null); // { id, startAt, betsCloseAt, resultAt, endAt, status }
+  const [round, setRound] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [balance, setBalance] = useState(0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isLocked, setLocked] = useState(false);
+
+  const normalizePick = (p) => {
+    const P = String(p || "").toUpperCase();
+    if (P === "UP") return "HIGH";
+    if (P === "DOWN") return "LOW";
+    return P; // SEVEN, RED/BLACK, suits etc.
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -374,6 +375,10 @@ const icons3 = [
     const t = setInterval(() => setNow(Date.now()), 200);
     return () => clearInterval(t);
   }, []);
+
+  useEffect(() => {
+    betRef.current = bet;
+  }, [bet]);
 
   // Connect socket once
   useEffect(() => {
@@ -405,11 +410,16 @@ const icons3 = [
 
     socket.on("round:start", (r) => {
       // r should contain: id, startAt, betsCloseAt, resultAt, endAt, status
+      canvasRef.current.style.backgroundColor = "#0b1920";
       setLoading(false)
       if (resultRef.current) resultRef.current.style.opacity = 0;
       setRound(r);
       setResult(null);
       aaaRef.current?.flipBack()
+      currentPickRef.current = null;
+      currentPickRoundRef.current = r?.id || null;
+      setBet(null);           // clear UI selection for the new round
+      setLocked(false);
     });
 
     socket.on("round:lock", () => {
@@ -419,17 +429,54 @@ const icons3 = [
       setRound((prev) => (prev ? { ...prev, status: "LOCKED" } : prev));
     });
 
-    // Expecting server to emit dice details for 7updown
     socket.on("round:result", (res) => {
-      setLoading(false)
+      setLoading(false);
 
+      const serverRoundId = res?.roundId || roundIdRef.current || null;
       if (res?.roundId) roundIdRef.current = res.roundId;
+
       const faceKey = faceKeyFromServer(res?.card || res?.result?.card || res?.meta?.card);
-      const pick = String(aaaRef.current?.state?.userPick || "").toUpperCase();
-      const outcome = String(res?.outcome || res?.result?.outcome || "").toUpperCase();
+
+      // Use the pick only if it was placed for THIS round
+      const pick = (currentPickRoundRef.current === serverRoundId)
+        ? currentPickRef.current
+        : null;
+
+      // If user didn’t participate, just reveal the card & exit (no win/lose)
+      if (!pick) {
+        aaaRef.current?.setWin?.(null);
+        aaaRef.current?.showResult(faceKey);
+        setLocked(false);
+        return;
+      }
+
+      // Get server outcome facets safely
+      const outcome = res?.seven ? "SEVEN" : res?.high ? "HIGH" : res?.low ? "LOW" : "";
+      const suit = String(res?.suit || res?.result?.suit || res?.meta?.suit || "").toUpperCase();
+      const group =
+        String(res?.group || res?.result?.group || res?.meta?.group || "").toUpperCase()
+        || ((suit === "HEARTS" || suit === "DIAMONDS") ? "RED"
+          : (suit === "CLUBS" || suit === "SPADES") ? "BLACK" : "");
+
+      const win = [outcome, group, suit].includes(pick);
+
+      // reflect on canvas (prefer class method; fallback to canvas bg flash)
+      if (typeof aaaRef.current?.setWin === "function") {
+        aaaRef.current.setWin(win);
+      }
+      if (canvasRef.current) {
+        canvasRef.current.style.transition = "background-color 300ms ease";
+        canvasRef.current.style.backgroundColor = win ? "#057a22ff" : "#740d0dff";
+      }
+
       aaaRef.current?.showResult(faceKey);
-      setLocked(false)
+      setResult(win ? "You Win" : "You Lose");
+      setLocked(false);
     });
+
+
+
+
 
     socket.on("disconnect", (reason) => {
       console.log("Socket disconnected:", reason);
@@ -460,7 +507,7 @@ const icons3 = [
   async function placeBet() {
     const token = isLoggedIn();
     if (!token) {
-      alert("Log in to place bets!");
+      toast.error("Log in to place bets!");
       router.push("/login");
       return;
     }
@@ -505,7 +552,11 @@ const icons3 = [
           alert(res?.error || "Failed to place bet.");
           return;
         }
+        console.log(bet);
+
         setBalance(res.balance ?? balance);
+        currentPickRef.current = normalizePick(selection);
+        currentPickRoundRef.current = round.id;
         setBet(null);
         setAmnt(0);
         toast.success(`Bet placed on ${selection} for ${s}.`, {

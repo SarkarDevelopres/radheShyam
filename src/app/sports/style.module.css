@@ -15,7 +15,7 @@
     width: 50%;
     justify-content: space-between;
     background-color: #012167;
-    border-radius: 20px;
+    border-radius: 40px;
     position: relative;
 }
 .sportsSelectBar div{
@@ -24,11 +24,11 @@
     transition: all 300ms ease-in-out;
 }
 .capsule{
-    width: 33%;
+    width: 20%;
     position: absolute;
     height: 100%;
     left: 0%;
-    border-radius: 20px;
+    border-radius: 40px;
     background-color: #02D4F4;
     transition: all 300ms ease-in-out;
 }
@@ -58,6 +58,39 @@
     
 }
 
+.sportsHead{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #02D4F4;
+    width: 80%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+.sportsHead h3{
+    margin-bottom: 0px;
+    color: #012167;
+    font-weight: 600;
+    margin-right: 10px;
+}
+.sportsHead svg{
+    font-size: 1.5rem;
+}
+
+.betsList .sportsField:first-child{
+    margin-top: 30px;
+}
+
+.sportsField{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+
+
 @media screen and (max-width: 480px) {
     .mainDiv{
         padding: 20px;
@@ -65,7 +98,7 @@
     .sportsSelectBar{
         width: 100%;
     }
-    .oddsGroup{
+    .oddsGroup, .sportsHead{
         width: 100%;
     }
 }

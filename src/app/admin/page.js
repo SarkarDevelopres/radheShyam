@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import AdminSideBar from '../../../components/AdminSideBar'
 import styles from './admin.module.css'
 import { MdPersonOutline, MdInstallMobile } from "react-icons/md";
+import { toast } from 'react-toastify';
 import { IoGameControllerOutline } from "react-icons/io5";
 import { BsCashCoin } from "react-icons/bs";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -17,6 +18,7 @@ ChartJS.register(
 import { Pie } from 'react-chartjs-2';
 import { Line } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
+import { useRouter } from 'next/navigation';
 
 export function LastGameComponent({ index, type, players, fee }) {
     const [normalDate, setNormalDate] = useState("");
@@ -52,9 +54,10 @@ function Admin() {
     const [totaltypes, setTotaltypes] = useState(4)
     const [activeGames, setActiveGames] = useState(5)
     const [revenueToday, setRevenueToday] = useState(4562)
-    const [installs, setInstalls] = useState(2)
+    const [whatsAppNo, setWhatsAppNo] = useState()
     const [lastGames, setLastGames] = useState([])
     const [lastTransaction, setLastTransaction] = useState([])
+    const router = useRouter();
 
     const fetchGameLogs = async () => {
         try {
@@ -158,7 +161,7 @@ function Admin() {
     }
     const fetchTransactionAmount = async () => {
         try {
-           
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/todayTransactions`, {
                 method: "POST",
                 headers: {
@@ -179,6 +182,50 @@ function Admin() {
         }
     }
 
+    const fecthWhatsapp = async () => {
+        try {
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/getNum`);
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            // console.log(data.rounds);
+            setWhatsAppNo(data.data.phone);
+        } catch (err) {
+            console.error("Fetch error:", err);
+            return null;
+        }
+    }
+
+    const changeWhastapp = async () => {
+
+        const adminToken = localStorage.getItem("adminToken");
+        if (!adminToken) throw new Error("No admin token found");
+        const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/chngWhatsapp`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${adminToken}`,
+            },
+            body: JSON.stringify({
+                "phone": parseInt(whatsAppNo)
+            })
+        });
+
+        const res = await req.json();
+        if (res.ok) {
+            toast.success(`${res.message}`);
+            router.refresh();
+        }
+        else {
+            toast.error(`${res.message}`)
+        }
+        console.log(res);
+    }
+
 
     useEffect(() => {
         fetchGameLogs()
@@ -186,6 +233,7 @@ function Admin() {
         fetchTotalGames()
         fetchTotalUsers()
         fetchTransactionAmount()
+        fecthWhatsapp()
     }, [])
 
 
@@ -262,13 +310,6 @@ function Admin() {
                 <h2>Welcome Sir,</h2>
                 <div className={styles.dataCardList}>
                     <div className={styles.dataCard}>
-                        <MdPersonOutline className={styles.dataIcon} />
-                        <div className={styles.dataDetails}>
-                            <p>Total Games</p>
-                            <h3>{totaltypes}</h3>
-                        </div>
-                    </div>
-                    <div className={styles.dataCard}>
                         <IoGameControllerOutline className={styles.dataIcon} />
                         <div className={styles.dataDetails}>
                             <p>Played Games</p>
@@ -278,15 +319,17 @@ function Admin() {
                     <div className={styles.dataCard}>
                         <BsCashCoin className={styles.dataIcon} />
                         <div className={styles.dataDetails}>
-                            <p>{`Revenue (Today)`}</p>
+                            <p>{`Revenue Today`}</p>
                             <h3>{revenueToday}</h3>
                         </div>
                     </div>
                     <div className={styles.dataCard}>
-                        <MdInstallMobile className={styles.dataIcon} />
                         <div className={styles.dataDetails}>
-                            <p>{`No.of Installs`}</p>
-                            <h3>{installs}</h3>
+                            <p>{`Whatsapp No.`}</p>
+                            <div className={styles.noField}>
+                                <input value={whatsAppNo} onChange={(e)=>setWhatsAppNo(e.target.value)} />
+                                <button onClick={changeWhastapp}>Change</button>
+                            </div>
                         </div>
                     </div>
                 </div>

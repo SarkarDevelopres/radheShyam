@@ -83,12 +83,13 @@ function OddComponent({ data }) {
      const goToMatchPage = () => {
         localStorage.setItem("home",data.home);
         localStorage.setItem("away",data.away);
+        localStorage.setItem("matchId",data.matchId);
         router.push(`/sports/${data.matchId}`)
      }
     return (
         <div className={styles.oddMainComp} onClick={() => moveIt()}>
             <div className={styles.OddDetails}>
-                <span className={styles.liveIndicator} />
+                <span className={styles.liveIndicator} style={{backgroundColor:data.isLive?"#00b728":"#a0a0a0ff"}} />
                 <div className={styles.teamMatchDetails} >
                     <p onClick={goToMatchPage}>{`${data.home} vs ${data.away}`}</p>
                     <span>{`${data.displayableTime} | ${data.title}`}</span>

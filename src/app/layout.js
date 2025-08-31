@@ -21,13 +21,26 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+async function getNumber() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/getNum`,
+    { cache: "no-store" } // prevent caching
+  );
 
+  if (!res.ok) throw new Error("Failed to fetch phone number");
+
+  const data = await res.json();
+  return data.data.phone;
+}
+
+export default async function RootLayout({ children }) {
+
+  const no = await getNumber();
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ClientShell>{children}</ClientShell>
+        <ClientShell number={no}>{children}</ClientShell>
       </body>
     </html>
   );
