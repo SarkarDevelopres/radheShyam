@@ -590,3 +590,36 @@ input:checked + .slider::before {
   background-color: #2e2d2f;
   padding: 20px;
 }
+.gameListDiv{
+  padding: 10px;
+}
+
+.inputDiv{
+  display: flex;
+  justify-content: space-between;
+}
+
+.inputDiv input{
+  padding: 5px;
+  border-radius: 5px;
+  width: 60%;
+  outline: none;
+  border: 1px solid rgb(255,255,255,0.3);
+}
+.inputDiv select{
+  width: 20%;
+  border: 1px solid rgb(255,255,255,0.3);
+  border-radius: 5px;
+}
+.inputDiv button{
+  width: 20%;
+  border: none;
+  border-radius: 5px;
+  background-color: #073e8d;
+
+  transition: all 300ms ease-in-out;
+}
+
+.inputDiv button:hover{
+  background-color: #02285e;
+}
