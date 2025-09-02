@@ -144,3 +144,18 @@
   color: #008ae6;
   cursor: pointer;
 }
+
+.inputDiv{
+  padding: 20px;
+  padding-bottom: 0px;
+}
+.inputDiv input{
+  padding: 5px;
+  border-radius: 10px;
+  outline: none;
+  background-color: #008ae6;
+  border: none;
+  width: 100%;
+  color: #012167;
+  font-weight: 600;
+}

@@ -11,6 +11,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
   const [amount, chooseAmount] = useState(null);
+  const [customStake, setCustomStake] = useState(null);
   const [odds, setOdds] = useState('');
   const [team, setTeam] = useState('');
   const [lay, setLay] = useState(false);
@@ -29,20 +30,8 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
       return; // stop here
     }
 
-    let betObj = {
-      token: loggedIn,
-      matchId: meta.matchId,
-      title: meta.sportkey,
-      market: market,
-      bookmakerKey: bookmaker,
-      selection: team,
-      stake: amount,
-      odds: odds,
-      lay: lay,
-    }
 
-    console.log(betObj);
-
+    const amnt = customStake?parseInt(customStake):amount;
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
       method: 'POST',
@@ -57,7 +46,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
         market: market,
         bookmakerKey: bookmaker,
         selection: team,
-        stake: amount,
+        stake: amnt,
         odds: odds,
         lay: lay,
       }),
@@ -72,7 +61,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
     if (response.ok) {
       console.log(response);
 
-      toast.success("Bet Successfully Placed!");
+      toast.success(`Bet Placed for ${amnt}!`);
       setShowStake(false);
     }
 
@@ -101,6 +90,9 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
+        <div className={styles.inputDiv}>
+          <input type="number" value={customStake} onChange={(e) => setCustomStake(e.target.value)} />
+        </div>
         <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
           {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
             <button
@@ -135,7 +127,7 @@ function GameComp() {
   const openTV = () => {
     if (!tvOn) {
       tvRef.current.style.height = "200px";
-      spinRef.current.style.display = metaData.streamLink.link?"none":"block";
+      spinRef.current.style.display = metaData.streamLink.link ? "none" : "block";
       btnRef.current.style.backgroundColor = "block";
       btnSpan.current.style.marginLeft = "25px";
       setTvOn(true)
@@ -175,7 +167,7 @@ function GameComp() {
   useEffect(() => {
     let id = localStorage.getItem("matchId");
     console.log(id);
-    
+
     fetchData(id);
   }, [])
 
@@ -190,15 +182,15 @@ function GameComp() {
           </button>
         </div>
         <div className={styles.tvWrapper}>
-        <iframe
-          ref={tvRef}
-          className={styles.tvDiv}
-          src={metaData?.streamLink?.link}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
-        </iframe>
+          <iframe
+            ref={tvRef}
+            className={styles.tvDiv}
+            src={metaData?.streamLink?.link}
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
+          </iframe>
 
-        <Spinner ref={spinRef} className={styles.spinnerComp} />
+          <Spinner ref={spinRef} className={styles.spinnerComp} />
         </div>
       </div>
       <div className={styles.topScoreDiv}></div>

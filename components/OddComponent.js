@@ -6,6 +6,7 @@ function OddComponent({ data }) {
     const [amnt, setAmnt] = useState(0);
     const [team, setTeam] = useState(null);
     const [showStake, setShowStake] = useState(false);
+    const [customStake, setCustomStake] = useState(null);
     const router = useRouter();
     const moveIt = () => {
         // router.push(`/sports/game/${data.matchId}`)
@@ -34,6 +35,7 @@ function OddComponent({ data }) {
         }
 
         const odds = data.odds[team].price;
+        const amount = customStake?parseInt(customStake):amnt;
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
             method: 'POST',
@@ -48,7 +50,7 @@ function OddComponent({ data }) {
                 market: data.market,
                 bookmakerKey: data.bookmakerKey,
                 selection: data.odds[team].name,
-                stake: amnt,
+                stake: amount,
                 odds,
             }),
         });
@@ -62,7 +64,7 @@ function OddComponent({ data }) {
         if (response.ok) {
             console.log(response);
             
-            toast.success("Bet Successfully Placed!");
+            toast.success(`Bet Placed of ${customStake?customStake:amnt}!`);
             setAmnt(0);
             setTeam(null);
             setShowStake(false);
@@ -112,6 +114,9 @@ function OddComponent({ data }) {
             </div>
             {
                 showStake && <div className={styles.stakeWrapper}>
+                    <div className={styles.inputDiv}>
+                        <input type="number" value={customStake} onChange={(e)=>setCustomStake(e.target.value)}/>
+                    </div>
                     <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
                         {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
                             <button
