@@ -7,11 +7,7 @@ import GameCard from '../../components/GameCard';
 
 
 export function SportsSection({ sportName, image, matchList }) {
-  const router = useRouter()
-
-  console.log(matchList);
-  
-  
+  const router = useRouter() 
   return (
     <div className={styles.sportsSection}>
       <div className={styles.sportsSectionHeader}>

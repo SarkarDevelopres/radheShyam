@@ -63,6 +63,8 @@
 .sportsSectionHeader h2{
   color: #012167;
   padding-right: 10px;
+  margin-bottom: 0px;
+  padding: 0px;
 }
 .sportsSectionHeader img{
   width: 30px;
