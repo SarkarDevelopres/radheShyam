@@ -333,6 +333,7 @@ export default function AmarAkbarAnthonyPage() {
       setLocked(false)
       // payload likely contains {_id, game, tableId, startAt, ...}
       setLoading(false)
+      canvasRef.current.style.backgroundColor = "#0b1920";
       roundIdRef.current = payload?._id || payload?.id || roundIdRef.current;
       setRound(payload);
       aaaRef.current?.startRound();

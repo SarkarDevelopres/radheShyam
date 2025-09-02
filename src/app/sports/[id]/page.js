@@ -126,6 +126,7 @@ function GameComp() {
   const spinRef = useRef(null);
   const btnSpan = useRef(null);
   const btnRef = useRef(null);
+  const router = useRouter();
 
   const [tvOn, setTvOn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -173,6 +174,8 @@ function GameComp() {
 
   useEffect(() => {
     let id = localStorage.getItem("matchId");
+    console.log(id);
+    
     fetchData(id);
   }, [])
 

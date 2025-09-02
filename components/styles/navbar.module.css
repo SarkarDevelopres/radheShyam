@@ -33,6 +33,9 @@
   align-items: center;
   font-weight: 600;
 }
+.navLinks a{
+  color: #02d4f4;
+}
 .navLinks a:hover {
   color: #00539e;
 }

@@ -20,6 +20,10 @@
   font-weight: 600;
 }
 
+.footerNav a{
+  color: rgb(255,255,255);
+}
+
 .footerNav a:hover{
     color:aqua;
 }
