@@ -33,6 +33,10 @@
     width: 100%;
 }
 
+.navLinksList svg{
+    color:#02D4F4;
+}
+
 .capsule{
     width: 20%;
     padding: 10px;
