@@ -18,7 +18,7 @@ export function SportsSection({ sportName, image, matchList }) {
         {
           matchList.map((e, i) => {
             return <div key={i}>
-              <p>{`${e.home} vs ${e.away}`}</p>
+              <p>{`${e.teamHome} vs ${e.teamAway}`}</p>
               <button onClick={()=>router.push(`/sports`)}>Bet Now</button>
             </div>
           })

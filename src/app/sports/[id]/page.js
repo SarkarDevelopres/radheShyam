@@ -31,7 +31,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
     }
 
 
-    const amnt = customStake?parseInt(customStake):amount;
+    const amnt = customStake ? parseInt(customStake) : amount;
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
       method: 'POST',
@@ -52,13 +52,14 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
       }),
     });
 
-    if (!response.ok) {
-      const payload = await response.json().catch(() => null);
-      alert(payload?.error || 'Failed');
+    const payload = await response.json();
+
+    if (!payload.ok) {
+      toast.error(`${payload.message}`)
       return;
     }
 
-    if (response.ok) {
+    if (payload.ok) {
       console.log(response);
 
       toast.success(`Bet Placed for ${amnt}!`);
@@ -68,6 +69,8 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
 
   }
   const cancel = () => {
+    setOdds(0);
+    setTeam('')
     setShowStake(false)
   }
 
@@ -75,6 +78,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
         <p>{f.name}</p>
+        {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
         <div className={styles.betButtons}>
           <button onClick={() => {
             setShowStake(true)
@@ -83,22 +87,22 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
           }}>{f.price}</button>
           <button onClick={() => {
             setShowStake(true)
-            setOdds(Math.round((f.price + 0.2) * 100) / 100)
+            setOdds((f.price / (f.price - 1).toFixed(2)))
             setTeam(f.name)
             setLay(true)
-          }}>{Math.round((f.price + 0.2) * 100) / 100}</button>
+          }}>{(f.price / (f.price - 1)).toFixed(2)}</button>
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
         <div className={styles.inputDiv}>
-          <input type="number" value={customStake} onChange={(e) => setCustomStake(e.target.value)} />
+          <input type="number" value={amount} onChange={(e) => chooseAmount(e.target.value)} />
         </div>
         <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
           {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
             <button
               key={amt}
               onClick={() => chooseAmount(amt)}
-            // className={amnt === amt ? styles.selectedStake : ""}
+              className={amount === amt ? styles.selectedStake : ""}
             >
               {amt}
             </button>
@@ -153,7 +157,7 @@ function GameComp() {
     console.log(res);
 
     if (res.success) {
-      setOddsData([...res.data]);
+      setOddsData([res.data]);
       setMetaData({ ...res.meta });
       setIsLoading(false);
     }
@@ -163,7 +167,36 @@ function GameComp() {
       router.refresh();
     }
   }
+  const takeBackBet = async () => {
+    console.log("Called ?");
 
+    if (typeof window === "undefined") return false;
+    let userToken = localStorage.getItem("userToken");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+      body: JSON.stringify({
+        token: userToken,
+        matchId: metaData.matchId,
+      }),
+    });
+
+    const payload = await response.json();
+    if (!payload.ok) {
+      toast.error(`${payload.message}`)
+      return;
+    }
+
+    if (payload.ok) {
+      console.log(response);
+      toast.success(`${payload.message}`);
+    }
+
+
+  }
   useEffect(() => {
     let id = localStorage.getItem("matchId");
     console.log(id);
@@ -197,6 +230,7 @@ function GameComp() {
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match odds</h3>
+          <button onClick={takeBackBet}>cashout</button>
         </div>
         <div>
           {

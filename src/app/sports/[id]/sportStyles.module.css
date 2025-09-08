@@ -164,3 +164,24 @@
   color: #012167;
   font-weight: 600;
 }
+
+.selectedStake {
+  background-color: #00b728 !important;
+  color: white;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header button{
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: #000f31;
+}
+.header button:hover{
+    background-color: #0030a1;
+    cursor: pointer;
+}

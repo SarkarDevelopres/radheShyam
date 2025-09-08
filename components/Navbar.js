@@ -37,6 +37,7 @@ useEffect(() => {
   fetchNow();
   s.on("connect", fetchNow);
   s.on("wallet:update", (res) => {
+    console.log("Results: ",res);
     console.log("Results Came: ",res._doc.balance);
     
     if (res?.ok) setBalance(Number(res._doc.balance) || 0);
