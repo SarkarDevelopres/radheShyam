@@ -230,7 +230,7 @@ function GameComp() {
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match odds</h3>
-          <button onClick={takeBackBet}>cashout</button>
+          <button onClick={takeBackBet} style={{color:"white"}}>cashout</button>
         </div>
         <div>
           {
