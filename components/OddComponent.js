@@ -91,7 +91,7 @@ function OddComponent({ data }) {
     return (
         <div className={styles.oddMainComp} onClick={() => moveIt()}>
             <div className={styles.OddDetails}>
-                <span className={styles.liveIndicator} style={{backgroundColor:data.isLive?"#00b728":"#a0a0a0ff"}} />
+                <span className={styles.liveIndicator} style={{backgroundColor:data.status=="live"?"#00b728":"#a0a0a0ff"}} />
                 <div className={styles.teamMatchDetails} >
                     <p onClick={goToMatchPage}>{`${data.teamHome} vs ${data.teamAway}`}</p>
                     <span>{`${data.start_time} | ${data.title}`}</span>

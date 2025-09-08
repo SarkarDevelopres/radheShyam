@@ -6,10 +6,10 @@ import OddComponent from '../../../components/OddComponent';
 import { BiSolidCricketBall } from "react-icons/bi";
 import { IoMdFootball, IoIosTennisball, IoIosBasketball, IoIosBaseball } from "react-icons/io";
 function LiveView({ initialData }) {
-    console.log(initialData);
+    console.log(initialData.data);
 
     const [activeSports, setActiveSports] = useState("cricket");
-    const [oddsData, setOddsData] = useState({ ...initialData.data })
+    const [oddsData, setOddsData] = useState({cricket:[...initialData.data ]})
     const cricket = useRef(null);
     const football = useRef(null);
     const tennis = useRef(null);
@@ -49,11 +49,14 @@ function LiveView({ initialData }) {
     const fetchData = async (sports) => {
         console.log("SPORTS: ", sports);
 
-        let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/${sports}`);
+        let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/live`);
 
         let res = await req.json();
         if (res.success) {
-            setOddsData([...res.data]);
+            setOddsData((p)=>({
+                ...p,
+                ...res.data
+            }));
         }
         else {
             console.log(res);
