@@ -256,6 +256,7 @@
 
 .runs,
 .over {
+  font-size: 1.2rem;
   background-color: #000f31;
   padding: 5px 10px;
   border-bottom-left-radius: 10px;
