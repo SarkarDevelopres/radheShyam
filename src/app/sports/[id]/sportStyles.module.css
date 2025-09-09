@@ -1,146 +1,152 @@
-.mainDiv{
-    padding: 20px;
+.mainDiv {
+  padding: 20px;
 }
-.liveTVDiv{
-    background-color: #02D4F4;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
+.liveTVDiv {
+  background-color: #02d4f4;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
 }
-.tvHead{
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    color: #012167;
-    margin-bottom: 10px;
+.tvHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  color: #012167;
+  margin-bottom: 10px;
 }
-.tvHead button{
-    width: 60px;
-    border-radius: 20px;
-    padding: 5px 10px;
-    border: none;
-    outline: none;
-    background-color: rgb(151, 0, 0);
-    position: relative;
+.tvHead button {
+  width: 60px;
+  border-radius: 20px;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  background-color: rgb(151, 0, 0);
+  position: relative;
 }
-.tvWrapper{
-    display: flex;
-    position: relative;
+.tvWrapper {
+  display: flex;
+  position: relative;
 }
-.tvDiv{
-    height: 0px;
-    width: 100%;
-    /* aspect-ratio: 1.8; */
-    transition: all 300ms ease-in-out;
-    background-color: #000f31;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.tvDiv {
+  height: 0px;
+  width: 100%;
+  /* aspect-ratio: 1.8; */
+  transition: all 300ms ease-in-out;
+  background-color: #000f31;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.header{
-    background-color: #02D4F4;
-    color: white !important;
-    padding: 10px;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
+.header {
+  background-color: #02d4f4;
+  color: white !important;
+  padding: 10px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
-.header h3, .liveTVDiv h3{
-    margin: 0px;
-    font-weight: 600;
+.header h3,
+.liveTVDiv h3 {
+  margin: 0px;
+  font-weight: 600;
 }
-.teamDiv{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-
+.teamDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
-.teamDiv p{
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0px;
+.teamDiv p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0px;
 }
-.betButtons button{
-    width: 100px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    padding: 5px;
-    background-color: #fcabff;
-    color:#012167;
-    font-weight: 600;
+.betButtons button {
+  width: 100px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 5px;
+  background-color: #fcabff;
+  color: #012167;
+  font-weight: 600;
 }
-.buttonSpan{
-    width: 20px;
-    height: 20px;
-    background-color: #000f31;
-    display: block;
-    border-radius: 50%;
+.buttonSpan {
+  width: 20px;
+  height: 20px;
+  background-color: #000f31;
+  display: block;
+  border-radius: 50%;
 }
-.betButtons button:first-child{
-    margin-right: 10px;
-    background-color: #02d4f4;
-}
-
-.spinnerComp{
-    display: none;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 70px;
-    right: 160px;
+.betButtons button:first-child {
+  margin-right: 10px;
+  background-color: #02d4f4;
 }
 
-.oddsComp{
-    margin-bottom: 20px;
-    
+.spinnerComp {
+  display: none;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 70px;
+  right: 160px;
+  z-index: 12;
 }
 
-.bookOddDiv{
-    border-bottom: 1px solid #02d4f4b2;
-}
-.stakeChoice{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-.stakeChoice button{
-    border-radius: 5px;
-    border: none;
-    padding: 4px;
-    background-color: rgb(183, 183, 183);
-    color: #000f31;
+.spinnerScore {
+  width: 50px;
+  height: 50px;
+  z-index: 12;
 }
 
-.stakeChoice button:hover{
-    background-color: rgb(202, 148, 0);
-}
-.orderBtn{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-bottom: 5px;
-}
-.orderBtn button{
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    background-color: #008ae6;
-    color: #000f31;
-    font-weight: 600;
-    width: 48%;
+.oddsComp {
+  margin-bottom: 20px;
 }
 
-.orderBtn button:hover{
-      background-color: #00b728;
+.bookOddDiv {
+  border-bottom: 1px solid #02d4f4b2;
+}
+.stakeChoice {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.stakeChoice button {
+  border-radius: 5px;
+  border: none;
+  padding: 4px;
+  background-color: rgb(183, 183, 183);
+  color: #000f31;
+}
+
+.stakeChoice button:hover {
+  background-color: rgb(202, 148, 0);
+}
+.orderBtn {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-bottom: 5px;
+}
+.orderBtn button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  background-color: #008ae6;
+  color: #000f31;
+  font-weight: 600;
+  width: 48%;
+}
+
+.orderBtn button:hover {
+  background-color: #00b728;
   cursor: pointer;
 }
 
-.orderBtn button:last-child:hover{
-    background-color: #b41e00;
+.orderBtn button:last-child:hover {
+  background-color: #b41e00;
 }
 
 /* .stakeBtnDiv{
@@ -150,11 +156,11 @@
     display: none;
 } */
 
-.inputDiv{
+.inputDiv {
   padding: 10px;
   /* padding-bottom: 0px; */
 }
-.inputDiv input{
+.inputDiv input {
   padding: 5px;
   border-radius: 10px;
   outline: none;
@@ -170,33 +176,114 @@
   color: white;
 }
 
-.header{
-    display: flex;
-    justify-content: space-between;
+.header {
+  display: flex;
+  justify-content: space-between;
 }
 
-.header button{
-    padding: 5px;
-    border-radius: 5px;
-    border: none;
-    background-color: #000f31;
+.header button {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #000f31;
 }
-.header button:hover{
-    background-color: #0030a1;
-    cursor: pointer;
+.header button:hover {
+  background-color: #0030a1;
+  cursor: pointer;
 }
 
-.topScoreDiv{
-    width: 100%;
-    aspect-ratio: 1.9;
-    background-image: url(../../../../public/live-score-bg.webp);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    margin-bottom: 10px;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+.topScoreDiv {
+  width: 100%;
+  height: 200px;
+  background-image: url(../../../../public/live-score-bg.webp);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  /* align-items: center; */
+}
+
+.teamnameDiv {
+  width: 40%;
+  background-color: #000f31ae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.teamnameDiv h2 {
+  font-size: 1.2rem;
+  text-align: left;
+  padding-left: 10px;
+}
+.teamnameDiv span {
+  text-align: center;
+  font-size: 0.8rem;
+}
+.teamnameDiv:last-of-type h2 {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.teamnameDiv:last-of-type {
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.ballsOverDiv {
+  background-color: #0091ab;
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  padding: 10px 0px;
+  bottom: 0px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.runs,
+.over {
+  background-color: #000f31;
+  padding: 5px 10px;
+  border-bottom-left-radius: 10px;
+  width: 20%;
+  text-align: center;
+}
+.over {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 10px;
+}
+.balls {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+}
+.balls span {
+  background-color: #0030a1;
+  padding: 3px 5px;
+  border-radius: 2px;
+}
+.maskDiv {
+  background-color: rgba(0, 0, 0, 0.7);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 10;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

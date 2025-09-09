@@ -88,6 +88,7 @@ function OddComponent({ data }) {
         localStorage.setItem("home",data.home);
         localStorage.setItem("away",data.away);
         localStorage.setItem("matchId",data.matchId);
+        localStorage.setItem("status",data.status);
         router.push(`/sports/${data.matchId}`)
      }
     return (
