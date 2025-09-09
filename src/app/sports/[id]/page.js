@@ -199,10 +199,18 @@ function GameComp() {
   }
   useEffect(() => {
     let id = localStorage.getItem("matchId");
-    console.log(id);
 
+    // Run immediately on mount
     fetchData(id);
-  }, [])
+
+    // Set up polling every 5 minutes (300,000 ms)
+    const interval = setInterval(() => {
+      fetchData(id);
+    }, 3 * 60 * 1000);
+
+    // Clear interval on unmount
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className={styles.mainDiv}>
@@ -230,7 +238,7 @@ function GameComp() {
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match odds</h3>
-          <button onClick={takeBackBet} style={{color:"white"}}>cashout</button>
+          <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>
         </div>
         <div>
           {
