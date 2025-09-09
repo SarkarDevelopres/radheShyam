@@ -234,7 +234,9 @@ function GameComp() {
           <Spinner ref={spinRef} className={styles.spinnerComp} />
         </div>
       </div>
-      <div className={styles.topScoreDiv}></div>
+      <div className={styles.topScoreDiv}>
+        <h2>Live Score is coming soon</h2>
+      </div>
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match odds</h3>

@@ -34,8 +34,13 @@ async function getNumber() {
 }
 
 export default async function RootLayout({ children }) {
-
-  const no = await getNumber();
+  let no = null;
+  try {
+    no = await getNumber();
+  } catch (e) {
+    console.error("getNumber failed:", e);
+    // no stays null; ClientShell can show a fallback
+  }
 
   return (
     <html lang="en">

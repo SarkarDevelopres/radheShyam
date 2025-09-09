@@ -185,3 +185,18 @@
     background-color: #0030a1;
     cursor: pointer;
 }
+
+.topScoreDiv{
+    width: 100%;
+    aspect-ratio: 1.9;
+    background-image: url(../../../../public/live-score-bg.webp);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
