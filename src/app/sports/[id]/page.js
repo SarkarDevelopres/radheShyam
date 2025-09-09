@@ -142,6 +142,7 @@ function GameComp() {
     overs: 0.0,
     runrate: 0.0,
   })
+  const [ballArray, setBallArray] = useState(["", "", "", "", "", ""]);
   const [isLive, setIsLive] = useState(false)
   const openTV = () => {
     if (!tvOn) {
@@ -157,11 +158,12 @@ function GameComp() {
       btnSpan.current.style.marginLeft = "0px";
     }
   }
+
   const fetchData = async (id) => {
     let teama = localStorage.getItem("home")
     let teamb = localStorage.getItem("away")
     setTeamData({
-      teama,teamb
+      teama, teamb
     })
     let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/matchOdds`, {
       method: 'POST',
@@ -238,15 +240,15 @@ function GameComp() {
       });
       socket.emit("watch:join", id);
       socket.on("score:update", (d) => {
-        
+
         if (d?.data?.liveScore) {
           setLiveData(d.data.liveScore);
         }
-        
+
         if (d.kind == "snapshot") {
           let batTeam = d.data.batBowl.batting;
           let bowlTeam = d.data.batBowl.bowling;
-          let teamData = { teama:batTeam, teamb:bowlTeam};
+          let teamData = { teama: batTeam, teamb: bowlTeam };
           setTeamData(teamData)
           let teamAOdds = d.data?.liveOdds.matchodds.teama.back
           console.log(teamAOdds);
@@ -261,6 +263,52 @@ function GameComp() {
               price: d.data.liveOdds.matchodds.teamb.back
             },]
           }]);
+        }
+        if (d.kind === "ball") {
+          let ballNo = parseInt(d.data.data.ball, 10);
+
+          if (
+            d.data.ball_event !== "Ball Chalu" &&
+            d.data.ball_event !== "Over"
+          ) {
+            if (ballNo < 6) {
+              setBallArray((prev) => {
+                const updated = [...prev];
+
+                let val;
+                if (d.data.ball_event === "dot") {
+                  val = "0";        // keep blank for dot ball
+                } else if (d.data.ball_event === "Stumps" || d.data.ball_event === "Caught" || d.data.ball_event === "LWB") {
+                  val = "w";
+                } else if (d.data.ball_event === "Wide") {
+                  val = "wd";
+                } else if(d.data.ball_event === "1") {
+                  val = "1";
+                }
+                 else if(d.data.ball_event === "2") {
+                  val = "2";
+                }
+                 else if(d.data.ball_event === "3") {
+                  val = "3";
+                }
+                 else if(d.data.ball_event === "5") {
+                  val = "5";
+                }
+                 else if(d.data.ball_event === "4" || d.data.ball_event === "four" ) {
+                  val = "4";
+                }
+                 else if(d.data.ball_event === "6" || d.data.ball_event === "six" ) {
+                  val = "6";
+                }
+
+                updated[ballNo-1] = val;
+                return updated;
+              });
+            }
+            if (d.data.ball_event === "Over") {
+    setBallArray(["", "", "", "", "", ""]); // reset for new over
+  }
+          }
         }
         console.log("Live score update:", d)
       });
@@ -329,12 +377,11 @@ function GameComp() {
             {`${liveData.runs}/${liveData.wickets}`}
           </div>
           <div className={styles.balls}>
-            <span>0</span>
-            <span>0</span>
-            <span>0</span>
-            <span>0</span>
-            <span>0</span>
-            <span>0</span>
+            {
+              ballArray.map((e, i) => {
+                return <span key={i}>{e}</span>
+              })
+            }
           </div>
           <div className={styles.over}>
             {liveData.overs}
