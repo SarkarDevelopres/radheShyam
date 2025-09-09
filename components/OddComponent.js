@@ -85,8 +85,8 @@ function OddComponent({ data }) {
         setShowStake(false);
     }
      const goToMatchPage = () => {
-        localStorage.setItem("home",data.home);
-        localStorage.setItem("away",data.away);
+        localStorage.setItem("home",data.teamHome);
+        localStorage.setItem("away",data.teamAway);
         localStorage.setItem("matchId",data.matchId);
         localStorage.setItem("status",data.status);
         router.push(`/sports/${data.matchId}`)
@@ -109,7 +109,7 @@ function OddComponent({ data }) {
                                 onClick={() => chooseTeam(i)}
                                 className={team === i ? styles.selectedTeam : ""}
                             >
-                                {e.price}
+                                {e.price?e.price:0}
                             </button>
                         })
                     }

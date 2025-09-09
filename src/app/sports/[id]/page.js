@@ -17,6 +17,7 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
   const [team, setTeam] = useState('');
   const [lay, setLay] = useState(false);
 
+
   const isLoggedIn = () => {
     if (typeof window === "undefined") return false;
     let userToken = localStorage.getItem("userToken");
@@ -85,10 +86,10 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
             setShowStake(true)
             setOdds(f.price)
             setTeam(f.name)
-          }}>{f.price}</button>
+          }}>{f.price ? f.price : 1}</button>
           <button onClick={() => {
             setShowStake(true)
-            setOdds((f.price / (f.price - 1).toFixed(2)))
+            setOdds(((f.price ? f.price : 1) / ((f.price ? f.price : 1) - 1).toFixed(2)))
             setTeam(f.name)
             setLay(true)
           }}>{(f.price / (f.price - 1)).toFixed(2)}</button>
@@ -124,17 +125,22 @@ function GameComp() {
   const btnSpan = useRef(null);
   const btnRef = useRef(null);
   const router = useRouter();
+  const [teamData, setTeamData] = useState({
+    teama: '',
+    teamb: '',
+  })
 
-  const [snapshot, setSnapshot] = useState(null);
+  const [isStall, setIsStall] = useState(false);
 
   const [tvOn, setTvOn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [oddsData, setOddsData] = useState([]);
   const [metaData, setMetaData] = useState([]);
   const [liveData, setLiveData] = useState({
-    runs:0,
-    wickets:0,
-    overs:0.0
+    runs: 0,
+    wickets: 0,
+    overs: 0.0,
+    runrate: 0.0,
   })
   const [isLive, setIsLive] = useState(false)
   const openTV = () => {
@@ -152,6 +158,11 @@ function GameComp() {
     }
   }
   const fetchData = async (id) => {
+    let teama = localStorage.getItem("home")
+    let teamb = localStorage.getItem("away")
+    setTeamData({
+      teama,teamb
+    })
     let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/matchOdds`, {
       method: 'POST',
       headers: {
@@ -210,9 +221,9 @@ function GameComp() {
     let id = localStorage.getItem("matchId");
     let status = localStorage.getItem("status");
 
-    setIsLive(true)
 
     if (status == "live") {
+      setIsStall(true)
       if (!id) return;
 
       const base = process.env.NEXT_PUBLIC_SERVER_PORT;
@@ -223,35 +234,23 @@ function GameComp() {
         const payload = [...args];
         // usually the data object
         console.log("[socket:any]", payload);
-        // console.log(Array.isArray(payload));
-        // let teamAOdds = payload.data?.liveodds
-        // if (payload?.response?.live) {
-        //   setLiveData(payload.response.live);
-        // }
 
-        // if (payload[1].kind="snapshot") {
-        //   setOddsData((prev) => {
-        //     const next = { ...prev };
-        //     if (next.outcomes) {
-        //       next.outcomes = [...next.outcomes];
-        //       next.outcomes[0] = { ...next.outcomes[0], price: payload.data.liveOdds.matchodds.teama.back };
-        //       next.outcomes[1] = { ...next.outcomes[1], price:payload.data.liveOdds.matchodds.teamb.back };
-        //     }
-        //     return next;
-        //   });
-        // }
       });
       socket.emit("watch:join", id);
       socket.on("score:update", (d) => {
-        let teamAOdds = d.data?.liveOdds.matchodds.teama.back
-        console.log(teamAOdds);
-
+        
         if (d?.data?.liveScore) {
           setLiveData(d.data.liveScore);
         }
-
+        
         if (d.kind == "snapshot") {
-          setIsLoading(false)
+          let batTeam = d.data.batBowl.batting;
+          let bowlTeam = d.data.batBowl.bowling;
+          let teamData = { teama:batTeam, teamb:bowlTeam};
+          setTeamData(teamData)
+          let teamAOdds = d.data?.liveOdds.matchodds.teama.back
+          console.log(teamAOdds);
+          setIsLive(true)
           setOddsData([{
             outcomes: [{
               name: d.data.teamData.teama,
@@ -285,6 +284,12 @@ function GameComp() {
     }
   }, []);
 
+  useEffect(() => {
+    let id = localStorage.getItem("matchId");
+    fetchData(id);
+  }, [])
+
+
   return (
     <div className={styles.mainDiv}>
       {isLoading && <Loading />}
@@ -308,13 +313,16 @@ function GameComp() {
         </div>
       </div>
       <div className={styles.topScoreDiv}>
-        {!isLive&&<div className={styles.maskDiv}>
-          <span style={{ position: "absolute", fontSize: "1.3rem" }}>Match not started yet</span>
+        {!isLive && <div className={styles.maskDiv}>
+          <span style={{ position: "absolute", fontSize: "1.3rem" }}>{isStall ? "Watitng For Match Scores " : "Match not started yet"}</span>
           <Spinner style={{ display: "block" }} className={styles.spinnerScore} />
         </div>}
         <div className={styles.teamnameDiv}>
-          <h2>{oddsData[0]?.outcomes[0]?.name}</h2>
-          {/* <span>Batting</span> */}
+          <h2>{teamData.teama}</h2>
+          <span>Batting</span>
+        </div>
+        <div className={styles.runRateDiv}>
+          <span>{`Run Rate: ${liveData.runrate}`}</span>
         </div>
         <div className={styles.ballsOverDiv}>
           <div className={styles.runs}>
@@ -333,8 +341,8 @@ function GameComp() {
           </div>
         </div>
         <div className={styles.teamnameDiv}>
-          <h2>{oddsData[0]?.outcomes[1]?.name}</h2>
-          {/* <span>Bowling</span> */}
+          <h2>{teamData.teamb}</h2>
+          <span>Bowling</span>
         </div>
       </div>
       <div className={styles.oddsDiv}>
