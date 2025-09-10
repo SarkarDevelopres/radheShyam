@@ -271,7 +271,7 @@ function GameComp() {
             d.data.ball_event !== "Ball Chalu" &&
             d.data.ball_event !== "Over"
           ) {
-            if (ballNo < 6) {
+            if (ballNo <= 6) {
               setBallArray((prev) => {
                 const updated = [...prev];
 
@@ -282,32 +282,34 @@ function GameComp() {
                   val = "w";
                 } else if (d.data.ball_event === "Wide") {
                   val = "wd";
-                } else if(d.data.ball_event === "1") {
+                } else if (d.data.ball_event === "1") {
                   val = "1";
                 }
-                 else if(d.data.ball_event === "2") {
+                else if (d.data.ball_event === "2") {
                   val = "2";
                 }
-                 else if(d.data.ball_event === "3") {
+                else if (d.data.ball_event === "3") {
                   val = "3";
                 }
-                 else if(d.data.ball_event === "5") {
+                else if (d.data.ball_event === "5") {
                   val = "5";
                 }
-                 else if(d.data.ball_event === "4" || d.data.ball_event === "four" ) {
+                else if (d.data.ball_event === "4" || d.data.ball_event === "four") {
                   val = "4";
                 }
-                 else if(d.data.ball_event === "6" || d.data.ball_event === "six" ) {
+                else if (d.data.ball_event === "6" || d.data.ball_event === "six") {
                   val = "6";
                 }
 
-                updated[ballNo-1] = val;
+                updated[ballNo - 1] = val;
                 return updated;
               });
             }
-            if (d.data.ball_event === "Over") {
-    setBallArray(["", "", "", "", "", ""]); // reset for new over
-  }
+          }
+          if (d.data.ball_event === "Over") {
+            setTimeout(() => {
+              setBallArray(["", "", "", "", "", ""]); // reset for new over
+            }, 2000);
           }
         }
         console.log("Live score update:", d)
