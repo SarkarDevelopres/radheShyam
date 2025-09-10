@@ -278,7 +278,7 @@ function GameComp() {
                 let val;
                 if (d.data.ball_event === "dot") {
                   val = "0";        // keep blank for dot ball
-                } else if (d.data.ball_event === "Stumps" || d.data.ball_event === "Caught" || d.data.ball_event === "LWB") {
+                } else if (d.data.ball_event === "Stumps" || d.data.ball_event === "Caught" || d.data.ball_event === "LBW") {
                   val = "w";
                 } else if (d.data.ball_event === "Wide") {
                   val = "wd";
