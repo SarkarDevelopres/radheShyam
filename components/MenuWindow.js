@@ -19,10 +19,10 @@ function MenuWindow({ onClose }) {
         }
     }
 
-        const goToLogin = () => {
-            onClose();
-            router.push('/login');
-        }
+    const goToLogin = () => {
+        onClose();
+        router.push('/login');
+    }
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -40,10 +40,10 @@ function MenuWindow({ onClose }) {
                 </div>
                 <div className={styles.menuBody}>
                     {
-                        tokenExists?(
+                        tokenExists ? (
                             <button onClick={logOut}><FaPowerOff />Log-Out</button>
-                        ):(
-                            <button onClick={()=>goToLogin()}>Log-In</button>
+                        ) : (
+                            <button onClick={() => goToLogin()}>Log-In</button>
                         )
                     }
                 </div>

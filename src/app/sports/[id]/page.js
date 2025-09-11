@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import { io } from "socket.io-client";
 
-export function OddsMatchComp({ f, meta, bookmaker, market }) {
+export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
 
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
@@ -79,12 +79,12 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
   return (
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
-        <p>{f.name}</p>
+        <p>{f.name ? f.name : f.title}</p>
         {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
         <div className={styles.betButtons}>
           <button onClick={() => {
             setShowStake(true)
-            setOdds(f.price)
+            setOdds(f.price ? f.price : f.back)
             setTeam(f.name)
           }}>{f.price ? f.price : 1}</button>
           <button onClick={() => {
@@ -93,6 +93,117 @@ export function OddsMatchComp({ f, meta, bookmaker, market }) {
             setTeam(f.name)
             setLay(true)
           }}>{(f.price / (f.price - 1)).toFixed(2)}</button>
+        </div>
+      </div>
+      {showStake && <div className={styles.stakeBtnDiv} >
+        <div className={styles.inputDiv}>
+          <input type="number" value={amount} onChange={(e) => chooseAmount(e.target.value)} />
+        </div>
+        <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
+          {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
+            <button
+              key={amt}
+              onClick={() => chooseAmount(amt)}
+              className={amount === amt ? styles.selectedStake : ""}
+            >
+              {amt}
+            </button>
+          ))}
+        </div>
+        <div className={styles.orderBtn}>
+          <button onClick={() => placeBet()}>Place Bet</button>
+          <button onClick={() => cancel()}>Cancel</button>
+        </div>
+      </div>}
+    </div>
+  )
+}
+export function SessionOddsMatchComp({ f }) {
+
+  const router = useRouter();
+  const [showStake, setShowStake] = useState(false);
+  const [amount, chooseAmount] = useState(null);
+  const [customStake, setCustomStake] = useState(null);
+  const [odds, setOdds] = useState('');
+  const [team, setTeam] = useState('');
+  const [lay, setLay] = useState(false);
+
+
+  const isLoggedIn = () => {
+    if (typeof window === "undefined") return false;
+    let userToken = localStorage.getItem("userToken");
+    return userToken || false;
+  }
+
+  const placeBet = async (price, name) => {
+    const loggedIn = isLoggedIn();
+    if (!loggedIn) {
+      alert("Log In to place bets!");
+      router.push('/login');
+      return; // stop here
+    }
+
+
+    const amnt = customStake ? parseInt(customStake) : amount;
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${loggedIn}`,
+      },
+      body: JSON.stringify({
+        token: loggedIn,
+        matchId: meta.matchId,
+        title: meta.sportkey,
+        market: market,
+        bookmakerKey: bookmaker,
+        selection: team,
+        stake: amnt,
+        odds: odds,
+        lay: lay,
+      }),
+    });
+
+    const payload = await response.json();
+
+    if (!payload.ok) {
+      toast.error(`${payload.message}`)
+      return;
+    }
+
+    if (payload.ok) {
+      console.log(response);
+
+      toast.success(`Bet Placed for ${amnt}!`);
+      setShowStake(false);
+    }
+
+
+  }
+  const cancel = () => {
+    setOdds(0);
+    setTeam('')
+    setShowStake(false)
+  }
+
+  return (
+    <div className={styles.bookOddDiv}>
+      <div className={styles.teamDiv}>
+        <p>{f.title}</p>
+        {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
+        <div className={styles.betButtons}>
+          <button onClick={() => {
+            setShowStake(true)
+            setOdds(f.back)
+            setTeam(f.back_condition)
+          }}>{f.back}</button>
+          <button onClick={() => {
+            setShowStake(true)
+            setOdds(f.lay)
+            setTeam(f.lay_condition)
+            setLay(true)
+          }}>{f.lay}</button>
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
@@ -142,8 +253,12 @@ function GameComp() {
     overs: 0.0,
     runrate: 0.0,
   })
+  const [batsmenList, setBatsmenList] = useState([])
+  const [bowlersList, setBowlersList] = useState([])
+  const [ballEvent, setBallEvent] = useState("");
   const [ballArray, setBallArray] = useState(["", "", "", "", "", ""]);
   const [isLive, setIsLive] = useState(false)
+  const [sessionOdds, setSessionOdds] = useState([])
   const openTV = () => {
     if (!tvOn) {
       tvRef.current.style.height = "200px";
@@ -181,6 +296,7 @@ function GameComp() {
     if (res.success) {
       setOddsData([res.data]);
       setMetaData({ ...res.meta });
+      setSessionOdds([res.data.sessionOdds])
       setIsLoading(false);
     }
     else {
@@ -235,10 +351,37 @@ function GameComp() {
       socket.onAny((...args) => {
         const payload = [...args];
         // usually the data object
-        console.log("[socket:any]", payload);
+        // console.log("[socket:any]", payload);
 
       });
       socket.emit("watch:join", id);
+      socket.on("watch:joined", (d) => {
+        console.log(d.data);
+
+        if (d?.data) {
+          if (d?.data?.data?.liveScore) {
+            setLiveData(d.data.data.liveScore);
+          }
+          setBatsmenList(d.data.data.batsmenList)
+          setBowlersList(d.data.data.bowlersList)
+          let batTeam = d.data.data.batBowl.batting;
+          let bowlTeam = d.data.data.batBowl.bowling;
+          let teamData = { teama: batTeam, teamb: bowlTeam };
+          setTeamData(teamData)
+          setIsLive(true)
+          setOddsData([{
+            outcomes: [{
+              name: d.data.data.teamData.teama,
+              price: d.data.data.liveOdds.matchodds.teama.back
+            },
+            {
+              name: d.data.data.teamData.teamb,
+              price: d.data.data.liveOdds.matchodds.teamb.back
+            },]
+          }]);
+          setSessionOdds(d.data.data.batBowl.sessionOdds)
+        }
+      })
       socket.on("score:update", (d) => {
 
         if (d?.data?.liveScore) {
@@ -249,9 +392,9 @@ function GameComp() {
           let batTeam = d.data.batBowl.batting;
           let bowlTeam = d.data.batBowl.bowling;
           let teamData = { teama: batTeam, teamb: bowlTeam };
+          setBatsmenList(d.data.batsmenList)
+          setBowlersList(d.data.bowlersList)
           setTeamData(teamData)
-          let teamAOdds = d.data?.liveOdds.matchodds.teama.back
-          console.log(teamAOdds);
           setIsLive(true)
           setOddsData([{
             outcomes: [{
@@ -263,48 +406,62 @@ function GameComp() {
               price: d.data.liveOdds.matchodds.teamb.back
             },]
           }]);
+          setSessionOdds(d.data.sessionOdds)
+          console.log("Live score update:", d)
         }
         if (d.kind === "ball") {
+          setBallEvent(d.data.ball_event)
           let ballNo = parseInt(d.data.data.ball, 10);
 
-          if (
-            d.data.ball_event !== "Ball Chalu" &&
-            d.data.ball_event !== "Over"
-          ) {
-            if (ballNo <= 6) {
-              setBallArray((prev) => {
-                const updated = [...prev];
-
-                let val;
-                if (d.data.ball_event === "dot") {
-                  val = "0";        // keep blank for dot ball
-                } else if (d.data.ball_event === "Stumps" || d.data.ball_event === "Caught" || d.data.ball_event === "LBW") {
-                  val = "w";
-                } else if (d.data.ball_event === "Wide") {
-                  val = "wd";
-                } else if (d.data.ball_event === "1") {
-                  val = "1";
-                }
-                else if (d.data.ball_event === "2") {
-                  val = "2";
-                }
-                else if (d.data.ball_event === "3") {
-                  val = "3";
-                }
-                else if (d.data.ball_event === "5") {
-                  val = "5";
-                }
-                else if (d.data.ball_event === "4" || d.data.ball_event === "four") {
-                  val = "4";
-                }
-                else if (d.data.ball_event === "6" || d.data.ball_event === "six") {
-                  val = "6";
-                }
-
+          if (ballNo <= 6) {
+            setBallArray((prev) => {
+              const updated = [...prev];
+              let val;
+              if (d.data.ball_event === "dot") {
+                val = "0";        // keep blank for dot ball
                 updated[ballNo - 1] = val;
                 return updated;
-              });
-            }
+              } else if (d.data.ball_event === "Stumps" || d.data.ball_event === "Caught" || d.data.ball_event === "LBW" || d.data.ball_event === "Bowled" || d.data.ball_event === "Wicket" || d.data.ball_event === "3rd umpire out"
+              ) {
+                val = "w";
+                updated[ballNo - 1] = val;
+                return updated;
+              } else if (d.data.ball_event === "Wide") {
+                val = "wd";
+                updated[ballNo - 1] = val;
+                return updated;
+              } else if (d.data.ball_event === "1") {
+                val = "1";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              else if (d.data.ball_event === "2") {
+                val = "2";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              else if (d.data.ball_event === "3") {
+                val = "3";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              else if (d.data.ball_event === "5") {
+                val = "5";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              else if (d.data.ball_event === "4" || d.data.ball_event === "four") {
+                val = "4";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              else if (d.data.ball_event === "6" || d.data.ball_event === "six") {
+                val = "6";
+                updated[ballNo - 1] = val;
+                return updated;
+              }
+              return updated
+            });
           }
           if (d.data.ball_event === "Over") {
             setTimeout(() => {
@@ -312,7 +469,7 @@ function GameComp() {
             }, 2000);
           }
         }
-        console.log("Live score update:", d)
+
       });
       return () => {
         socket.emit("watch:leave", id);
@@ -374,6 +531,36 @@ function GameComp() {
         <div className={styles.runRateDiv}>
           <span>{`Run Rate: ${liveData.runrate}`}</span>
         </div>
+        <div className={styles.ballEvent}>
+          {ballEvent}
+        </div>
+        <div className={styles.batsmanList}>
+          {
+            batsmenList.map((e, i) => {
+              return <span key={i}>
+                {`${e?.name}(${e.runs})${i == 0 ? '*' : ''}`}
+              </span>
+            })
+          }
+        </div>
+        <div className={styles.bowlersList}>
+          {
+            bowlersList.length > 0 ? (
+              <>
+                <span>{
+                  `${bowlersList[0]?.name}`}
+                </span>
+                <span>
+                  {
+                    `(over:${bowlersList[0]?.overs}/run:${bowlersList[0]?.runs_conceded
+                    }/wicket:${bowlersList[0]?.wickets
+                    })`
+                  }
+                </span>
+              </>)
+              : (<></>)
+          }
+        </div>
         <div className={styles.ballsOverDiv}>
           <div className={styles.runs}>
             {`${liveData.runs}/${liveData.wickets}`}
@@ -396,7 +583,7 @@ function GameComp() {
       </div>
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
-          <h3>Match odds</h3>
+          <h3>Match Odds</h3>
           <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>
         </div>
         <div>
@@ -410,6 +597,24 @@ function GameComp() {
                         <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} market={e.market} />
                       )
                     })
+                  }
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+      <div className={styles.oddsDiv}>
+        <div className={styles.header}>
+          <h3>Session Odds</h3>
+        </div>
+        <div>
+          {
+            sessionOdds.map((e, i) => {
+              return (
+                <div key={i} className={styles.oddsComp}>
+                  {
+                    <SessionOddsMatchComp f={e} />
                   }
                 </div>
               )

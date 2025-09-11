@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import { TbCoinRupee } from "react-icons/tb";
 import { io } from "socket.io-client";
+import { toast } from 'react-toastify';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 
@@ -16,39 +17,52 @@ function Navbar() {
   const balanceRef = useRef(null);
   const [isUser, setIsUser] = useState(false)
   // init socket
-useEffect(() => {
-  const user = localStorage.getItem("userToken");
-  if (!user) return;
 
-  setIsUser(true);
-  // console.log(user);
-  
-  const s = io(SERVER_URL, { auth: { token: user } });
-  socketRef.current = s;
+  const logOut = () => {
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("balance");
+    window.location.replace("/login");
+  }
 
-  const fetchNow = () => {
-    s.emit("wallet:fetch", { userId: user }, (res) => {
-      console.log(res);
-      
+  useEffect(() => {
+    const user = localStorage.getItem("userToken");
+    if (!user) return;
+
+    setIsUser(true);
+    // console.log(user);
+
+    const s = io(SERVER_URL, { auth: { token: user } });
+    socketRef.current = s;
+
+    const fetchNow = () => {
+      s.emit("wallet:fetch", { userId: user }, (res) => {
+        console.log(res);
+        if (res.ok == false) {
+          toast.error("Sessiopn expired login again!");
+          setTimeout(() => {
+            logOut()
+          }, 1000);
+        }
+
+        if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+      });
+    };
+
+    fetchNow();
+    s.on("connect", fetchNow);
+    s.on("wallet:update", (res) => {
+      console.log("Results: ", res);
+      console.log("Results Came: ", res._doc.balance);
+
       if (res?.ok) setBalance(Number(res._doc.balance) || 0);
     });
-  };
 
-  fetchNow();
-  s.on("connect", fetchNow);
-  s.on("wallet:update", (res) => {
-    console.log("Results: ",res);
-    console.log("Results Came: ",res._doc.balance);
-    
-    if (res?.ok) setBalance(Number(res._doc.balance) || 0);
-  });
-
-  return () => {
-    s.off("connect", fetchNow);
-    s.off("wallet:update");
-    s.disconnect();
-  };
-}, []);
+    return () => {
+      s.off("connect", fetchNow);
+      s.off("wallet:update");
+      s.disconnect();
+    };
+  }, []);
 
 
 
@@ -56,7 +70,7 @@ useEffect(() => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem("adminToken");
       setTokenExists(!!token);
-      
+
     }
   }, [pathName]);
 
@@ -80,7 +94,7 @@ useEffect(() => {
             <span ref={balanceRef}>{balance}</span>
           </div>
         ) : (
-          tokenExists ?<Link href='/admin'>Profile</Link>:<Link href="/login" className={styles.btn}>Log In</Link>
+          tokenExists ? <Link href='/admin'>Profile</Link> : <Link href="/login" className={styles.btn}>Log In</Link>
         )}
       </div>
     </div>

@@ -86,7 +86,7 @@ function ClientView({initialData}) {
 
     return (
         <div className={styles.mainDiv}>
-            <h2>Sports</h2>
+            <h2 style={{color:"#02d4f4"}}>Sports</h2>
             <div className={styles.sportsBar}>
                 <div className={styles.sportsSelectBar}>
                     <span className={styles.capsule} ref={capsule}></span>
