@@ -146,39 +146,39 @@ export function SessionOddsMatchComp({ f }) {
 
     const amnt = customStake ? parseInt(customStake) : amount;
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${loggedIn}`,
-      },
-      body: JSON.stringify({
-        token: loggedIn,
-        matchId: meta.matchId,
-        title: meta.sportkey,
-        market: market,
-        bookmakerKey: bookmaker,
-        selection: team,
-        stake: amnt,
-        odds: odds,
-        lay: lay,
-      }),
-    });
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': `Bearer ${loggedIn}`,
+    //   },
+    //   body: JSON.stringify({
+    //     token: loggedIn,
+    //     matchId: meta.matchId,
+    //     title: meta.sportkey,
+    //     market: market,
+    //     bookmakerKey: bookmaker,
+    //     selection: team,
+    //     stake: amnt,
+    //     odds: odds,
+    //     lay: lay,
+    //   }),
+    // });
 
-    const payload = await response.json();
+    // const payload = await response.json();
 
-    if (!payload.ok) {
-      toast.error(`${payload.message}`)
-      return;
-    }
+    // if (!payload.ok) {
+    //   toast.error(`${payload.message}`)
+    //   return;
+    // }
 
-    if (payload.ok) {
-      console.log(response);
+    // if (payload.ok) {
+    //   console.log(response);
 
+    // }
+    
       toast.success(`Bet Placed for ${amnt}!`);
       setShowStake(false);
-    }
-
 
   }
   const cancel = () => {
@@ -192,18 +192,28 @@ export function SessionOddsMatchComp({ f }) {
       <div className={styles.teamDiv}>
         <p>{f.title}</p>
         {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
-        <div className={styles.betButtons}>
-          <button onClick={() => {
-            setShowStake(true)
-            setOdds(f.back)
-            setTeam(f.back_condition)
-          }}>{f.back}</button>
-          <button onClick={() => {
-            setShowStake(true)
-            setOdds(f.lay)
-            setTeam(f.lay_condition)
-            setLay(true)
-          }}>{f.lay}</button>
+        <div className={styles.sessionOddBets}>
+          <div style={{width:"100%",display:"flex",justifyContent:"space-around"}}>
+            <span>
+              { `Over ${f.back_condition}` }
+            </span>
+            <span>
+              { `Under ${f.lay_condition}` }
+            </span>
+          </div>
+          <div className={styles.betButtons}>
+            <button onClick={() => {
+              setShowStake(true)
+              setOdds(f.back)
+              setTeam(f.back_condition)
+            }}>{f.back}</button>
+            <button onClick={() => {
+              setShowStake(true)
+              setOdds(f.lay)
+              setTeam(f.lay_condition)
+              setLay(true)
+            }}>{f.lay}</button>
+          </div>
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
@@ -296,7 +306,7 @@ function GameComp() {
     if (res.success) {
       setOddsData([res.data]);
       setMetaData({ ...res.meta });
-      setSessionOdds([res.data.sessionOdds])
+      setSessionOdds([...res.data.sessionOdds])
       setIsLoading(false);
     }
     else {
@@ -379,7 +389,7 @@ function GameComp() {
               price: d.data.data.liveOdds.matchodds.teamb.back
             },]
           }]);
-          setSessionOdds(d.data.data.batBowl.sessionOdds)
+          setSessionOdds(d.data.data.sessionOdds)
         }
       })
       socket.on("score:update", (d) => {
