@@ -539,7 +539,9 @@ function GameComp() {
           <span>Batting</span>
         </div>
         <div className={styles.runRateDiv}>
-          <span>{`Run Rate: ${liveData.runrate}`}</span>
+          {liveData?.required_runrate!=""?<span>{`RRR: ${liveData.required_rate}`}</span>:<></>}
+          {liveData?.target!=0?<span>{`Target: ${liveData.target}`}</span>:<></>}
+          <span>{`CRR: ${liveData.runrate}`}</span>
         </div>
         <div className={styles.ballEvent}>
           {ballEvent}
