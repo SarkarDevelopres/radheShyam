@@ -60,9 +60,10 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0px;
+  width: 50%;
 }
 .betButtons button {
-  width: 100px;
+  width: 70px;
   border-radius: 10px;
   border: none;
   outline: none;
