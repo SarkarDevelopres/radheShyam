@@ -421,6 +421,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  padding: 30px 0px;
 }
 .maskDivSession span{
   font-weight: 600;

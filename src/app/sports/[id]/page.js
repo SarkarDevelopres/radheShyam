@@ -708,6 +708,7 @@ function GameComp() {
         </div>
         <div className={styles.sessionoddsDiv}>
           <div className={styles.maskDivSession}>
+             <Spinner/>
             <span>Session Odds are being added....</span>
           </div>
           {
