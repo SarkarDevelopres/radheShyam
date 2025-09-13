@@ -564,10 +564,6 @@ export default function AmarAkbarAnthonyPage() {
             ))}
           </div>
         </div>
-
-        <p style={{ marginTop: 10, fontSize: 12, color: "#9aa4af" }}>
-          Flow: <code>round:start</code> (bets open) → <code>round:result</code> (one card + outcome; settle).
-        </p>
       </div>
     </div>
   );

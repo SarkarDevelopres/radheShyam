@@ -688,10 +688,6 @@ const icons5 = [
 
 
                 </div>
-
-                <p style={{ marginTop: 10, fontSize: 12, color: "#9aa4af" }}>
-                    Flow: <code>round:start</code> (base shown & bets open) → <code>round:lock</code> (lock) → <code>round:result</code> (next + outcome).
-                </p>
             </div>
         </div>
     );
