@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 function MenuWindow({ onClose }) {
     const pathName = usePathname();
     const router = useRouter();
-    const [userData, setUserData] = useState({ name: "Sagnik Sarkar" })
+    const [userData, setUserData] = useState({ name: "UserName" })
     const [tokenExists, setTokenExists] = useState(false);
 
     const logOut = () => {
