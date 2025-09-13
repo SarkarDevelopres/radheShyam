@@ -725,7 +725,7 @@ function GameComp() {
           <div className={styles.betComps}>
             {openBets.map((e, i) => {
               return <div key={i} className={styles.betIndiComps} >
-                <p className={styles.betTeamName}>{(e?.selection).slice(0,16)}</p>
+                <p className={styles.betTeamName}>{(e?.selection).slice(0,11)}</p>
                 <p className={styles.betOdd}>{e?.lay ? 'lay' : 'back'}</p>
                 <p className={styles.betOdd}>{e.odds}</p>
                 <p className={styles.betStake}>{e.stake}</p>
