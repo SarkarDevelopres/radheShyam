@@ -698,7 +698,10 @@ function GameComp() {
         <div className={styles.header}>
           <h3>Session Odds</h3>
         </div>
-        <div>
+        <div className={styles.sessionoddsDiv}>
+          <div className={styles.maskDivSession}>
+            <span>Session Odds are being added....</span>
+          </div>
           {
             sessionOdds.map((e, i) => {
               return (

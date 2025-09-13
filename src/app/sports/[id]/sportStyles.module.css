@@ -409,3 +409,21 @@
    font-size: 1.2rem;
   font-weight: 600;
 }
+.sessionoddsDiv{
+  position: relative;
+}
+.maskDivSession{
+  background-color: #000f3195;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.maskDivSession span{
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #02d4f4;
+}
