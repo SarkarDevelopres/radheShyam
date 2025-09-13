@@ -14,11 +14,23 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
   const [amount, chooseAmount] = useState(null);
-  const [customStake, setCustomStake] = useState(null);
+  const [customStake, setCustomStake] = useState("");
   const [odds, setOdds] = useState('');
   const [team, setTeam] = useState('');
   const [lay, setLay] = useState(false);
 
+  const payout = useMemo(() => {
+    // oddsBook must be keyed by team name
+    const oddsBook = {
+      [f.name]: {
+        back: f.price,
+        lay: (f.price / 0.99).toFixed(2)
+      }
+    };
+
+    // This handles multiple bets internally
+    return cashoutForTeam(openBets, f.name, oddsBook);
+  }, [openBets, f]);
 
   const isLoggedIn = () => {
     if (typeof window === "undefined") return false;
@@ -90,18 +102,15 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
   return (
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
-        <p>{f.name ? f.name : f.title}</p>
-        {amount && odds ? <span>{
-          !lay ? (amount * odds).toFixed(2)
-            :
-            (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
-        </span> : <></>
+        <p>{f.name}</p>
+        {
+          <span style={{ color: payout.profitNow < 0 ? "red" : "green" }}>{payout.profitNow}</span>
         }
         <div className={styles.betButtons}>
           <button onClick={() => {
             setLay(false)
             setShowStake(true)
-            setOdds(f.price.toFixed(2))
+            setOdds(parseFloat(f.price).toFixed(2))
             setTeam(f.name)
           }}>{f.price ? f.price : 1}</button>
           <button onClick={() => {
@@ -113,8 +122,19 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
-        <div className={styles.inputDiv}>
-          <input type="number" value={amount} onChange={(e) => chooseAmount(e.target.value)} />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className={styles.inputDiv}>
+            <input type="number" value={amount} onChange={(e) => {
+              chooseAmount(e.target.value)
+              setCustomStake(e.target.value)
+              }} />
+          </div>
+          {amount && odds ? <span>{
+            !lay ? (amount * odds).toFixed(2)
+              :
+              (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
+          </span> : <span></span>
+          }
         </div>
         <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
           {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
@@ -370,6 +390,17 @@ function GameComp() {
     const confirmed = confirm("Are you sure you want to Delete Bet ?");
 
     if (confirmed) {
+
+      let oddsBook = {};
+
+      for (const outcome of oddsData[0].outcomes) {
+        oddsBook[outcome.name] = {
+          back: parseFloat(outcome.price),
+          lay: parseFloat((parseFloat(outcome.price) / 0.99).toFixed(2))
+        };
+      }
+
+
       if (typeof window === "undefined") return false;
       let userToken = localStorage.getItem("userToken");
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
@@ -381,6 +412,7 @@ function GameComp() {
         body: JSON.stringify({
           token: userToken,
           matchId: metaData.matchId,
+          oddsBook: oddsBook
         }),
       });
 
@@ -395,7 +427,7 @@ function GameComp() {
         let matchId = localStorage.getItem("matchId");
         let userToken = localStorage.getItem("userToken");
         toast.success(`${payload.message}`);
-        fetchBets(userToken,matchId)
+        fetchBets(userToken, matchId)
       }
 
     }
@@ -693,7 +725,7 @@ function GameComp() {
           <div className={styles.betComps}>
             {openBets.map((e, i) => {
               return <div key={i} className={styles.betIndiComps} >
-                <p className={styles.betTeamName}>{e?.selection}</p>
+                <p className={styles.betTeamName}>{(e?.selection).slice(0,16)}</p>
                 <p className={styles.betOdd}>{e?.lay ? 'lay' : 'back'}</p>
                 <p className={styles.betOdd}>{e.odds}</p>
                 <p className={styles.betStake}>{e.stake}</p>
@@ -708,7 +740,7 @@ function GameComp() {
         </div>
         <div className={styles.sessionoddsDiv}>
           <div className={styles.maskDivSession}>
-             <Spinner/>
+            <Spinner />
             <span>Session Odds are being added....</span>
           </div>
           {
