@@ -28,6 +28,7 @@ function Login() {
         if (res.success) {
             localStorage.setItem("userToken", res.token);
             localStorage.setItem("balance", res.balance);
+            localStorage.setItem("userName", userName);
             window.location.replace("/");
         } else {
             alert(res.message);

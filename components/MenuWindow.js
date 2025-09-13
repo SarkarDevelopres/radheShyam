@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 function MenuWindow({ onClose }) {
     const pathName = usePathname();
     const router = useRouter();
-    const [userData, setUserData] = useState({ name: "UserName" })
+    const [userData, setUserData] = useState({ name: "User Name" })
     const [tokenExists, setTokenExists] = useState(false);
 
     const logOut = () => {
@@ -27,7 +27,9 @@ function MenuWindow({ onClose }) {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem("userToken");
+            const userName = localStorage.getItem("userName");
             setTokenExists(!!token);
+            setUserData({name:!userName?"User Name":userName})
         }
     }, [pathName]);
 
