@@ -19,8 +19,7 @@ function Navbar() {
   // init socket
 
   const logOut = () => {
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("balance");
+    localStorage.clear();
     window.location.replace("/login");
   }
 

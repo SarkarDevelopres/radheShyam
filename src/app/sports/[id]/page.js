@@ -6,8 +6,10 @@ import Loading from '../../../../components/Loading'
 import { toast } from "react-toastify";
 import { useRouter } from 'next/navigation';
 import { io } from "socket.io-client";
+import { useMemo } from "react";
+import { cashoutForTeam } from "../../../../lib/cashout";
 
-export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
+export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets }) {
 
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
@@ -33,7 +35,13 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
     }
 
 
-    const amnt = customStake ? parseInt(customStake) : amount;
+    let amnt = customStake ? parseInt(customStake) : amount;
+    let deductAmnt = amnt;
+    if (lay == true) {
+      let layOdds = (parseFloat(odds) - 1).toFixed(2)
+      deductAmnt = layOdds * parseInt(amount)
+    }
+
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
       method: 'POST',
@@ -49,6 +57,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
         bookmakerKey: bookmaker,
         selection: team,
         stake: amnt,
+        deductAmount: deductAmnt,
         odds: odds,
         lay: lay,
       }),
@@ -66,6 +75,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
 
       toast.success(`Bet Placed for ${amnt}!`);
       setShowStake(false);
+      fetchBet(loggedIn, meta.matchId)
     }
 
 
@@ -80,19 +90,25 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "" }) {
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
         <p>{f.name ? f.name : f.title}</p>
-        {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
+        {amount && odds ? <span>{
+          !lay ? (amount * odds).toFixed(2)
+            :
+            (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2)*parseInt(amount)))}
+        </span> : <></>
+        }
         <div className={styles.betButtons}>
           <button onClick={() => {
+            setLay(false)
             setShowStake(true)
-            setOdds(f.price ? f.price : f.back)
+            setOdds(f.price.toFixed(2))
             setTeam(f.name)
           }}>{f.price ? f.price : 1}</button>
           <button onClick={() => {
             setShowStake(true)
-            setOdds(((f.price ? f.price : 1) / ((f.price ? f.price : 1) - 1).toFixed(2)))
+            setOdds((((f.price ? f.price : 1) / 0.99).toFixed(2)))
             setTeam(f.name)
             setLay(true)
-          }}>{(f.price / (f.price - 1)).toFixed(2)}</button>
+          }}>{(f.price / (0.99)).toFixed(2)}</button>
         </div>
       </div>
       {showStake && <div className={styles.stakeBtnDiv} >
@@ -176,9 +192,9 @@ export function SessionOddsMatchComp({ f }) {
     //   console.log(response);
 
     // }
-    
-      toast.success(`Bet Placed for ${amnt}!`);
-      setShowStake(false);
+
+    toast.success(`Bet Placed for ${amnt}!`);
+    setShowStake(false);
 
   }
   const cancel = () => {
@@ -193,12 +209,12 @@ export function SessionOddsMatchComp({ f }) {
         <p>{f.title}</p>
         {amount && odds ? <span>{(amount * odds).toFixed(2)}</span> : <></>}
         <div className={styles.sessionOddBets}>
-          <div style={{width:"100%",display:"flex",justifyContent:"space-around"}}>
+          <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
             <span>
-              { `Over ${f.back_condition}` }
+              {`Yes`}
             </span>
             <span>
-              { `Under ${f.lay_condition}` }
+              {`No`}
             </span>
           </div>
           <div className={styles.betButtons}>
@@ -206,13 +222,19 @@ export function SessionOddsMatchComp({ f }) {
               setShowStake(true)
               setOdds(f.back)
               setTeam(f.back_condition)
-            }}>{f.back}</button>
+            }}>
+              <span>{`${f.back_condition}`}</span>
+              <span>{`${f.back}`}</span>
+            </button>
             <button onClick={() => {
               setShowStake(true)
               setOdds(f.lay)
               setTeam(f.lay_condition)
               setLay(true)
-            }}>{f.lay}</button>
+            }}>
+              <span>{`${f.lay_condition}`}</span>
+              <span>{`${f.lay}`}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -262,12 +284,17 @@ function GameComp() {
     wickets: 0,
     overs: 0.0,
     runrate: 0.0,
+    required_runrate: 0.0,
+    target: 0
+
   })
+  const [openBets, setOpenBets] = useState([])
   const [batsmenList, setBatsmenList] = useState([])
   const [bowlersList, setBowlersList] = useState([])
   const [ballEvent, setBallEvent] = useState("");
   const [ballArray, setBallArray] = useState(["", "", "", "", "", ""]);
   const [isLive, setIsLive] = useState(false)
+  const [liveUpdate, setLiveUpdate] = useState("")
   const [sessionOdds, setSessionOdds] = useState([])
   const openTV = () => {
     if (!tvOn) {
@@ -314,6 +341,27 @@ function GameComp() {
 
       router.refresh();
     }
+  }
+  const fetchBets = async (userToken, matchId) => {
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/findMany`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+      body: JSON.stringify({
+        userToken: userToken,
+        matchId: matchId,
+      }),
+    });
+
+    const payload = await response.json();
+    console.log(payload.data);
+    if (payload.ok) {
+      setOpenBets([...payload.data])
+    }
+
   }
   const takeBackBet = async () => {
     console.log("Called ?");
@@ -366,7 +414,7 @@ function GameComp() {
       });
       socket.emit("watch:join", id);
       socket.on("watch:joined", (d) => {
-        console.log(d.data);
+        // console.log(d.data);
 
         if (d?.data) {
           if (d?.data?.data?.liveScore) {
@@ -416,8 +464,9 @@ function GameComp() {
               price: d.data.liveOdds.matchodds.teamb.back
             },]
           }]);
-          setSessionOdds(d.data.sessionOdds)
-          console.log("Live score update:", d)
+          setSessionOdds(d.data.sessionOdds);
+          setLiveUpdate(d.data.liveStatus);
+          // console.log("Live score update:", d.data.liveStatus)
         }
         if (d.kind === "ball") {
           setBallEvent(d.data.ball_event)
@@ -503,7 +552,9 @@ function GameComp() {
 
   useEffect(() => {
     let id = localStorage.getItem("matchId");
+    let userToken = localStorage.getItem("userToken");
     fetchData(id);
+    fetchBets(userToken, id)
   }, [])
 
 
@@ -529,6 +580,9 @@ function GameComp() {
 
         </div>
       </div>
+      <div>
+        <p style={{ textAlign: "center", fontSize: "1.3rem", color: "#02d4f4" }}>{liveUpdate}</p>
+      </div>
       <div className={styles.topScoreDiv}>
         {!isLive && <div className={styles.maskDiv}>
           <span style={{ position: "absolute", fontSize: "1.3rem" }}>{isStall ? "Watitng For Match Scores " : "Match not started yet"}</span>
@@ -539,8 +593,9 @@ function GameComp() {
           <span>Batting</span>
         </div>
         <div className={styles.runRateDiv}>
-          {liveData?.required_runrate!=""?<span>{`RRR: ${liveData.required_rate}`}</span>:<></>}
-          {liveData?.target!=0?<span>{`Target: ${liveData.target}`}</span>:<></>}
+          {liveData?.required_runrate != "" ? <span>{`RRR: ${liveData.required_runrate
+            }`}</span> : <></>}
+          {liveData?.target != 0 ? <span style={{ padding: "0px 15px" }}>{`Target: ${liveData.target}`}</span> : <></>}
           <span>{`CRR: ${liveData.runrate}`}</span>
         </div>
         <div className={styles.ballEvent}>
@@ -598,6 +653,12 @@ function GameComp() {
           <h3>Match Odds</h3>
           <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>
         </div>
+        <div className={styles.backLayNameBar}>
+          <div>
+            <span>Back</span>
+            <span>Lay</span>
+          </div>
+        </div>
         <div>
           {
             oddsData.map((e, i) => {
@@ -606,7 +667,7 @@ function GameComp() {
                   {
                     e?.outcomes.map((f, j) => {
                       return (
-                        <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} market={e.market} />
+                        <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} market={e.market} fetchBet={fetchBets} openBets={openBets} />
                       )
                     })
                   }
@@ -614,6 +675,23 @@ function GameComp() {
               )
             })
           }
+        </div>
+      </div>
+      <div className={styles.oddsDiv}>
+        <div className={styles.header}>
+          <h3>Open Bets</h3>
+        </div>
+        <div className={styles.oddsComp}>
+          <div className={styles.betComps}>
+            {openBets.map((e, i) => {
+              return <div key={i} className={styles.betIndiComps} >
+                <p className={styles.betTeamName}>{e?.selection}</p>
+                <p className={styles.betOdd}>{e?.lay ? 'lay' : 'back'}</p>
+                <p className={styles.betOdd}>{e.odds}</p>
+                <p className={styles.betStake}>{e.stake}</p>
+              </div>
+            })}
+          </div>
         </div>
       </div>
       <div className={styles.oddsDiv}>
