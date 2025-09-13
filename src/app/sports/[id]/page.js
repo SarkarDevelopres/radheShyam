@@ -102,7 +102,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
   return (
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
-        <p>{f.name}</p>
+        <p>{(f.name).slice(0,11)}</p>
         {
           <span style={{ color: payout.profitNow < 0 ? "red" : "green" }}>{payout.profitNow}</span>
         }
