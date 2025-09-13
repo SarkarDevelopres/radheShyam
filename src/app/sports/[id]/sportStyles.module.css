@@ -233,6 +233,7 @@
   padding-left: 10px;
   margin-bottom: 0px;
   color: #02d4f4;
+  text-wrap: wrap;
 }
 .teamnameDiv span {
   text-align: center;
