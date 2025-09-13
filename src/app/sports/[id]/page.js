@@ -42,6 +42,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       deductAmnt = layOdds * parseInt(amount)
     }
 
+    console.log(amnt);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
       method: 'POST',
@@ -93,7 +94,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
         {amount && odds ? <span>{
           !lay ? (amount * odds).toFixed(2)
             :
-            (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2)*parseInt(amount)))}
+            (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
         </span> : <></>
         }
         <div className={styles.betButtons}>
@@ -366,31 +367,38 @@ function GameComp() {
   const takeBackBet = async () => {
     console.log("Called ?");
 
-    if (typeof window === "undefined") return false;
-    let userToken = localStorage.getItem("userToken");
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`,
-      },
-      body: JSON.stringify({
-        token: userToken,
-        matchId: metaData.matchId,
-      }),
-    });
+    const confirmed = confirm("Are you sure you want to Delete Bet ?");
 
-    const payload = await response.json();
-    if (!payload.ok) {
-      toast.error(`${payload.message}`)
-      return;
+    if (confirmed) {
+      if (typeof window === "undefined") return false;
+      let userToken = localStorage.getItem("userToken");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({
+          token: userToken,
+          matchId: metaData.matchId,
+        }),
+      });
+
+      const payload = await response.json();
+      if (!payload.ok) {
+        toast.error(`${payload.message}`)
+        return;
+      }
+
+      if (payload.ok) {
+        console.log(response);
+        let matchId = localStorage.getItem("matchId");
+        let userToken = localStorage.getItem("userToken");
+        toast.success(`${payload.message}`);
+        fetchBets(userToken,matchId)
+      }
+
     }
-
-    if (payload.ok) {
-      console.log(response);
-      toast.success(`${payload.message}`);
-    }
-
 
   }
   useEffect(() => {
