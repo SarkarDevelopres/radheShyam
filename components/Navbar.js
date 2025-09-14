@@ -43,7 +43,7 @@ function Navbar() {
           }, 1000);
         }
 
-        if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+        if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
       });
     };
 
@@ -53,7 +53,7 @@ function Navbar() {
       console.log("Results: ", res);
       console.log("Results Came: ", res._doc.balance);
 
-      if (res?.ok) setBalance(Number(res._doc.balance) || 0);
+      if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
     });
 
     return () => {
