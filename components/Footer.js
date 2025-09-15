@@ -12,6 +12,7 @@ function Footer() {
                 <Link href="/games">Games</Link>
                 <Link href="/sports">In-Play</Link>
                 <Link href="/login">Log-In</Link>
+                <Link href="/employee/login">Emp Log-In</Link>
             </div>
         </div>
         <p className={styles.copyrightPara}>Copyright@RadheShyamExchange 2025</p>
