@@ -85,8 +85,8 @@ function OddComponent({ data }) {
         setShowStake(false);
     }
      const goToMatchPage = () => {
-        localStorage.setItem("home",data.teamHome);
-        localStorage.setItem("away",data.teamAway);
+        localStorage.setItem("home",data.teamHome.name);
+        localStorage.setItem("away",data.teamAway.name);
         localStorage.setItem("matchId",data.matchId);
         localStorage.setItem("status",data.status);
         router.push(`/sports/${data.matchId}`)
@@ -96,7 +96,7 @@ function OddComponent({ data }) {
             <div className={styles.OddDetails}>
                 <span className={styles.liveIndicator} style={{backgroundColor:data.status=="live"?"#00b728":"#a0a0a0ff"}} />
                 <div className={styles.teamMatchDetails} >
-                    <p onClick={goToMatchPage}>{`${data.teamHome} vs ${data.teamAway}`}</p>
+                    <p onClick={goToMatchPage}>{`${data.teamHome.name} vs ${data.teamAway.name}`}</p>
                     <span>{`${data.start_time} | ${data.title}`}</span>
                 </div>
             </div>
