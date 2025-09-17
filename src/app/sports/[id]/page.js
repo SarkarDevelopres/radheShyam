@@ -21,10 +21,11 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
 
   const payout = useMemo(() => {
     // oddsBook must be keyed by team name
+    const price = f.price ?? 0;
     const oddsBook = {
       [f.name]: {
-        back: f.price,
-        lay: (f.price / 0.99).toFixed(2)
+        back: price,
+        lay: (price / 0.99).toFixed(2)
       }
     };
 
@@ -47,7 +48,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
     }
 
     if (!f.price) {
-       toast.error(`Cannot place bets !`)
+      toast.error(`Cannot place bets !`)
       return;
     }
 
@@ -320,6 +321,7 @@ function GameComp() {
   const [ballEvent, setBallEvent] = useState("");
   const [ballArray, setBallArray] = useState(["", "", "", "", "", ""]);
   const [isLive, setIsLive] = useState(false)
+  const [completed, setCompleted] = useState(false)
   const [liveUpdate, setLiveUpdate] = useState("")
   const [sessionOdds, setSessionOdds] = useState([])
   const [gameState, setGameState] = useState({ code: 3, string: "Play Ongoing" })
@@ -526,12 +528,16 @@ function GameComp() {
           if (d.data.gameState.stateCode != 3) {
             setGameState(d.data.gameState)
           }
-          console.log("Live score update:", d.data)
+          // console.log("Live score update:", d.data)
         }
         if (d.kind === "ball") {
+          console.log("Ball update:", d.data)
           setBallEvent(d.data.ball_event)
           let ballNo = parseInt(d.data.data.ball, 10);
-
+          if (d.data.ball_event == "Match End") {
+            setIsLive(false);
+            setCompleted(true)
+          }
           if (ballNo <= 6) {
             setBallArray((prev) => {
               const updated = [...prev];
@@ -711,7 +717,7 @@ function GameComp() {
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match Odds</h3>
-          <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>
+          {!completed && <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>}
         </div>
         <div className={styles.backLayNameBar}>
           <div>
@@ -727,6 +733,10 @@ function GameComp() {
               <Spinner />
               <span>{gameState.string}</span>
             </div>}
+          {completed && <div className={styles.maskDivSession}>
+            <Spinner />
+            <span>Match Completed, rewards within 30 mins</span>
+          </div>}
           {
             oddsData.map((e, i) => {
               return (
