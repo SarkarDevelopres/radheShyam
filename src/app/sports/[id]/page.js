@@ -46,6 +46,11 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       return; // stop here
     }
 
+    if (!f.price) {
+       toast.error(`Cannot place bets !`)
+      return;
+    }
+
 
     let amnt = customStake ? parseInt(customStake) : amount;
     let deductAmnt = amnt;
@@ -112,7 +117,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
             setShowStake(true)
             setOdds(parseFloat(f.price).toFixed(2))
             setTeam(f.name)
-          }}>{f.price ? f.price : 1}</button>
+          }}>{f.price ? f.price : 0.00}</button>
           <button onClick={() => {
             setShowStake(true)
             setOdds((((f.price ? f.price : 1) / 0.99).toFixed(2)))
