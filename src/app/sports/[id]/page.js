@@ -102,7 +102,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
   return (
     <div className={styles.bookOddDiv}>
       <div className={styles.teamDiv}>
-        <p>{(f.name).slice(0,11)}</p>
+        <p>{(f.name).slice(0, 11)}</p>
         {
           <span style={{ color: payout.profitNow < 0 ? "red" : "green" }}>{payout.profitNow}</span>
         }
@@ -127,7 +127,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
             <input type="number" value={amount} onChange={(e) => {
               chooseAmount(e.target.value)
               setCustomStake(e.target.value)
-              }} />
+            }} />
           </div>
           {amount && odds ? <span>{
             !lay ? (amount * odds).toFixed(2)
@@ -317,6 +317,7 @@ function GameComp() {
   const [isLive, setIsLive] = useState(false)
   const [liveUpdate, setLiveUpdate] = useState("")
   const [sessionOdds, setSessionOdds] = useState([])
+  const [gameState, setGameState] = useState({ code: 3, string: "Play Ongoing" })
   const openTV = () => {
     if (!tvOn) {
       tvRef.current.style.height = "200px";
@@ -356,6 +357,12 @@ function GameComp() {
       setMetaData({ ...res.meta });
       setSessionOdds([...res.data.sessionOdds])
       setIsLoading(false);
+
+      if (res.matchData.game_state?.code != 3) {
+        setGameState({ ...res.matchData.game_state })
+      }
+      console.log(gameState);
+
     }
     else {
       console.log(res);
@@ -460,6 +467,7 @@ function GameComp() {
           if (d?.data?.data?.liveScore) {
             setLiveData(d.data.data.liveScore);
           }
+
           setBatsmenList(d.data.data.batsmenList)
           setBowlersList(d.data.data.bowlersList)
           let batTeam = d.data.data.batBowl.batting;
@@ -494,19 +502,26 @@ function GameComp() {
           setBowlersList(d.data.bowlersList)
           setTeamData(teamData)
           setIsLive(true)
-          setOddsData([{
-            outcomes: [{
-              name: d.data.teamData.teama,
-              price: d.data.liveOdds.matchodds.teama.back
-            },
-            {
-              name: d.data.teamData.teamb,
-              price: d.data.liveOdds.matchodds.teamb.back
-            },]
-          }]);
+          if (d?.data?.liveOdds?.matchodds) {
+            setOddsData([{
+              outcomes: [
+                {
+                  name: d.data.teamData.teama,
+                  price: d.data.liveOdds.matchodds.teama?.back
+                },
+                {
+                  name: d.data.teamData.teamb,
+                  price: d.data.liveOdds.matchodds.teamb?.back
+                },
+              ]
+            }]);
+          }
           setSessionOdds(d.data.sessionOdds);
           setLiveUpdate(d.data.liveStatus);
-          // console.log("Live score update:", d.data.liveStatus)
+          if (d.data.gameState.stateCode != 3) {
+            setGameState(d.data.gameState)
+          }
+          console.log("Live score update:", d.data)
         }
         if (d.kind === "ball") {
           setBallEvent(d.data.ball_event)
@@ -695,11 +710,18 @@ function GameComp() {
         </div>
         <div className={styles.backLayNameBar}>
           <div>
-            <span>Back</span>
+            <span onClick={() => {
+              console.log(gameState);
+            }}>Back</span>
             <span>Lay</span>
           </div>
         </div>
-        <div>
+        <div className={styles.sessionoddsDiv}>
+          {gameState.code == 3 ? <></>
+            : <div className={styles.maskDivSession}>
+              <Spinner />
+              <span>{gameState.string}</span>
+            </div>}
           {
             oddsData.map((e, i) => {
               return (
@@ -725,7 +747,7 @@ function GameComp() {
           <div className={styles.betComps}>
             {openBets.map((e, i) => {
               return <div key={i} className={styles.betIndiComps} >
-                <p className={styles.betTeamName}>{(e?.selection).slice(0,11)}</p>
+                <p className={styles.betTeamName}>{(e?.selection).slice(0, 11)}</p>
                 <p className={styles.betOdd}>{e?.lay ? 'lay' : 'back'}</p>
                 <p className={styles.betOdd}>{e.odds}</p>
                 <p className={styles.betStake}>{e.stake}</p>

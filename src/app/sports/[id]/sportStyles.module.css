@@ -413,6 +413,7 @@
 }
 .sessionoddsDiv{
   position: relative;
+  min-height: 100px;
 }
 .maskDivSession{
   background-color: #000f3195;
@@ -430,4 +431,5 @@
   font-weight: 600;
   font-size: 1.3rem;
   color: #02d4f4;
+  position: absolute;
 }
