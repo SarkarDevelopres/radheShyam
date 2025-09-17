@@ -9,7 +9,7 @@ import { io } from "socket.io-client";
 import { useMemo } from "react";
 import { cashoutForTeam } from "../../../../lib/cashout";
 
-export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets }) {
+export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets, matchData }) {
 
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
@@ -52,6 +52,12 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       return;
     }
 
+    let teamId = null;
+    if (matchData.teamHome?.name === team) {
+      teamId = matchData.teamHome.team_id;
+    } else if (matchData.teamAway?.name === team) {
+      teamId = matchData.teamAway.team_id;
+    }
 
     let amnt = customStake ? parseInt(customStake) : amount;
     let deductAmnt = amnt;
@@ -74,7 +80,8 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
         title: meta.sportkey,
         market: market,
         bookmakerKey: bookmaker,
-        selection: team,
+        selection: teamId,
+        selectionName:team,
         stake: amnt,
         deductAmount: deductAmnt,
         odds: odds,
@@ -306,6 +313,7 @@ function GameComp() {
   const [isLoading, setIsLoading] = useState(true);
   const [oddsData, setOddsData] = useState([]);
   const [metaData, setMetaData] = useState([]);
+  const [matchData, setMatchData] = useState({});
   const [liveData, setLiveData] = useState({
     runs: 0,
     wickets: 0,
@@ -362,6 +370,7 @@ function GameComp() {
     if (res.success) {
       setOddsData([res.data]);
       setMetaData({ ...res.meta });
+      setMatchData({ ...res.matchData })
       setSessionOdds([...res.data.sessionOdds])
       setIsLoading(false);
 
@@ -744,7 +753,7 @@ function GameComp() {
                   {
                     e?.outcomes.map((f, j) => {
                       return (
-                        <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} market={e.market} fetchBet={fetchBets} openBets={openBets} />
+                        <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} matchData={matchData} market={e.market} fetchBet={fetchBets} openBets={openBets} />
                       )
                     })
                   }
@@ -762,7 +771,7 @@ function GameComp() {
           <div className={styles.betComps}>
             {openBets.map((e, i) => {
               return <div key={i} className={styles.betIndiComps} >
-                <p className={styles.betTeamName}>{(e?.selection).slice(0, 11)}</p>
+                <p className={styles.betTeamName}>{(e?.selectionName).slice(0, 11)}</p>
                 <p className={styles.betOdd}>{e?.lay ? 'lay' : 'back'}</p>
                 <p className={styles.betOdd}>{e.odds}</p>
                 <p className={styles.betStake}>{e.stake}</p>
