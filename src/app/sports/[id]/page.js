@@ -39,7 +39,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
     return userToken || false;
   }
 
-  const placeBet = async (price, name) => {
+  const placeBet = async () => {
     const loggedIn = isLoggedIn();
     if (!loggedIn) {
       alert("Log In to place bets!");
@@ -81,7 +81,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
         market: market,
         bookmakerKey: bookmaker,
         selection: teamId,
-        selectionName:team,
+        selectionName: team,
         stake: amnt,
         deductAmount: deductAmnt,
         odds: odds,
@@ -117,7 +117,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       <div className={styles.teamDiv}>
         <p>{(f.name).slice(0, 11)}</p>
         {
-          <span style={{ color: payout.profitNow < 0 ? "red" : "green" }}>{payout.profitNow}</span>
+          <span style={{ color: payout.profitNow < 0 ? "red" : "rgba(0, 243, 0, 1)" }}>{payout.profitNow}</span>
         }
         <div className={styles.betButtons}>
           <button onClick={() => {
@@ -349,11 +349,6 @@ function GameComp() {
   }
 
   const fetchData = async (id) => {
-    let teama = localStorage.getItem("home")
-    let teamb = localStorage.getItem("away")
-    setTeamData({
-      teama, teamb
-    })
     let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/matchOdds`, {
       method: 'POST',
       headers: {
@@ -372,6 +367,16 @@ function GameComp() {
       setMetaData({ ...res.meta });
       setMatchData({ ...res.matchData })
       setSessionOdds([...res.data.sessionOdds])
+      setTeamData({
+        teama: {
+          name: res.matchData.teamHome.name,
+          image: res.matchData.teamHome.logo_url
+        },
+        teamb: {
+          name: res.matchData.teamAway.name,
+          image: res.matchData.teamAway.logo_url
+        }
+      })
       setIsLoading(false);
 
       if (res.matchData.game_state?.code != 3) {
@@ -489,7 +494,16 @@ function GameComp() {
           let batTeam = d.data.data.batBowl.batting;
           let bowlTeam = d.data.data.batBowl.bowling;
           let teamData = { teama: batTeam, teamb: bowlTeam };
-          setTeamData(teamData)
+          setTeamData({
+            teama: {
+              name: batTeam,
+              // image: res.matchData.teamHome.logo_url
+            },
+            teamb: {
+              name: bowlTeam,
+              // image: res.matchData.teamAway.logo_url
+            }
+          })
           setIsLive(true)
           setOddsData([{
             outcomes: [{
@@ -513,10 +527,18 @@ function GameComp() {
         if (d.kind == "snapshot") {
           let batTeam = d.data.batBowl.batting;
           let bowlTeam = d.data.batBowl.bowling;
-          let teamData = { teama: batTeam, teamb: bowlTeam };
           setBatsmenList(d.data.batsmenList)
           setBowlersList(d.data.bowlersList)
-          setTeamData(teamData)
+          setTeamData((p)=>({
+            teama: {
+              name: batTeam,
+              image: p.teama.image
+            },
+            teamb: {
+              name: bowlTeam,
+              image: p.teamb.image
+            }
+          }))
           setIsLive(true)
           if (d?.data?.liveOdds?.matchodds) {
             setOddsData([{
@@ -537,10 +559,10 @@ function GameComp() {
           if (d.data.gameState.stateCode != 3) {
             setGameState(d.data.gameState)
           }
-          // console.log("Live score update:", d.data)
+          console.log("Live score update:", d.data)
         }
         if (d.kind === "ball") {
-          console.log("Ball update:", d.data)
+          // console.log("Ball update:", d.data)
           setBallEvent(d.data.ball_event)
           let ballNo = parseInt(d.data.data.ball, 10);
           if (d.data.ball_event == "Match End") {
@@ -664,7 +686,7 @@ function GameComp() {
           <Spinner style={{ display: "block" }} className={styles.spinnerScore} />
         </div>}
         <div className={styles.teamnameDiv}>
-          <h2>{teamData.teama}</h2>
+          <h2>{teamData.teama.name}</h2>
           <span>Batting</span>
         </div>
         <div className={styles.runRateDiv}>
@@ -719,7 +741,7 @@ function GameComp() {
           </div>
         </div>
         <div className={styles.teamnameDiv}>
-          <h2>{teamData.teamb}</h2>
+          <h2>{teamData.teamb.name}</h2>
           <span>Bowling</span>
         </div>
       </div>
@@ -737,7 +759,7 @@ function GameComp() {
           </div>
         </div>
         <div className={styles.sessionoddsDiv}>
-          {gameState.code == 3 ? <></>
+          {gameState.code == 3 || gameState.code == 0 ? <></>
             : <div className={styles.maskDivSession}>
               <Spinner />
               <span>{gameState.string}</span>
