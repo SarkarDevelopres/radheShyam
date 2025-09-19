@@ -52,6 +52,15 @@ function Navbar() {
     s.on("wallet:update", (res) => {
       console.log("Results: ", res);
       console.log("Results Came: ", res._doc.balance);
+      if (res?.ok) {
+        setBalance(Number(res.balance).toFixed(2) || 0);
+
+        if (res.type === "bet_win" && res.amount > 0) {
+          toast.success(`🎉 You won ₹${res.amount}!`);
+        } else if (res.type === "bet_loss" && res.amount < 0) {
+          toast.error(`❌ You lost ₹${Math.abs(res.amount)}`);
+        }
+      }
 
       if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
     });
