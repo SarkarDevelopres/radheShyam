@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css'
+import { toast } from 'react-toastify';
 
 function Login() {
     const router = useRouter();
@@ -11,7 +12,7 @@ function Login() {
 
     const login = async () => {
         if (!userName || !password) {
-            alert("Enter Credentials");
+            toast.error("Enter Credentials");
         }
         let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/auth/login`, {
             method: 'POST',
@@ -31,7 +32,7 @@ function Login() {
             localStorage.setItem("userName", userName);
             window.location.replace("/");
         } else {
-            alert(res.message);
+            toast.error("Invalid Credentials");
             router.refresh();
         }
     }
