@@ -1,8 +1,8 @@
 .mainDiv{
     position: fixed;
-    bottom: 7%;
+    bottom: 8%;
     right: 20px;
-    z-index: 12;
+    z-index: 30;
     background-color: transparent;
 }
 .mainDiv img{

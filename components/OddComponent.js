@@ -29,49 +29,49 @@ function OddComponent({ data }) {
     }
 
     async function placeBet() {
-        const loggedIn = isLoggedIn();
-        if (!loggedIn) {
-            alert("Log In to place bets!");
-            router.push('/login');
-            return; // stop here
-        }
+        // const loggedIn = isLoggedIn();
+        // if (!loggedIn) {
+        //     alert("Log In to place bets!");
+        //     router.push('/login');
+        //     return; // stop here
+        // }
 
-        const odds = data.odds[team].price;
-        const amount = customStake?parseInt(customStake):amnt;
+        // const odds = data.odds[team].price;
+        // const amount = customStake?parseInt(customStake):amnt;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${loggedIn}`,
-            },
-            body: JSON.stringify({
-                token: loggedIn,
-                matchId: data.matchId,
-                title: data.title,
-                market: data.market,
-                bookmakerKey: data.bookmakerKey,
-                selection: data.odds[team].name,
-                stake: amount,
-                odds,
-            }),
-        });
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${loggedIn}`,
+        //     },
+        //     body: JSON.stringify({
+        //         token: loggedIn,
+        //         matchId: data.matchId,
+        //         title: data.title,
+        //         market: data.market,
+        //         bookmakerKey: data.bookmakerKey,
+        //         selection: data.odds[team].name,
+        //         stake: amount,
+        //         odds,
+        //     }),
+        // });
 
-        if (!response.ok) {
-            const payload = await response.json().catch(() => null);
-            alert(payload?.error || 'Failed');
-            return;
-        }
+        // if (!response.ok) {
+        //     const payload = await response.json().catch(() => null);
+        //     alert(payload?.error || 'Failed');
+        //     return;
+        // }
 
-        if (response.ok) {
-            console.log(response);
+        // if (response.ok) {
+        //     console.log(response);
             
-            toast.success(`Bet Placed of ${customStake?customStake:amnt}!`);
-            setAmnt(0);
-            setTeam(null);
-            setShowStake(false);
-        }
-
+        //     toast.success(`Bet Placed of ${customStake?customStake:amnt}!`);
+        //     setAmnt(0);
+        //     setTeam(null);
+        //     setShowStake(false);
+        // }
+        toast.error("Server Under Maintiance!!")
         // If you use Server Components / data fetching on the page:
         //   router.refresh();
 
