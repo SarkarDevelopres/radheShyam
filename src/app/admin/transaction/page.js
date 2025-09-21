@@ -63,16 +63,19 @@ function Transaction() {
             </thead>
             <tbody>
               {
-                transactionList.map((e, index) => {
-                  return <tr className={styles.tableRow} key={index}>
-                    <td>{index + 1}</td>
-                    <td>{e._id}</td>
-                    <td>{e.type}</td>
-                    <td>{-(e.amount)}</td>
-                    <td>{e.createdAt}</td>
-                  </tr>
+                [...transactionList].reverse().map((e, index) => {
+                  return (
+                    <tr className={styles.tableRow} key={index}>
+                      <td>{index + 1}</td>
+                      <td>{e._id}</td>
+                      <td>{e.type}</td>
+                      <td>{-(e.amount)}</td>
+                      <td>{e.createdAt}</td>
+                    </tr>
+                  );
                 })
               }
+
             </tbody>
           </table>
         </div>
