@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import ClientShell from "../../components/ClientShell";
+import MaintainanceScreen from "../../components/MaintainanceScreen";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,9 @@ async function getNumber() {
   return data.data.phone;
 }
 
+
 export default async function RootLayout({ children }) {
+  let maintainceMode = true
   let no = null;
   try {
     no = await getNumber();
@@ -45,7 +48,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ClientShell number={no}>{children}</ClientShell>
+        {maintainceMode && <MaintainanceScreen duration={6} startedAt={"2025-09-22T13:43:12.372Z"}/>}
+        {!maintainceMode&&<ClientShell number={no}>{children}</ClientShell>}
       </body>
     </html>
   );

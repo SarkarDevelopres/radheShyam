@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 
-function Navbar() {
+function Navbar({ maintainance }) {
   const [tokenExists, setTokenExists] = useState(false);
   const [balance, setBalance] = useState(null);
   const pathName = usePathname();
@@ -24,58 +24,58 @@ function Navbar() {
   }
 
   useEffect(() => {
-    const user = localStorage.getItem("userToken");
-    if (!user) return;
+    if (!maintainance) {
+      const user = localStorage.getItem("userToken");
+      if (!user) return;
 
-    setIsUser(true);
-    // console.log(user);
+      setIsUser(true);
+      const s = io(SERVER_URL, { auth: { token: user } });
+      socketRef.current = s;
 
-    const s = io(SERVER_URL, { auth: { token: user } });
-    socketRef.current = s;
+      const fetchNow = () => {
+        s.emit("wallet:fetch", { userId: user }, (res) => {
+          console.log(res);
+          if (res.ok == false) {
+            toast.error("Sessiopn expired login again!");
+            setTimeout(() => {
+              logOut()
+            }, 1000);
+          }
 
-    const fetchNow = () => {
-      s.emit("wallet:fetch", { userId: user }, (res) => {
-        console.log(res);
-        if (res.ok == false) {
-          toast.error("Sessiopn expired login again!");
-          setTimeout(() => {
-            logOut()
-          }, 1000);
+          if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
+        });
+      }
+
+      fetchNow();
+      s.on("connect", fetchNow);
+      s.on("wallet:update", (res) => {
+        console.log("Results: ", res);
+        console.log("Results Came: ", res._doc.balance);
+        if (res?.ok) {
+          setBalance(Number(res.balance).toFixed(2) || 0);
+
+          if (res.type === "bet_win" && res.amount > 0) {
+            toast.success(`🎉 You won ₹${res.amount}!`);
+          } else if (res.type === "bet_loss" && res.amount < 0) {
+            toast.error(`❌ You lost ₹${Math.abs(res.amount)}`);
+          }
         }
 
         if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
       });
-    };
 
-    fetchNow();
-    s.on("connect", fetchNow);
-    s.on("wallet:update", (res) => {
-      console.log("Results: ", res);
-      console.log("Results Came: ", res._doc.balance);
-      if (res?.ok) {
-        setBalance(Number(res.balance).toFixed(2) || 0);
-
-        if (res.type === "bet_win" && res.amount > 0) {
-          toast.success(`🎉 You won ₹${res.amount}!`);
-        } else if (res.type === "bet_loss" && res.amount < 0) {
-          toast.error(`❌ You lost ₹${Math.abs(res.amount)}`);
-        }
-      }
-
-      if (res?.ok) setBalance(Number(res._doc.balance).toFixed(2) || 0);
-    });
-
-    return () => {
-      s.off("connect", fetchNow);
-      s.off("wallet:update");
-      s.disconnect();
-    };
+      return () => {
+        s.off("connect", fetchNow);
+        s.off("wallet:update");
+        s.disconnect();
+      };
+    }
   }, []);
 
 
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !maintainance) {
       const token = localStorage.getItem("adminToken");
       setTokenExists(!!token);
 
