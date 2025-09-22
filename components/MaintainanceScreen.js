@@ -47,7 +47,7 @@ function MaintainanceScreen({ duration, startedAt }) {
                 <h1 style={{ color: "#02D4F4", textAlign: "center", margin: "20px 0px" }}>
                     Server is under maintenance<br />
                 </h1>
-                <h3>Remaining time: {hours}:{minutes}:{seconds}</h3>
+                <h3 style={{color: "#02D4F4"}}>Remaining time: {hours}:{minutes}:{seconds}</h3>
             </div>
             <Footer maintainance={true}/>
         </div>
