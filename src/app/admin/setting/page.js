@@ -1,11 +1,14 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import AdminSideBar from '../../../../components/AdminSideBar'
 import styles from '../admin.module.css'
 import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 export function GameComponent({ id, index, active }) {
     const [isOn, setIsOn] = useState(active);
+
 
     const handleToggle = () => {
         setIsOn(prev => !prev);
@@ -30,7 +33,64 @@ export function GameComponent({ id, index, active }) {
 }
 
 function Setting() {
-    const [promoCodeList, setPromoCOdeList] = useState([{ PromoCode: "FIRST200", active: true }, { PromoCode: "WELCOME4412", active: true }, { PromoCode: 4928, active: true }, { PromoCode: 4319, active: true }, { PromoCode: 4319, active: true }, { PromoCode: 4583, active: true }])
+    const router = useRouter();
+    const [promoCodeList, setPromoCOdeList] = useState([{ PromoCode: "FIRST200", active: true }, { PromoCode: "WELCOME4412", active: true }, { PromoCode: 4928, active: true }, { PromoCode: 4319, active: true }, { PromoCode: 4319, active: true }, { PromoCode: 4583, active: true }]);
+
+    const [isMaintiance, setIsMaintiance] = useState(false);
+    const [maintianceReason, setMaintianceReason] = useState("");
+    const [maintianceTime, setMaintianceTime] = useState(0);
+    const btnSpan = useRef(null);
+    const btnRef = useRef(null);
+
+    const toggelMaintance = () => {
+        if (!isMaintiance) {
+            btnRef.current.style.backgroundColor = "#009320ff";
+            btnSpan.current.style.marginLeft = "60px";
+            setIsMaintiance(true)
+        } else {
+            setIsMaintiance(false)
+            btnRef.current.style.backgroundColor = "#007deb";
+            btnSpan.current.style.marginLeft = "0px";
+        }
+    }
+
+    const updateMaintaince = async () => {
+        let confirmDecision = confirm(isMaintiance ? "Turn ON Maintaince?" : "Turn OFF Maintiance ?");
+
+        if (confirmDecision) {
+             const adminToken = localStorage.getItem("adminToken");
+            if (!adminToken){ 
+                toast.error("Invalid access !");
+                localStorage.clear();
+                router.push("/admin/login")
+            }
+            let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/setmaintainance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                     "Authorization": `Bearer ${adminToken}`,   // or other content type if needed
+                },
+                body: JSON.stringify({
+                    "isOn": isMaintiance,
+                    "duration": parseFloat(maintianceTime),
+                    "string":maintianceReason,
+                })
+            });
+
+            let res = await req.json();
+
+            if (res.ok) {
+                toast.success("Maintaince Updated !");
+                setIsMaintiance(res.data.isOn);
+                setMaintianceTime(res.data.duration);
+                setMaintianceReason(res.data.string);
+            }
+            else{
+                toast.error(`${res.message}`);
+            }
+        }
+
+    }
     return (
         <div className={styles.mainDiv}>
             <AdminSideBar page={"set"} />
@@ -65,27 +125,34 @@ function Setting() {
                         </div>
                     </div>
                     <div className={styles.containerDiv}>
-                        <h3>Gameplay Rules</h3>
-                        <div className={styles.detailsDataList}>
+                        <h3>Maintaince Mode</h3>
+                        <div className={`${styles.detailsDataList} ${styles.maintainceBox}`}>
                             <div className={styles.individualDataComp}>
-                                <p>Auto-win on player exit </p>
+                                <p>Maintenance Duration </p>
                                 <div>
-                                    <input placeholder="Input in sec" />
-                                    <button>Save</button>
+                                    <input placeholder="Input in sec" value={maintianceTime} onChange={(e)=>setMaintianceTime(e.target.value)} />
                                 </div>
                             </div>
                             <div className={styles.individualDataComp}>
-                                <p>Disconnection timeout </p>
+                                <p>Maintenance Reason </p>
                                 <div>
-                                    <input placeholder="Input in INR" />
-                                    <button>Save</button>
+                                    <input placeholder="Type reason" value={maintianceReason} onChange={(e)=>setMaintianceReason(e.target.value)} />
                                 </div>
                             </div>
                             <div className={styles.individualDataComp}>
-                                <p>Maintenance Mode Toggle </p>
-                                <div>
-                                    <input placeholder="Enter Percentage" />
-                                    <button>Save</button>
+                                <p>Maintenance Duration</p>
+                                <div className={styles.maintainceDiv}>
+                                    <button
+                                        className={styles.maintainceDivBtn}
+                                        onClick={toggelMaintance}
+                                        ref={btnRef}
+                                    >
+                                        <span
+                                            className={styles.buttonSpan}
+                                            ref={btnSpan}
+                                        ></span>
+                                    </button>
+                                    <button onClick={updateMaintaince}>Save</button>
                                 </div>
                             </div>
 

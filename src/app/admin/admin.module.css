@@ -46,41 +46,41 @@
   margin-bottom: 10px;
 }
 
-.dataCard:last-child{
+.dataCard:last-child {
   width: 48%;
 }
 
-.dataCard:last-child  .dataDetails{
+.dataCard:last-child .dataDetails {
   width: 100%;
   padding-left: 0px;
 }
 
-.noField{
+.noField {
   display: flex;
 }
 
-.noField button{
+.noField button {
   width: 18%;
   border-radius: 10px;
   padding: 5px;
   border: none;
   outline: none;
-  background-color: #3AE5FF;
+  background-color: #3ae5ff;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   color: #02285e;
 }
 
-.noField button:hover{
+.noField button:hover {
   background-color: #073e8d;
   color: white;
 }
 
-.dataDetails input{
+.dataDetails input {
   width: 80%;
   padding: 5px 10px;
   border-radius: 10px;
-  border: 1px solid rgb(255,255,255,0.3);
+  border: 1px solid rgb(255, 255, 255, 0.3);
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
@@ -279,12 +279,12 @@
   width: 100px;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
-  background-color: #6b14b7;
+  background-color: #007deb;
 }
 
 .individualDataComp button:hover {
   cursor: pointer;
-  background-color: #430976;
+  background-color: #003399;
 }
 
 .addPromoInput {
@@ -528,25 +528,25 @@ input:checked + .slider::before {
   background-color: #2e2d2f;
   border-radius: 20px;
 }
-.userModalDiv svg{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 25px;
-    cursor: pointer;
+.userModalDiv svg {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 25px;
+  cursor: pointer;
 }
-.detailsField{
-    display: flex;
-    align-items: center;
+.detailsField {
+  display: flex;
+  align-items: center;
 }
 .detailsField span {
   color: #fff;
 }
-.detailsField p{
-    color: #fff;
-    font-size: 1.3rem;
-    margin: 0px;
-    padding-left: 10px;
+.detailsField p {
+  color: #fff;
+  font-size: 1.3rem;
+  margin: 0px;
+  padding-left: 10px;
 }
 .modalDetailsDiv {
   display: flex;
@@ -585,33 +585,33 @@ input:checked + .slider::before {
   background-color: #02285e;
 }
 
-.eventsListDiv{
+.eventsListDiv {
   border-radius: 15px;
   background-color: #2e2d2f;
   padding: 20px;
 }
-.gameListDiv{
+.gameListDiv {
   padding: 10px;
 }
 
-.inputDiv{
+.inputDiv {
   display: flex;
   justify-content: space-between;
 }
 
-.inputDiv input{
+.inputDiv input {
   padding: 5px;
   border-radius: 5px;
   width: 60%;
   outline: none;
-  border: 1px solid rgb(255,255,255,0.3);
+  border: 1px solid rgb(255, 255, 255, 0.3);
 }
-.inputDiv select{
+.inputDiv select {
   width: 20%;
-  border: 1px solid rgb(255,255,255,0.3);
+  border: 1px solid rgb(255, 255, 255, 0.3);
   border-radius: 5px;
 }
-.inputDiv button{
+.inputDiv button {
   width: 20%;
   border: none;
   border-radius: 5px;
@@ -620,6 +620,41 @@ input:checked + .slider::before {
   transition: all 300ms ease-in-out;
 }
 
-.inputDiv button:hover{
+.inputDiv button:hover {
   background-color: #02285e;
+}
+
+.individualDataComp .maintainceDivBtn {
+  width: 100px;
+  border-radius: 20px;
+  padding: 5px 10px;
+  border: none;
+  outline: none;
+  background-color: #007deb; 
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.individualDataComp .buttonSpan {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: margin-left 0.3s;
+}
+
+.individualDataComp .buttonSpan.spanOn {
+  margin-left: 25px;
+}
+
+.individualDataComp .maintainceDiv button:last-child{
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.maintainceBox .individualDataComp input{
+  width: 100%;
+  border-radius: 10px;
 }

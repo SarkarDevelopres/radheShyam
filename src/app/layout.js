@@ -34,12 +34,32 @@ async function getNumber() {
   return data.data.phone;
 }
 
+async function checkMaintainance() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/checkmaintainance`,
+    { cache: "no-store" } // prevent caching
+  );
+  return res;
+}
 
 export default async function RootLayout({ children }) {
-  let maintainceMode = true
+  let maintainceMode = true;
+  let duration = 1;
+  let startedAt = null;
   let no = null;
   try {
     no = await getNumber();
+    // let fetchMaintenanceData = await checkMaintainance();
+    // let jsonResponse = await fetchMaintenanceData.json();
+    // console.log(jsonResponse);
+    
+    // if (jsonResponse.ok) {
+    //   maintainceMode = jsonResponse.isMaintenance;
+    //   if (maintainceMode) {
+    //     duration = jsonResponse.duration
+    //     startedAt = jsonResponse.startedAt
+    //   }
+    // }
   } catch (e) {
     console.error("getNumber failed:", e);
     // no stays null; ClientShell can show a fallback
@@ -48,7 +68,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {maintainceMode && <MaintainanceScreen duration={6} startedAt={"2025-09-22T13:43:12.372Z"}/>}
+        {maintainceMode && <MaintainanceScreen duration={20} startedAt={"2025-09-22T13:43:12.372Z"}/>}
         {!maintainceMode&&<ClientShell number={no}>{children}</ClientShell>}
       </body>
     </html>
