@@ -44,7 +44,7 @@
 .betBoxes {
   padding: 10px;
   border-radius: 10px;
-  background-image: url("../../../public/betbackground.jpg");
+  background-image: url("../../../../public/betbackground.jpg");
   background-position: center;
   background-size: cover;
   transition: all 300ms ease-in-out;

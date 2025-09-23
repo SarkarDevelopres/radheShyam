@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
-import AdminSideBar from '../../../../components/AdminSideBar'
+import AdminSideBar from '@components/AdminSideBar'
 import styles from '../admin.module.css'
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
@@ -42,6 +42,28 @@ function Setting() {
     const btnSpan = useRef(null);
     const btnRef = useRef(null);
 
+    const fetchMaintainceData = async () => {
+        try {
+            const adminToken = localStorage.getItem("adminToken");
+            let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/checkmaintainance`);
+
+            let res = await req.json();
+            console.log(res);
+
+            if (res.ok) {
+                setIsMaintiance(res.isMaintenance);
+                if (res.isMaintenance) {
+                    btnRef.current.style.backgroundColor = "#009320ff";
+                    btnSpan.current.style.marginLeft = "60px";
+                    setMaintianceTime(res.duration);
+                    setMaintianceReason(res.string);
+                }
+            }
+        } catch (error) {
+            toast.error('Error fetching data from server.')
+        }
+    }
+
     const toggelMaintance = () => {
         if (!isMaintiance) {
             btnRef.current.style.backgroundColor = "#009320ff";
@@ -58,8 +80,8 @@ function Setting() {
         let confirmDecision = confirm(isMaintiance ? "Turn ON Maintaince?" : "Turn OFF Maintiance ?");
 
         if (confirmDecision) {
-             const adminToken = localStorage.getItem("adminToken");
-            if (!adminToken){ 
+            const adminToken = localStorage.getItem("adminToken");
+            if (!adminToken) {
                 toast.error("Invalid access !");
                 localStorage.clear();
                 router.push("/admin/login")
@@ -68,15 +90,15 @@ function Setting() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                     "Authorization": `Bearer ${adminToken}`,   // or other content type if needed
+                    "Authorization": `Bearer ${adminToken}`,   // or other content type if needed
                 },
                 body: JSON.stringify({
                     "isOn": isMaintiance,
                     "duration": parseFloat(maintianceTime),
-                    "string":maintianceReason,
+                    "string": maintianceReason,
                 })
             });
-
+            // "2025-09-22T13:43:12.372Z"
             let res = await req.json();
 
             if (res.ok) {
@@ -85,12 +107,17 @@ function Setting() {
                 setMaintianceTime(res.data.duration);
                 setMaintianceReason(res.data.string);
             }
-            else{
+            else {
                 toast.error(`${res.message}`);
             }
         }
 
     }
+    useEffect(() => {
+        fetchMaintainceData();
+    }, [])
+
+
     return (
         <div className={styles.mainDiv}>
             <AdminSideBar page={"set"} />
@@ -130,13 +157,13 @@ function Setting() {
                             <div className={styles.individualDataComp}>
                                 <p>Maintenance Duration </p>
                                 <div>
-                                    <input placeholder="Input in sec" value={maintianceTime} onChange={(e)=>setMaintianceTime(e.target.value)} />
+                                    <input placeholder="Input in sec" value={maintianceTime} onChange={(e) => setMaintianceTime(e.target.value)} />
                                 </div>
                             </div>
                             <div className={styles.individualDataComp}>
                                 <p>Maintenance Reason </p>
                                 <div>
-                                    <input placeholder="Type reason" value={maintianceReason} onChange={(e)=>setMaintianceReason(e.target.value)} />
+                                    <input placeholder="Type reason" value={maintianceReason} onChange={(e) => setMaintianceReason(e.target.value)} />
                                 </div>
                             </div>
                             <div className={styles.individualDataComp}>

@@ -325,22 +325,20 @@ export default function HighLowPage() {
 
     socket.on("round:start", (payload) => {
       setLoading(false);
+      console.log("PAYLOAD1: ",payload);
       canvasRef.current.style.backgroundColor = "#0b1920";
-      hlRef.current?.startRound();
       const rid = payload?._id || payload?.id || payload?.roundId;
       if (rid) {
         roundIdRef.current = rid;
         setRound({ id: rid, ...payload });
-      }
-      if (payload?.baseCard) {
-        const key = faceKeyFromServer(payload.baseCard);
-        hlRef.current?.revealBase(key);
       }
       lockedRef.current = false;
       setLocked(false);
     });
 
     socket.on("highlow:base", (payload) => {
+      console.log("PAYLOAD2: ",payload);
+      
       const rid = payload?.roundId || payload?.id;
       if (rid) {
         roundIdRef.current = rid;
@@ -377,8 +375,8 @@ export default function HighLowPage() {
       if (payload?.roundId) roundIdRef.current = payload.roundId;
       const nextKey = faceKeyFromServer(payload?.nextCard);
       const pick = String(hlRef.current?.state?.userPick).toUpperCase();
-      console.log(pick);
-      console.log("Result: ", payload);
+      // console.log(pick);
+      // console.log("Result: ", payload);
       const cardObj = { ...payload.nextCard };
       const suit = String(cardObj.suit).toUpperCase();
       const deriveGroup = (s) => {

@@ -2,8 +2,8 @@
 import { useRef, useEffect, useState } from 'react';
 import styles from "./page.module.css";
 import { useRouter } from 'next/navigation';
-import InfiniteSlider from "../../components/InfiniteSlide";
-import GameCard from '../../components/GameCard';
+import InfiniteSlider from "@components/InfiniteSlide";
+import GameCard from '@components/GameCard';
 
 
 export function SportsSection({ sportName, image, matchList }) {

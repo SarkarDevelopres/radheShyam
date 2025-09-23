@@ -431,6 +431,8 @@ function SevenUpDown() {
 
     socket.on("round:result", (res) => {
       setLoading(false);
+      console.log("Res: ",res);
+      
 
       const serverRoundId = res?.roundId || roundIdRef.current || null;
       if (res?.roundId) roundIdRef.current = res.roundId;

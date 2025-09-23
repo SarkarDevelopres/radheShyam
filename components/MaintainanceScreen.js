@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar"
 import { Spinner } from "react-bootstrap";
 import Footer from "./Footer";
 
-function MaintainanceScreen({ duration, startedAt }) {
+function MaintainanceScreen({ duration, startedAt, string }) {
     const [remaining, setRemaining] = useState(0);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ function MaintainanceScreen({ duration, startedAt }) {
 
                 <Spinner style={{ height: "50px", width: "50px" }} />
                 <h1 style={{ color: "#02D4F4", textAlign: "center", margin: "20px 0px" }}>
-                    Server is under maintenance<br />
+                    {string}
                 </h1>
                 <h3 style={{color: "#02D4F4"}}>Remaining time: {hours}:{minutes}:{seconds}</h3>
             </div>

@@ -1,15 +1,15 @@
 import localFont from "next/font/local";
-import "./globals.css";
-import ClientShell from "../../components/ClientShell";
-import MaintainanceScreen from "../../components/MaintainanceScreen";
+import "@/globals.css";
+import ClientShell from "@components/ClientShell";
+import MaintainanceScreen from "@components/MaintainanceScreen";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "../fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "../fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
 });
@@ -46,20 +46,22 @@ export default async function RootLayout({ children }) {
   let maintainceMode = true;
   let duration = 1;
   let startedAt = null;
+  let string = "";
   let no = null;
   try {
     no = await getNumber();
-    // let fetchMaintenanceData = await checkMaintainance();
-    // let jsonResponse = await fetchMaintenanceData.json();
-    // console.log(jsonResponse);
-    
-    // if (jsonResponse.ok) {
-    //   maintainceMode = jsonResponse.isMaintenance;
-    //   if (maintainceMode) {
-    //     duration = jsonResponse.duration
-    //     startedAt = jsonResponse.startedAt
-    //   }
-    // }
+    let fetchMaintenanceData = await checkMaintainance();
+    let jsonResponse = await fetchMaintenanceData.json();
+    console.log(jsonResponse);
+
+    if (jsonResponse.ok) {
+      maintainceMode = jsonResponse.isMaintenance;
+      if (maintainceMode) {
+        duration = jsonResponse.duration
+        startedAt = jsonResponse.startedAt
+        string = jsonResponse.string
+      }
+    }
   } catch (e) {
     console.error("getNumber failed:", e);
     // no stays null; ClientShell can show a fallback
@@ -68,8 +70,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {maintainceMode && <MaintainanceScreen duration={20} startedAt={"2025-09-22T13:43:12.372Z"}/>}
-        {!maintainceMode&&<ClientShell number={no}>{children}</ClientShell>}
+        {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} />}
+        {!maintainceMode && <ClientShell number={no}>{children}</ClientShell>}
       </body>
     </html>
   );

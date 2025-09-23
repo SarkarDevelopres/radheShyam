@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
-import styles from '../../login/login.module.css'
+import styles from '@/(main)/login/login.module.css'
 
 function EmpLogin() {
     const router = useRouter();

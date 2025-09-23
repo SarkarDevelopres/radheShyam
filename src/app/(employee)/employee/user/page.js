@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import EmployeeSideBar from '../../../../components/EmployeeSideBar'
-import styles from '../../admin/admin.module.css'
+import EmployeeSideBar from '@components/EmployeeSideBar'
+import styles from '@/(admin)/admin/admin.module.css'
 import { MdSearch } from "react-icons/md";
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
