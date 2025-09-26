@@ -775,7 +775,7 @@ function GameComp() {
             ? <></>
             : <div className={styles.maskDivSession}>
               <Spinner />
-              <span>{gameState.string}</span>
+              <span>{gameState.string || "Suspended"}</span>
             </div>}
 
           {completed && <div className={styles.maskDivSession}>
