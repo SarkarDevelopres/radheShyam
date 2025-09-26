@@ -148,7 +148,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
           {amount && odds ? <span>{
             !lay ? ((amount * odds)-amount).toFixed(2)
               :
-              (((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
+              (parseFloat(amount))}
           </span> : <span></span>
           }
         </div>
