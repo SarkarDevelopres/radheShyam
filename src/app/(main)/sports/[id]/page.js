@@ -9,7 +9,7 @@ import { io } from "socket.io-client";
 import { useMemo } from "react";
 import { cashoutForTeam } from "../../../../../lib/cashout";
 
-export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets, matchData, profitLoss=0 }) {
+export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets, matchData, profitLoss = 0 }) {
 
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
@@ -117,7 +117,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       <div className={styles.teamDiv}>
         <div>
           <p>{(f.name).slice(0, 11)}</p>
-          <p style={{color:(profitLoss+Number(payout.profitNow))<0?"red":"rgba(0, 243, 0, 1)",fontWeight:400}} >{(profitLoss+Number(payout.profitNow)).toFixed(2)}</p>
+          <p style={{ color: (profitLoss + Number(payout.profitNow)) < 0 ? "red" : "rgba(0, 243, 0, 1)", fontWeight: 400 }} >{(profitLoss + Number(payout.profitNow)).toFixed(2)}</p>
         </div>
         {/* {
           <span style={{ color: payout.profitNow < 0 ? "red" : "rgba(0, 243, 0, 1)" }}>{payout.profitNow}</span>
@@ -318,6 +318,7 @@ function GameComp() {
   const [oddsData, setOddsData] = useState([]);
   const [metaData, setMetaData] = useState([]);
   const [matchData, setMatchData] = useState({});
+  const [gameEnd, setGameEnd] = useState(false)
   const [liveData, setLiveData] = useState({
     runs: 0,
     wickets: 0,
@@ -413,10 +414,10 @@ function GameComp() {
     console.log(payload);
     if (payload.ok) {
       setOpenBets([...payload.data])
-      if (payload.profitLoss.length>0) {
+      if (payload.profitLoss.length > 0) {
         setMatchEndProfitLoss([payload.profitLoss[0].stake])
       }
-      else{
+      else {
         setMatchEndProfitLoss(0)
       }
     }
@@ -513,6 +514,9 @@ function GameComp() {
             }
           })
           setIsLive(true)
+          if (d.data.data.liveOdds.matchodds.teama.back == 0.00 || d.data.data.liveOdds.matchodds.teamb.back == 0.00) {
+            setGameEnd(true)
+          }
           setOddsData([{
             outcomes: [{
               name: d.data.data.teamData.teama,
@@ -767,11 +771,13 @@ function GameComp() {
           </div>
         </div>
         <div className={styles.sessionoddsDiv}>
-          {gameState.code == 3 || gameState.code == 0 ? <></>
+          {(gameState.code === 3 || gameState.code === 0 || gameEnd)
+            ? <></>
             : <div className={styles.maskDivSession}>
               <Spinner />
               <span>{gameState.string}</span>
             </div>}
+
           {completed && <div className={styles.maskDivSession}>
             <Spinner />
             <span>Match Completed, rewards within 30 mins</span>
