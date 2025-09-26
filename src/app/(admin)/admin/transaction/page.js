@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import AdminSideBar from '../../../../components/AdminSideBar'
+import AdminSideBar from '@components/AdminSideBar'
 import styles from '../admin.module.css'
-
+import { io } from "socket.io-client";
 import { MdSearch } from "react-icons/md";
 
 function Transaction() {
@@ -36,8 +36,25 @@ function Transaction() {
   }
 
   useEffect(() => {
-    fetchTotalTransactions()
-  }, [])
+    // 1. Fetch initial
+    fetchTotalTransactions();
+
+    // 2. Connect socket
+    const socket = io(process.env.NEXT_PUBLIC_SERVER_PORT, {
+      transports: ["websocket"],
+    });
+
+    // 3. Listen for new transactions
+    socket.on("transaction:new", (tx) => {
+      console.log("I am called:",tx);
+      
+      setTransactionList((prev) => [...prev, tx]); // append live tx
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className={styles.mainDiv}>
@@ -67,10 +84,10 @@ function Transaction() {
                   return (
                     <tr className={styles.tableRow} key={index}>
                       <td>{index + 1}</td>
-                      <td>{e._id}</td>
+                      <td>{e._id || "live-tx"}</td>
                       <td>{e.type}</td>
                       <td>{-(e.amount)}</td>
-                      <td>{e.createdAt}</td>
+                      <td>{e.createdAt || `${e.meta.game}--${e.meta.market}`}</td>
                     </tr>
                   );
                 })
