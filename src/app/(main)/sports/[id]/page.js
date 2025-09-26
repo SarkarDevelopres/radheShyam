@@ -491,7 +491,7 @@ function GameComp() {
       });
       socket.emit("watch:join", id);
       socket.on("watch:joined", (d) => {
-        // console.log(d.data);
+        console.log(d.data);
 
         if (d?.data) {
           if (d?.data?.data?.liveScore) {
@@ -514,8 +514,11 @@ function GameComp() {
             }
           })
           setIsLive(true)
-          if (d.data.data.liveOdds.matchodds.teama.back == 0.00 || d.data.data.liveOdds.matchodds.teamb.back == 0.00) {
+          if (d.data.data.liveOdds.matchodds.teama.back == '' || d.data.data.liveOdds.matchodds.teamb.back == '') {
             setGameEnd(true)
+          }
+          else {
+            setGameEnd(false);
           }
           setOddsData([{
             outcomes: [{
@@ -553,8 +556,11 @@ function GameComp() {
           }))
           setIsLive(true)
           if (d?.data?.liveOdds?.matchodds) {
-            if (d.data.data.liveOdds.matchodds.teama.back == 0.00 || d.data.data.liveOdds.matchodds.teamb.back == 0.00) {
+            if (d.data.liveOdds.matchodds.teama.back == '' || d.data.liveOdds.matchodds.teamb.back == '') {
               setGameEnd(true)
+            }
+            else {
+              setGameEnd(false);
             }
             setOddsData([{
               outcomes: [
@@ -774,12 +780,18 @@ function GameComp() {
           </div>
         </div>
         <div className={styles.sessionoddsDiv}>
-          {(gameState.code === 3 || gameState.code === 0 || gameEnd)
-            ? <></>
-            : <div className={styles.maskDivSession}>
+          {gameEnd && (
+            <div className={styles.maskDivSession}>
               <Spinner />
-              <span>{gameState.string || "Suspended"}</span>
-            </div>}
+              <span>
+                {(gameState.code === 0 || gameState.code === 3)
+                  ? "Suspended"
+                  : (gameState.string || "Suspended")}
+              </span>
+            </div>
+          )}
+
+
 
           {completed && <div className={styles.maskDivSession}>
             <Spinner />
