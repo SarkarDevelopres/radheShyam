@@ -203,7 +203,7 @@
 .topScoreDiv {
   width: 100%;
   height: 250px;
-  background-image: url(../../../../public/live-score-bg.webp);
+  background-image: url(../../../../../public/live-score-bg.webp);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
