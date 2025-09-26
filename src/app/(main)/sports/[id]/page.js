@@ -553,6 +553,9 @@ function GameComp() {
           }))
           setIsLive(true)
           if (d?.data?.liveOdds?.matchodds) {
+            if (d.data.data.liveOdds.matchodds.teama.back == 0.00 || d.data.data.liveOdds.matchodds.teamb.back == 0.00) {
+              setGameEnd(true)
+            }
             setOddsData([{
               outcomes: [
                 {
