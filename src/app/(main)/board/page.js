@@ -1,7 +1,7 @@
 "use client"
 import React, {useState} from 'react'
 import styles from '../games/style.module.css'
-import GameCard from '../../../components/GameCard'
+import GameCard from '@/components/GameCard'
 function BoardGames() {
   const [gameList, setGameList] = useState([
       {name:"ludo",image:"ludo-icon.webp"},
