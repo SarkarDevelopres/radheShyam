@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import AdminSideBar from '@/components/AdminSideBar'
+import AdminSideBar from '@components/AdminSideBar'
 import styles from '../admin.module.css'
 
 export function GameLogComponent({sl,id,name,players,fee,status,dateTime}) {

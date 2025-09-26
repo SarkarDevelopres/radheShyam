@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import AdminSideBar from '@/components/AdminSideBar'
+import AdminSideBar from '@components/AdminSideBar'
 import styles from '../admin.module.css'
 import { MdSearch } from "react-icons/md";
 import { toast } from 'react-toastify';

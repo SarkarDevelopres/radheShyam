@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import styles from '../sports/style.module.css'
-import OddComponent from '@/components/OddComponent';
+import OddComponent from '@components/OddComponent';
 import { BiSolidCricketBall } from "react-icons/bi";
 import { IoMdFootball, IoIosTennisball, IoIosBasketball, IoIosBaseball } from "react-icons/io";
 function LiveView({ initialData }) {
