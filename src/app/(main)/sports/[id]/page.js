@@ -718,18 +718,19 @@ function GameComp() {
         <div className={styles.ballEvent}>
           {ballEvent === "Ball Chalu" ? (
             <img
-              style={{ position: "absolute", left: "20px", top: "0px", width: "100px" }}
+              style={{ position: "absolute", left: "10px", top: "0px", width: "100px" }}
               src="/loading-img.gif"
               alt="Ball animation"
             />
           ) :  ballEvent === "Wicket" || ballEvent === "Bowled" ||ballEvent === "wicket" || ballEvent === "bowled" ? (
            <img
-              style={{ position: "absolute", left: "0px", top: "-50px", width: "150px" }}
+              style={{ position: "absolute", left: "-20px", top: "-50px", width: "150px" }}
               src="/wicket.gif"
               alt="Wicket animation"
             />
           ) : (
             <span>{ballEvent}</span>
+            
           )}
         </div>
         <div className={styles.batsmanList}>
