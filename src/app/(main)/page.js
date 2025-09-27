@@ -15,13 +15,14 @@ export function SportsSection({ sportName, image, matchList }) {
         <img src={image} />
       </div>
       <div className={styles.sportsSectionBody}>
-        {
+        { sportName=="Cricket"?
           matchList.map((e, i) => {
             return <div key={i}>
               <p>{`${e.teamHome.name} vs ${e.teamAway.name}`}</p>
               <button onClick={()=>router.push(`/sports`)}>Bet Now</button>
             </div>
           })
+          :<p>By October you will have all 5 sports, thanks for you patience!</p>
         }
       </div>
     </div>
@@ -36,7 +37,9 @@ export default function Home() {
     { name: "highlow", image: "highlow.webp" },
     { name: "7updown", image: "7updown.webp" },
     { name: "dragontiger", image: "dragontiger.webp" },
-    { name: "amarakbaranthony", image: "aaa.webp" }
+    { name: "amarakbaranthony", image: "aaa.png" },
+    { name: "andarbahar", image: "andarbahar.webp", isNew:true },
+    { name: "aviator", image: "aviator-icon.png", isNew:true },
   ])
   const [oddsData, setOddsData] = useState({
     cricket:[],
@@ -94,13 +97,13 @@ export default function Home() {
       </section>
       <section className={styles.cardsSection}>
         <div className={styles.cardList} ref={cardListRef}>
-          <div className={styles.card} style={{ backgroundImage: `url(/board-card.png)` }}
-            onClick={() => router.push('/board')}
-          ></div>
           <div className={styles.card} style={{ backgroundImage: `url(/casino-card.jpg)` }}
             onClick={() => router.push('/games')} ></div>
           <div className={styles.card} style={{ backgroundImage: `url(/sports-card.jpg)` }}
             onClick={() => router.push('/sports')} ></div>
+          <div className={styles.card} style={{ backgroundImage: `url(/board-card.png)` }}
+            onClick={() => router.push('/board')}
+          ></div>
 
         </div>
       </section>
@@ -109,7 +112,7 @@ export default function Home() {
         <div className={styles.gameList}>
           {
             gameList.map((e, i) => {
-              return <GameCard key={i} name={e.name} image={e.image} />
+              return <GameCard key={i} name={e.name} image={e.image} isNew={e.isNew} />
             })
           }
         </div>

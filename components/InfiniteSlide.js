@@ -11,9 +11,9 @@ export default function InfiniteSlider() {
   const [slideWidth, setSlideWidth] = useState(0);
 
   const slides = [
-    { name: "AustraliaVSAfrica", image: "/slide-1.png" },
-    { name: "NewZealandVSZimbabwe", image: "/slide-2.jpeg" },
-    { name: "AustiraVSWels", image: "/slide-3.jpg" },
+    { name: "AustraliaVSAfrica", image: "/asia-final.jpg" },
+    { name: "NewZealandVSZimbabwe", image: "/t20-africa-cup.png" },
+    { name: "AustiraVSWels", image: "/upl.png" },
   ];
   const extendedSlides = [...slides, ...slides]; // for seamless loop feel
 

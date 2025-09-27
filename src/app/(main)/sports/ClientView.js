@@ -5,10 +5,10 @@ import styles from './style.module.css'
 import OddComponent from '@components/OddComponent';
 import { BiSolidCricketBall } from "react-icons/bi";
 import { IoMdFootball, IoIosTennisball, IoIosBasketball, IoIosBaseball } from "react-icons/io";
-
-function ClientView({initialData}) {
+import { Spinner } from 'react-bootstrap'
+function ClientView({ initialData }) {
     console.log(initialData);
-    
+
     const [activeSports, setActiveSports] = useState("Cricket");
     const [oddsData, setOddsData] = useState(initialData.data)
     const cricket = useRef(null);
@@ -37,7 +37,7 @@ function ClientView({initialData}) {
             setActiveSports("Football");
             fetchData("soccer");
         }
-        else if( v == 'tennis') {            
+        else if (v == 'tennis') {
             tennis.current.style.color = "#00224E";
             cricket.current.style.color = "#02D4F4";
             football.current.style.color = "#02D4F4";
@@ -45,7 +45,7 @@ function ClientView({initialData}) {
             setActiveSports("Tennis")
             fetchData("tennis");
         }
-        else if( v == 'basketball') {            
+        else if (v == 'basketball') {
             tennis.current.style.color = "#00224E";
             cricket.current.style.color = "#02D4F4";
             football.current.style.color = "#02D4F4";
@@ -53,7 +53,7 @@ function ClientView({initialData}) {
             setActiveSports("Basketball")
             fetchData("basketball");
         }
-        else if( v == 'baseball') {            
+        else if (v == 'baseball') {
             tennis.current.style.color = "#00224E";
             cricket.current.style.color = "#02D4F4";
             football.current.style.color = "#02D4F4";
@@ -64,17 +64,17 @@ function ClientView({initialData}) {
     }
 
     const fetchData = async (sports) => {
-        console.log("SPORTS: ",sports);
-        
+        console.log("SPORTS: ", sports);
+
         let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/${sports}`);
 
         let res = await req.json();
         if (res.success) {
             setOddsData([...res.data]);
         }
-        else{
+        else {
             console.log(res);
-            
+
             router.refresh();
         }
 
@@ -86,24 +86,38 @@ function ClientView({initialData}) {
 
     return (
         <div className={styles.mainDiv}>
-            <h2 style={{color:"#02d4f4"}}>Sports</h2>
+            <h2 style={{ color: "#02d4f4" }}>Sports</h2>
             <div className={styles.sportsBar}>
                 <div className={styles.sportsSelectBar}>
                     <span className={styles.capsule} ref={capsule}></span>
-                    <div className={styles.sportName} ref={cricket} onClick={() => handleSportsChange("cricket")}><BiSolidCricketBall color={"red"}/></div>
+                    <div className={styles.sportName} ref={cricket} onClick={() => handleSportsChange("cricket")}><BiSolidCricketBall color={"red"} /></div>
                     <div className={styles.sportName} ref={football} onClick={() => handleSportsChange("football")}><IoMdFootball color={"white"} /></div>
                     <div className={styles.sportName} ref={tennis} onClick={() => handleSportsChange("tennis")}><IoIosTennisball color={"lime"} /></div>
                     <div className={styles.sportName} ref={basketball} onClick={() => handleSportsChange("basketball")}><IoIosBasketball color={"orange"} /></div>
-                    <div className={styles.sportName} ref={baseball} onClick={() => handleSportsChange("baseball")}><IoIosBaseball color={"white"} style={{backgroundColor:"red",borderRadius:"50%"}}/></div>
+                    <div className={styles.sportName} ref={baseball} onClick={() => handleSportsChange("baseball")}><IoIosBaseball color={"white"} style={{ backgroundColor: "red", borderRadius: "50%" }} /></div>
                 </div>
             </div>
             <h3>{activeSports}</h3>
             <div className={styles.betsList}>
-                <div className={styles.oddsGroup}>
-                    {oddsData.map((e,i)=>{
+                {activeSports == "Cricket" ? <div className={styles.oddsGroup}>
+                    {oddsData.map((e, i) => {
                         return <OddComponent key={i} data={e} />
                     })}
-                </div>
+                </div> :
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        padding: "70px 10px",
+                        width:"100%",
+                        borderRadius:"10px",
+                        backgroundColor:"#012167"
+                    }}>
+                        <Spinner style={{marginBottom:"20px"}}/>
+                        <h4>{`${activeSports} is still being added`}</h4>
+                        <p style={{fontSize:"10px"}}>By October you will have all 5 sports, thanks for you patience!</p>
+                    </div>}
             </div>
         </div>
     )
