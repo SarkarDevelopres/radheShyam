@@ -144,8 +144,8 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
               setCustomStake(e.target.value)
             }} />
           </div>
-          {amount && odds ? <span style={{color:!lay?"rgba(0, 243, 0, 1)":"red"}}>{
-            !lay ? ((amount * odds)-amount).toFixed(2)
+          {amount && odds ? <span style={{ color: !lay ? "rgba(0, 243, 0, 1)" : "red" }}>{
+            !lay ? ((amount * odds) - amount).toFixed(2)
               :
               (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
           </span> : <span></span>
@@ -716,7 +716,21 @@ function GameComp() {
           <span>{`CRR: ${liveData.runrate}`}</span>
         </div>
         <div className={styles.ballEvent}>
-          {ballEvent}
+          {ballEvent === "Ball Chalu" ? (
+            <img
+              style={{ position: "absolute", left: "20px", top: "0px", width: "100px" }}
+              src="/loading-img.gif"
+              alt="Ball animation"
+            />
+          ) :  ballEvent === "Wicket" || ballEvent === "Bowled" ||ballEvent === "wicket" || ballEvent === "bowled" ? (
+           <img
+              style={{ position: "absolute", left: "0px", top: "-50px", width: "150px" }}
+              src="/wicket.gif"
+              alt="Wicket animation"
+            />
+          ) : (
+            <span>{ballEvent}</span>
+          )}
         </div>
         <div className={styles.batsmanList}>
           {
