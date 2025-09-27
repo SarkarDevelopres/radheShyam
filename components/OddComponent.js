@@ -71,7 +71,7 @@ function OddComponent({ data }) {
         //     setTeam(null);
         //     setShowStake(false);
         // }
-        toast.error("Server Under Maintiance!!")
+        toast.error("Error placing bets!!")
         // If you use Server Components / data fetching on the page:
         //   router.refresh();
 
