@@ -62,8 +62,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
     let amnt = customStake ? parseInt(customStake) : amount;
     let deductAmnt = amnt;
     if (lay == true) {
-      let layOdds = (parseFloat(odds) - 1).toFixed(2)
-      deductAmnt = layOdds * parseInt(amount)
+      deductAmnt = Math.round(parseFloat(odds) * parseInt(amount));
     }
 
     console.log(amnt);
@@ -145,10 +144,10 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
               setCustomStake(e.target.value)
             }} />
           </div>
-          {amount && odds ? <span>{
+          {amount && odds ? <span style={{color:!lay?"rgba(0, 243, 0, 1)":"red"}}>{
             !lay ? ((amount * odds)-amount).toFixed(2)
               :
-              (parseFloat(amount))}
+              (parseFloat(amount) + ((parseFloat(odds) - 1).toFixed(2) * parseInt(amount)))}
           </span> : <span></span>
           }
         </div>
@@ -415,7 +414,7 @@ function GameComp() {
     if (payload.ok) {
       setOpenBets([...payload.data])
       if (payload.profitLoss.length > 0) {
-        setMatchEndProfitLoss([payload.profitLoss[0].stake])
+        setMatchEndProfitLoss([payload.profitLoss[0].profitHeld])
       }
       else {
         setMatchEndProfitLoss(0)
