@@ -80,9 +80,26 @@ function ClientView({ initialData }) {
 
 
     }
+    const [timeLeft, setTimeLeft] = useState(5 * 60 * 60); // 5 hours in seconds
 
     useEffect(() => {
-    }, [])
+        if (activeSports === "Tennis") {
+            const timer = setInterval(() => {
+                setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [activeSports]);
+
+    // Convert seconds → hh:mm:ss
+    const formatTime = (sec) => {
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        return `${h.toString().padStart(2, "0")}:${m
+            .toString()
+            .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    };
 
     return (
         <div className={styles.mainDiv}>
@@ -99,25 +116,51 @@ function ClientView({ initialData }) {
             </div>
             <h3>{activeSports}</h3>
             <div className={styles.betsList}>
-                {activeSports == "Cricket" ? <div className={styles.oddsGroup}>
-                    {oddsData.map((e, i) => {
-                        return <OddComponent key={i} data={e} />
-                    })}
-                </div> :
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        padding: "70px 10px",
-                        width:"100%",
-                        borderRadius:"10px",
-                        backgroundColor:"#012167"
-                    }}>
-                        <Spinner style={{marginBottom:"20px"}}/>
+                {activeSports === "Cricket" ? (
+                    <div className={styles.oddsGroup}>
+                        {oddsData.map((e, i) => (
+                            <OddComponent key={i} data={e} />
+                        ))}
+                    </div>
+                ) : activeSports === "Tennis" ? (
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "70px 10px",
+                            width: "100%",
+                            borderRadius: "10px",
+                            backgroundColor: "#012167",
+                        }}
+                    >
+                        <Spinner style={{ marginBottom: "20px" }} />
                         <h4>{`${activeSports} is still being added`}</h4>
-                        <p style={{fontSize:"10px"}}>By October you will have all 5 sports, thanks for you patience!</p>
-                    </div>}
+                        <p style={{ fontSize: "10px" }}>
+                            {`Tennis is being added within: ${formatTime(timeLeft)}`}
+                        </p>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: "70px 10px",
+                            width: "100%",
+                            borderRadius: "10px",
+                            backgroundColor: "#012167",
+                        }}
+                    >
+                        <Spinner style={{ marginBottom: "20px" }} />
+                        <h4>{`${activeSports} is still being added`}</h4>
+                        <p style={{ fontSize: "10px" }}>
+                            By October you will have all 5 sports, thanks for your patience!
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     )
