@@ -138,7 +138,7 @@ function ClientView({ initialData }) {
                         <Spinner style={{ marginBottom: "20px" }} />
                         <h4>{`${activeSports} is still being added`}</h4>
                         <p style={{ fontSize: "10px" }}>
-                            {`Tennis is being added within: 6:00 PM, 10-10-2025 - regards tennis-api`}
+                            {`Tennis is being added within: 9:00 PM, 10-10-2025 - regards tennis-api`}
                         </p>
                     </div>
                 ) : (
