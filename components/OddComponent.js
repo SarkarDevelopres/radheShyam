@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react'
 import styles from "./styles/odd.module.css";
 import { useRouter } from 'next/navigation';
 import { toast } from "react-toastify";
-function OddComponent({ data }) {
-    console.log(data);
+function OddComponent({ data, sport }) {
+    console.log(sport);
     
     const [amnt, setAmnt] = useState(0);
     const [team, setTeam] = useState(null);
@@ -71,7 +71,7 @@ function OddComponent({ data }) {
         //     setTeam(null);
         //     setShowStake(false);
         // }
-        toast.error("Error placing bets!!")
+        toast.warn("Open page to place bets!!")
         // If you use Server Components / data fetching on the page:
         //   router.refresh();
 
@@ -89,6 +89,7 @@ function OddComponent({ data }) {
         localStorage.setItem("away",data.teamAway.name);
         localStorage.setItem("matchId",data.matchId);
         localStorage.setItem("status",data.status);
+        localStorage.setItem("sport",sport);
         router.push(`/sports/${data.matchId}`)
      }
     return (

@@ -116,30 +116,11 @@ function ClientView({ initialData }) {
             </div>
             <h3>{activeSports}</h3>
             <div className={styles.betsList}>
-                {activeSports === "Cricket" ? (
+                {activeSports === "Cricket" || activeSports === "Tennis" ? (
                     <div className={styles.oddsGroup}>
                         {oddsData.map((e, i) => (
-                            <OddComponent key={i} data={e} />
+                            <OddComponent key={i} data={e} sport={activeSports} />
                         ))}
-                    </div>
-                ) : activeSports === "Tennis" ? (
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            padding: "70px 10px",
-                            width: "100%",
-                            borderRadius: "10px",
-                            backgroundColor: "#012167",
-                        }}
-                    >
-                        <Spinner style={{ marginBottom: "20px" }} />
-                        <h4>{`${activeSports} is still being added`}</h4>
-                        <p style={{ fontSize: "12px" }}>
-                            {`Tennis is being added within 10-10-2025 - regards tennis-api`}
-                        </p>
                     </div>
                 ) : (
                     <div

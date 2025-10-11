@@ -82,7 +82,7 @@ function LiveView({ initialData }) {
                     <div className={styles.oddsGroup}>
                         {(oddsData?.cricket?.length ?? 0) > 0 ? (
                             oddsData.cricket.map((e) => (
-                                <OddComponent key={e.matchId} data={e} />
+                                <OddComponent key={e.matchId} data={e} sport={"cricket"}/>
                             ))
                         ) : (
                             <p>No live match</p>
