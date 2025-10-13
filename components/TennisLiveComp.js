@@ -479,17 +479,17 @@ function TennisLiveComp() {
                 <div className={styles.statsData}>
                     <div className={styles.playerStats}>
                         {matchStats?.home.map((e, i) => {
-                            return <span>{e.stat_value}</span>
+                            return <span key={i}>{e.stat_value}</span>
                         })}
                     </div>
                     <div className={styles.statsName}>
                         {matchStats?.home.map((e, i) => {
-                            return <span>{e.stat_name}</span>
+                            return <span key={i}>{e.stat_name}</span>
                         })}
                     </div>
                     <div className={styles.playerStats}>
                         {matchStats?.away.map((e, i) => {
-                            return <span>{e.stat_value}</span>
+                            return <span key={i}>{e.stat_value}</span>
                         })}
                     </div>
                 </div>
