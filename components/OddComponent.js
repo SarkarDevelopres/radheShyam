@@ -122,7 +122,7 @@ function OddComponent({ data, sport }) {
                         <input type="number" value={customStake} onChange={(e)=>setCustomStake(e.target.value)}/>
                     </div>
                     <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
-                        {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
+                        {[20, 50, 100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
                             <button
                                 key={amt}
                                 onClick={() => chooseAmount(amt)}

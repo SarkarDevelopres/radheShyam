@@ -46,6 +46,7 @@ function TennisLiveComp() {
         teama: '',
         teamb: '',
     })
+    const [noBets, setNoBets] = useState(false)
     const [liveData, setLiveData] = useState({ status: "Match Not Started", score: "" })
     const [openBets, setOpenBets] = useState([]);
     const [matchEndProfitLoss, setMatchEndProfitLoss] = useState(0);
@@ -173,6 +174,8 @@ function TennisLiveComp() {
 
         console.log(sessionOddsTennis);
 
+        setNoBets(false);
+
 
     }
     const fetchBets = async (userToken, matchId) => {
@@ -205,6 +208,8 @@ function TennisLiveComp() {
 
     const takeBackBet = async () => {
         const confirmed = confirm("Are you sure you want to Cashout ?");
+
+        if(noBets) toast.error("undefined");
 
         if (confirmed) {
 
@@ -286,6 +291,7 @@ function TennisLiveComp() {
             //     console.log(d.data);
             // })
             socket.on("score:update", (d) => {
+                setNoBets(true)
                 fetchLiveOdds(base, id);
                 setIsStall(false)
                 console.log(d);
@@ -532,7 +538,7 @@ function TennisLiveComp() {
                                     {
                                         e?.outcomes.map((f, j) => {
                                             return (
-                                                <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} matchData={matchData} market={e.market} fetchBet={fetchBets} openBets={openBets} profitLoss={Number(matchEndProfitLoss)} />
+                                                <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} matchData={matchData} market={e.market} fetchBet={fetchBets} openBets={openBets} profitLoss={Number(matchEndProfitLoss)} noBets={noBets} setBets={setNoBets}/>
                                             )
                                         })
                                     }

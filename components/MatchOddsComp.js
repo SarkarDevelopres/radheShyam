@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { cashoutForTeam } from "../lib/cashout";
 import { toast } from "react-toastify";
 
-export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets, matchData, profitLoss = 0 }) {
+export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetchBet, openBets, matchData, profitLoss = 0, noBets, setBets }) {
 
   const router = useRouter();
   const [showStake, setShowStake] = useState(false);
@@ -48,6 +48,10 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       return;
     }
 
+    if (noBets) {
+      toast.error(`Undefined !`)
+      return;
+    }
     let teamId = null;
     if (matchData.teamHome?.name === team) {
       teamId = matchData.teamHome.team_id;
@@ -154,7 +158,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
           }
         </div>
         <div className={styles.stakeChoice} style={{ flexWrap: "wrap" }}>
-          {[100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
+          {[20, 50, 100, 300, 500, 1000, 3000, 5000, 10000, 50000, 100000].map((amt) => (
             <button
               key={amt}
               onClick={() => chooseAmount(amt)}
