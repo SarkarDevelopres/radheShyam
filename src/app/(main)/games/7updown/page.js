@@ -255,7 +255,7 @@ export function BetOptions({ name, bet, icon, setBet, index, amnt, setAmnt, onPl
       {showStake && (
         <div className={styles.stakeDiv}>
           <div className={styles.stakeChoice}>
-            {[100, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 1000000].map((amt) => (
+            {[20, 50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 1000000].map((amt) => (
               <button
                 key={amt}
                 onClick={() => setAmnt(amt)}
