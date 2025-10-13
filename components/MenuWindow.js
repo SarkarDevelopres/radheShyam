@@ -1,19 +1,26 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { IoPersonOutline } from "react-icons/io5";
 import styles from "./styles/menuWindow.module.css"
 import { FaPowerOff } from "react-icons/fa6";
 import { useRouter, usePathname } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { io } from "socket.io-client";
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 
 function MenuWindow({ onClose }) {
     const pathName = usePathname();
     const router = useRouter();
+    const socketRef = useRef(null);
+    const balanceRef = useRef(null);
+    const [balance, setBalance] = useState(null);
     const [userData, setUserData] = useState({ name: "User Name" })
     const [tokenExists, setTokenExists] = useState(false);
     const [changePasswordWindow, setChangePasswordWindow] = useState(false);
     const [oldpassword, setoldpassword] = useState("");
     const [newpassword, setnewpassword] = useState("");
+    const [profitLoss, setProfitLoss] = useState(0);
 
     const logOut = () => {
         const confirmed = confirm("Are you sure you want to Log-Out");
@@ -56,10 +63,58 @@ function MenuWindow({ onClose }) {
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem("userToken");
             const userName = localStorage.getItem("userName");
+            const profitLossData = localStorage.getItem("balance");
+            setProfitLoss(profitLossData)
             setTokenExists(!!token);
             setUserData({ name: !userName ? "User Name" : userName })
         }
     }, [pathName]);
+
+    useEffect(() => {
+
+        const user = localStorage.getItem("userToken");
+        if (!user) return;
+        const s = io(SERVER_URL, { auth: { token: user } });
+        socketRef.current = s;
+
+        const fetchNow = () => {
+            s.emit("exp:fetch", { userId: user }, (res) => {
+                console.log(res);
+                if (res.ok == false) {
+                    toast.error("Sessiopn expired login again!");
+                    setTimeout(() => {
+                        logOut()
+                    }, 1000);
+                }
+
+                if (res?.ok) setProfitLoss(Number(res._doc.balance).toFixed(2) || 0);
+            });
+        }
+
+        fetchNow();
+        s.on("connect", fetchNow);
+        s.on("exp:update", (res) => {
+            console.log("Results: ", res);
+            console.log("Results Came: ", res._doc.balance);
+            if (res?.ok) {
+                setProfitLoss(Number(res.balance).toFixed(2) || 0);
+
+                if (res.type === "bet_win" && res.amount > 0) {
+                    toast.success(`🎉 You won ₹${res.amount}!`);
+                } else if (res.type === "bet_loss" && res.amount < 0) {
+                    toast.error(`❌ You lost ₹${Math.abs(res.amount)}`);
+                }
+            }
+
+            if (res?.ok) setProfitLoss(Number(res._doc.balance).toFixed(2) || 0);
+        });
+
+        return () => {
+            s.off("connect", fetchNow);
+            s.off("wallet:update");
+            s.disconnect();
+        };
+    }, []);
 
     return (
         <div className={styles.mainWindow}>
@@ -83,6 +138,10 @@ function MenuWindow({ onClose }) {
                 <div className={styles.menuHead}>
                     <IoPersonOutline />
                     <h3>{userData.name}</h3>
+                </div>
+                <div className={styles.profitLossDiv}>
+                    <p>P&L:</p>
+                    {profitLoss >= 0 ? <span style={{ color: "rgba(0, 243, 0, 1)" }} className={styles.profitLossData} ref={balanceRef}>{profitLoss}</span> : <span style={{ color: "red" }} className={styles.profitLossData} ref={balanceRef}>{profitLoss}</span>}
                 </div>
                 <div className={styles.menuBody}>
                     {

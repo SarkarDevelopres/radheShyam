@@ -87,3 +87,19 @@
 .btnDiv button:last-child{
   background-color: #962020;
 }
+.profitLossDiv{
+  width: 100%;
+  background-color: #00539e;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profitLossDiv p{
+  margin: 0px;
+  color: white;
+}
+.profitLossData{
+  font-size: 1.2rem;
+}

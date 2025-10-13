@@ -60,7 +60,10 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0px;
-  width: 50%;
+  width: 100%;
+}
+.playerNameDiv{
+  width: 60%;
 }
 .betButtons {
   display: flex;
@@ -394,33 +397,33 @@
   padding-top: 15px;
   border-bottom: 1px solid #02d4f4b2;
 }
-.betIndiComps{
+.betIndiComps {
   width: 100%;
   display: flex;
   padding: 0px 10px;
 }
-.betTeamName{
+.betTeamName {
   width: 45%;
-   font-size: 1.2rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
-.betOdd{
+.betOdd {
   width: 15%;
   text-align: center;
-   font-size: 1.2rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
-.betStake{
+.betStake {
   text-align: right;
   width: 25%;
-   font-size: 1.2rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
-.sessionoddsDiv{
+.sessionoddsDiv {
   position: relative;
   min-height: 100px;
 }
-.maskDivSession{
+.maskDivSession {
   background-color: #000f3195;
   position: absolute;
   width: 100%;
@@ -432,9 +435,114 @@
   flex-direction: column;
   padding: 30px 0px;
 }
-.maskDivSession span{
+.maskDivSession span {
   font-weight: 600;
   font-size: 1.3rem;
   color: #02d4f4;
   position: absolute;
+}
+
+.tennisScoreDiv {
+  background-image: url("../../../../../public/tennis-score-bg.jpeg");
+}
+.tennisScoreBoard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background-color: #000f31ae;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.playerDiv {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 5px;
+}
+.playerDiv:last-child {
+  border-top: 3px solid #02d4f4b2;
+}
+.playerDiv p {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0px;
+  margin-bottom: 0px;
+}
+.playerDataDiv {
+  display: flex;
+  align-items: center;
+}
+.playerDataDiv span {
+  padding-left: 10px;
+  color: #00ff2a;
+}
+.servingSpan {
+  font-size: 12px;
+}
+
+.setData {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.setData span {
+  padding-right: 10px;
+}
+
+.scoreDiv {
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scoreDiv h1{
+  font-size: 2rem;
+}
+.statsDiv {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 10px;
+  border-radius: 10px;
+  justify-content: space-between;
+  background-color: #000f31ae;
+  margin-bottom: 20px;
+}
+.statsHead{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.statsDiv h3 {
+  font-size: 1.1rem;
+}
+.statsData{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.statsDiv span {
+  font-size: 0.7rem;
+}
+
+.statsName {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playerStats {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.playerStats:last-of-type{
+  align-items: center;
+  /* align-items: flex-end; */
 }

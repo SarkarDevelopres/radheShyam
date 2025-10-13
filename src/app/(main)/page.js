@@ -15,7 +15,7 @@ export function SportsSection({ sportName, image, matchList }) {
         <img src={image} />
       </div>
       <div className={styles.sportsSectionBody}>
-        { sportName=="Cricket"?
+        { sportName=="Cricket" || sportName=="Tennis"?
           matchList.map((e, i) => {
             return <div key={i}>
               <p>{`${e.teamHome.name} vs ${e.teamAway.name}`}</p>
