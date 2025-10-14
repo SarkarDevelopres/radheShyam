@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import styles from '../sports/style.module.css'
 import OddComponent from '@components/OddComponent';
+import Loading from '@components/Loading';
 import { BiSolidCricketBall } from "react-icons/bi";
 import { IoMdFootball, IoIosTennisball, IoIosBasketball, IoIosBaseball } from "react-icons/io";
 function LiveView({ initialData }) {
@@ -10,10 +11,12 @@ function LiveView({ initialData }) {
 
     const normalized = Object.assign({}, ...initialData.data);
     const [oddsData, setOddsData] = useState(normalized);
+    const [isLoading, setIsLoading] = useState(true)
     const router = useRouter();
 
     return (
         <div className={styles.mainDiv}>
+            
             <h2>In-Play</h2>
             <div className={styles.betsList}>
                 <div className={styles.sportsField}>

@@ -3,8 +3,7 @@ import styles from "./styles/odd.module.css";
 import { useRouter } from 'next/navigation';
 import { toast } from "react-toastify";
 function OddComponent({ data, sport }) {
-    console.log(sport);
-    
+     
     const [amnt, setAmnt] = useState(0);
     const [team, setTeam] = useState(null);
     const [showStake, setShowStake] = useState(false);

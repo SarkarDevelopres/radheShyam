@@ -4,11 +4,10 @@ import { useRouter } from 'next/navigation';
 import styles from './style.module.css'
 import OddComponent from '@components/OddComponent';
 import { BiSolidCricketBall } from "react-icons/bi";
+import Loading from '@components/Loading';
 import { IoMdFootball, IoIosTennisball, IoIosBasketball, IoIosBaseball } from "react-icons/io";
 import { Spinner } from 'react-bootstrap'
 function ClientView({ initialData }) {
-    console.log(initialData);
-
     const [activeSports, setActiveSports] = useState("Cricket");
     const [oddsData, setOddsData] = useState(initialData.data)
     const cricket = useRef(null);
@@ -18,6 +17,7 @@ function ClientView({ initialData }) {
     const baseball = useRef(null);
     const capsule = useRef(null);
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const handleSportsChange = (v) => {
@@ -65,12 +65,14 @@ function ClientView({ initialData }) {
 
     const fetchData = async (sports) => {
         console.log("SPORTS: ", sports);
+        setIsLoading(true)
 
         let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/odds/${sports}`);
 
         let res = await req.json();
         if (res.success) {
             setOddsData([...res.data]);
+            setIsLoading(false)
         }
         else {
             console.log(res);
@@ -103,6 +105,7 @@ function ClientView({ initialData }) {
 
     return (
         <div className={styles.mainDiv}>
+            {isLoading && <Loading />}
             <h2 style={{ color: "#02d4f4" }}>Sports</h2>
             <div className={styles.sportsBar}>
                 <div className={styles.sportsSelectBar}>

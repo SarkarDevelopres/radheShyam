@@ -80,7 +80,7 @@ function TennisLiveComp() {
         });
 
         let res = await req.json();
-        console.log(res);
+        // console.log(res);
 
         if (res.success) {
             setOddsData([res.data]);
@@ -118,7 +118,7 @@ function TennisLiveComp() {
         const home = toWinOdds.find(o => o.type === "Home");
         const away = toWinOdds.find(o => o.type === "Away");
 
-        console.log(res);
+        // console.log(res);
 
 
         setOddsData(prev => {
@@ -172,7 +172,7 @@ function TennisLiveComp() {
         const sessionOddsTennis = Object.values(grouped);
         setSessionOdds([...sessionOddsTennis])
 
-        console.log(sessionOddsTennis);
+        // console.log(sessionOddsTennis);
 
         setNoBets(false);
 
@@ -209,7 +209,7 @@ function TennisLiveComp() {
     const takeBackBet = async () => {
         const confirmed = confirm("Are you sure you want to Cashout ?");
 
-        if(noBets) toast.error("undefined");
+        if (noBets) toast.error("undefined");
 
         if (confirmed) {
 
@@ -287,14 +287,51 @@ function TennisLiveComp() {
 
             });
             socket.emit("watch:join", id);
-            // socket.on("watch:joined", (d) => {
-            //     console.log(d.data);
-            // })
+            socket.on("watch:joined", (d) => {
+                // console.log("Match Joined: ", d.data.data);
+                // d.data.data
+
+                if (d.data) {
+                    setNoBets(true)
+                    fetchLiveOdds(base, id);
+                    setIsStall(false)
+                    if (d.data.data.serve == "First Player") {
+                        setServer("home")
+                    }
+                    else if (d.data.data.serve == "Second Player") {
+                        setServer("away")
+                    }
+                    setLiveData(prev => ({ ...prev, score: d.data.data.score, status: d.data.data.status }));
+                    if (d.status == "Finished") {
+                        setGameEnd(true);
+                        setCompleted(true);
+                    }
+
+                    const homeId = d.data.data.teamaId;
+                    const awayId = d.data.data.teambId;
+
+                    const homeStats = d.data.data.stats.filter(s => s.player_key === homeId && s.stat_period === "match");
+                    const awayStats = d.data.data.stats.filter(s => s.player_key === awayId && s.stat_period === "match");
+
+                    const filteredHomeStats = homeStats.filter(s => importantStats.includes(s.stat_name));
+                    const filteredAwayStats = awayStats.filter(s => importantStats.includes(s.stat_name));
+
+                    const matchStats = {
+                        home: filteredHomeStats,
+                        away: filteredAwayStats
+                    };
+
+                    // console.log(matchStats);
+                    setMatchStats({ ...matchStats });
+                    setSets([...d.data.data.sets])
+                }
+
+            })
             socket.on("score:update", (d) => {
                 setNoBets(true)
                 fetchLiveOdds(base, id);
                 setIsStall(false)
-                console.log(d);
+                console.log("Data Came: d", d);
                 if (d.serve == "First Player") {
                     setServer("home")
                 }
@@ -321,7 +358,7 @@ function TennisLiveComp() {
                     away: filteredAwayStats
                 };
 
-                console.log(matchStats);
+                // console.log(matchStats);
                 setMatchStats({ ...matchStats });
                 setSets([...d.sets])
 
@@ -378,70 +415,6 @@ function TennisLiveComp() {
                 <div className={styles.scoreDiv}>
                     <h1>{`${liveData?.score}`}</h1>
                 </div>
-                {/* <div className={styles.ballEvent}>
-                    {ballEvent === "Ball Chalu" ? (
-                        <img
-                            style={{ position: "absolute", left: "10px", top: "0px", width: "100px" }}
-                            src="/loading-img.gif"
-                            alt="Ball animation"
-                        />
-                    ) : ballEvent === "Wicket" || ballEvent === "Bowled" || ballEvent === "wicket" || ballEvent === "bowled" ? (
-                        <img
-                            style={{ position: "absolute", left: "-20px", top: "-50px", width: "150px" }}
-                            src="/wicket.gif"
-                            alt="Wicket animation"
-                        />
-                    ) : (
-                        <span>{ballEvent}</span>
-
-                    )}
-                </div> */}
-                {/* <div className={styles.batsmanList}>
-                    {
-                        batsmenList.map((e, i) => {
-                            return <span key={i}>
-                                {`${e?.name}(${e.runs})${i == 0 ? '*' : ''}`}
-                            </span>
-                        })
-                    }
-                </div>
-                <div className={styles.bowlersList}>
-                    {
-                        bowlersList.length > 0 ? (
-                            <>
-                                <span>{
-                                    `${bowlersList[0]?.name}`}
-                                </span>
-                                <span>
-                                    {
-                                        `(over:${bowlersList[0]?.overs}/run:${bowlersList[0]?.runs_conceded
-                                        }/wicket:${bowlersList[0]?.wickets
-                                        })`
-                                    }
-                                </span>
-                            </>)
-                            : (<></>)
-                    }
-                </div> */}
-                {/* <div className={styles.ballsOverDiv}>
-                    <div className={styles.runs}>
-                        {`${liveData.runs}/${liveData.wickets}`}
-                    </div>
-                    <div className={styles.balls}>
-                        {
-                            ballArray.map((e, i) => {
-                                return <span key={i}>{e}</span>
-                            })
-                        }
-                    </div>
-                    <div className={styles.over}>
-                        {liveData.overs}
-                    </div>
-                </div> */}
-                {/* <div className={styles.teamnameDiv}>
-                    <h2>{teamData.teamb.name}</h2>
-                    {server == "away" ? <span>Serving</span> : <></>}
-                </div> */}
                 <div className={styles.tennisScoreBoard}>
                     <div className={styles.playerDiv}>
                         <div className={styles.playerDataDiv}>
@@ -538,7 +511,7 @@ function TennisLiveComp() {
                                     {
                                         e?.outcomes.map((f, j) => {
                                             return (
-                                                <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} matchData={matchData} market={e.market} fetchBet={fetchBets} openBets={openBets} profitLoss={Number(matchEndProfitLoss)} noBets={noBets} setBets={setNoBets}/>
+                                                <OddsMatchComp key={j} f={f} bookmaker={e.bookmaker} meta={metaData} matchData={matchData} market={e.market} fetchBet={fetchBets} openBets={openBets} profitLoss={Number(matchEndProfitLoss)} noBets={noBets} setBets={setNoBets} />
                                             )
                                         })
                                     }
