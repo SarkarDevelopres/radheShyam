@@ -80,7 +80,7 @@ function TennisLiveComp() {
         });
 
         let res = await req.json();
-        // console.log(res);
+        console.log(res);
 
         if (res.success) {
             setOddsData([res.data]);
@@ -97,12 +97,48 @@ function TennisLiveComp() {
                     image: res.matchData.teamAway.logo_url
                 }
             })
-            setIsLoading(false);
+
 
             if (res.matchData.game_state?.code != 3) {
                 setGameState({ ...res.matchData.game_state })
             }
             console.log(gameState);
+
+            if (res.matchData.game_state.live_score) {
+
+                if (res.matchData.game_state.live_score.status == "Finished") {
+                    setGameEnd(true);
+                    setCompleted(true);
+                }
+
+                if (res.matchData.game_state.live_score.serve == "First Player") {
+                    setServer("home")
+                }
+                else if (res.matchData.game_state.live_score.serve == "Second Player") {
+                    setServer("away")
+                }
+                setLiveData(prev => ({ ...prev, score: res.matchData.game_state.live_score.score, status: res.matchData.game_state.live_score.status }));
+
+                // const homeId = d.data.data.teamaId;
+                // const awayId = d.data.data.teambId;
+
+                // const homeStats = d.data.data.stats.filter(s => s.player_key === homeId && s.stat_period === "match");
+                // const awayStats = d.data.data.stats.filter(s => s.player_key === awayId && s.stat_period === "match");
+
+                // const filteredHomeStats = homeStats.filter(s => importantStats.includes(s.stat_name));
+                // const filteredAwayStats = awayStats.filter(s => importantStats.includes(s.stat_name));
+
+                // const matchStats = {
+                //     home: filteredHomeStats,
+                //     away: filteredAwayStats
+                // };
+
+                // // console.log(matchStats);
+                // setMatchStats({ ...matchStats });
+                setSets([...res.matchData.game_state.live_score.sets])
+                setIsStall(false)
+            }
+            setIsLoading(false);
 
         }
         else {
@@ -328,6 +364,7 @@ function TennisLiveComp() {
 
             })
             socket.on("score:update", (d) => {
+                console.log("Match Joined: ", d);
                 setNoBets(true)
                 fetchLiveOdds(base, id);
                 setIsStall(false)

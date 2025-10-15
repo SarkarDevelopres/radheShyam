@@ -3,24 +3,24 @@ import React, { useState, useEffect } from 'react'
 import AdminSideBar from '@components/AdminSideBar'
 import styles from '../admin.module.css'
 
-export function GameLogComponent({sl,id,name,players,fee,status,dateTime}) {
+export function GameLogComponent({ sl, id, name, players, fee, status, dateTime }) {
     return (
-       <tr>
-            <td>{sl}</td>
+        <tr>
+            <td>{sl+200}</td>
             <td>{id}</td>
             <td>{name}</td>
             <td>{players}</td>
             <td>{fee}</td>
             <td>{status}</td>
             <td>{dateTime}</td>
-       </tr>
+        </tr>
     )
 }
 
-export function GameComponent({name,backImage}){
-    return(
+export function GameComponent({ name, backImage }) {
+    return (
         <div className={styles.gameDiv}>
-            <div className={styles.gameLogoDiv} style={{backgroundImage:`url(${backImage})`}}></div>
+            <div className={styles.gameLogoDiv} style={{ backgroundImage: `url(${backImage})` }}></div>
             <p>{name}</p>
         </div>
     )
@@ -29,94 +29,230 @@ export function GameComponent({name,backImage}){
 function Games() {
     const [gameLogs, setGameLogs] = useState([
         {
-            gameID: '7627FGH',
-            name: 'Ludo',
-            players: 2,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 17:31:162'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "TIGER",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '9327UJG',
-            name: 'Ludo',
-            players: 2,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 17:01:122'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "DRAGON",
+            players: 100,
+            status: 'WON',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '5578RWD',
-            name: 'Ludo',
-            players: 2,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 16:51:152'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "TIGER",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '3568UIE',
-            name: 'Ludo',
-            players: 2,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 16:47:190'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "DRAGON",
+            players: 100,
+            status: 'WON',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '3928SKW',
-            name: 'Ludo',
-            players: 3,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 15:52:002'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "TIGER",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '3932SOW',
-            name: 'Ludo',
-            players: 3,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 15:42:102'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "DRAGON",
+            players: 100,
+            status: 'WON',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '3968UTW',
-            name: 'Ludo',
-            players: 3,
-            fee: 200,
-            status: 'completed',
-            createdAt: '27-07-2025 15:40:152'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "TIGER",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:40 PM'
         },
         {
-            gameID: '3938YRW',
-            name: 'Ludo',
-            players: 4,
-            fee: 100,
-            status: 'completed',
-            createdAt: '27-07-2025 14:32:189'
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "DRAGON",
+            players: 100,
+            status: 'WON',
+            createdAt: '14-10-2025 8:40 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'abdulk@772',
+            fee: "DRAGON",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:38 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'kiran@123',
+            fee: 'DRAGON',
+            players: 200,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:33 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'kiran@123',
+            fee: 'DRAGON',
+            players: 200,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:33 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'raunak@342',
+            fee: "TIGER",
+            players: 200,
+            status: 'WON',
+            createdAt: '14-10-2025 8:32 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'bubu@123',
+            fee: 'SEVEN',
+            players: 200,
+            status: 'WON',
+            createdAt: '14-10-2025 8:32 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'kiran@123',
+            fee: 'DRAGON',
+            players: 200,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:32 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'kiran@123',
+            fee: 'DRAGON',
+            players: 200,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:32 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@342',
+            fee: "UP",
+            players: 400,
+            status: 'LOST',
+            createdAt:'14-10-2025 8:25 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@342',
+            fee: "BLACK",
+            players: 200,
+            status: 'WON',
+            createdAt:'14-10-2025 8:22 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@342',
+            fee: "UP",
+            players: 200,
+            status: 'WON',
+            createdAt:'14-10-2025 8:21 PM'
+        },
+        {
+            gameID: 'Dragon-Tiger',
+            name: 'kiran@123',
+            fee: "DRAGON",
+            players: 2000,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:21 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
+        },
+        {
+            gameID: '7-Up-Down',
+            name: 'raunak@123',
+            fee: "DOWN",
+            players: 100,
+            status: 'LOST',
+            createdAt: '14-10-2025 8:20 PM'
         },
     ])
 
     const [gameDetails, setGameDetails] = useState([
         {
-            name:"Ludo",
-            image:'../'
+            name: "Ludo",
+            image: '../'
         }
     ])
     return (
         <div className={styles.mainDiv}>
             <AdminSideBar page={"game"} />
             <div className={styles.adminMainContent}>
-                <h2>Games</h2>
+                <h2>Bets</h2>
                 <div className={styles.bigContainer}>
-                    <h3>Game Logs</h3>
-                    <div className={styles.gameLogContainer}>
-                        <table className={styles.gameLogTable}>
+                    <h3>Bets Logs</h3>
+                    <div className={styles.gameLogContainer} style={{height:"10000px"}}>
+                        <table className={styles.gameLogTable} style={{height:"100px"}}>
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>GameID</th>
-                                    <th>Type</th>
-                                    <th>Players</th> 
-                                    <th>Entry Fee</th> 
-                                    <th>Status</th>
+                                    <th>Game Name</th>
+                                    <th>UserName</th>
+                                    <th>Amount</th>
+                                    <th>Option</th>
+                                    <th>Result</th>
                                     <th>Date-Time</th>
                                 </tr>
                             </thead>
