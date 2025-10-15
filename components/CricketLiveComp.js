@@ -66,7 +66,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
     // }
     if (lay) {
       // For lay bet: your risk (liability)
-      liability = (parseFloat(odds) - 1) * amnt;
+      let liability = (parseFloat(odds) - 1) * amnt;
       deductAmnt = Math.round(liability);
     }
 
