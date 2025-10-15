@@ -138,6 +138,9 @@ function TennisLiveComp() {
                 setSets([...res.matchData.game_state.live_score.sets])
                 setIsStall(false)
             }
+            
+            let userToken = localStorage.getItem("userToken");
+            fetchBets(userToken, id)
             setIsLoading(false);
 
         }
