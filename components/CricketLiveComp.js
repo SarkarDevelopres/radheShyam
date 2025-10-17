@@ -391,8 +391,11 @@ function CricketLiveComp() {
 
       if (res.matchData.game_state?.code != 3) {
         setGameState({ ...res.matchData.game_state })
+        if (res.matchData.game_state?.code != 1) {
+          setGameEnd(true)
+        }
       }
-      console.log(gameState);
+      console.log(res.matchData.game_state);
 
     }
     else {

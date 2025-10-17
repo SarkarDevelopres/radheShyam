@@ -341,7 +341,7 @@ function TennisLiveComp() {
                         setServer("away")
                     }
                     setLiveData(prev => ({ ...prev, score: d.data.data.score, status: d.data.data.status }));
-                    if (d.status == "Finished") {
+                    if (d.status == "Finished" || d.status == "Retired") {
                         setGameEnd(true);
                         setCompleted(true);
                     }
