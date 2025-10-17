@@ -42,6 +42,7 @@ async function checkMaintainance() {
   return res;
 }
 
+
 export default async function RootLayout({ children }) {
   let maintainceMode = true;
   let duration = 1;
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }) {
         string = jsonResponse.string
       }
     }
+
   } catch (e) {
     console.error("getNumber failed:", e);
     // no stays null; ClientShell can show a fallback
@@ -70,9 +72,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} />}
-        {!maintainceMode && <ClientShell number={no}>{children}</ClientShell>} */}
-        <ClientShell number={no}>{children}</ClientShell>
+        {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} />}
+        {!maintainceMode && <ClientShell number={no}>{children}</ClientShell>}
+        {/* <ClientShell number={no}>{children}</ClientShell> */}
       </body>
     </html>
   );

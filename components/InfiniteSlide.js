@@ -10,13 +10,23 @@ export default function InfiniteSlider() {
   const [isHovered, setIsHovered] = useState(false);
   const [slideWidth, setSlideWidth] = useState(0);
 
-  const slides = [
-    { name: "AustraliaVSAfrica", image: "/asia-final.jpg" },
-    { name: "NewZealandVSZimbabwe", image: "/t20-africa-cup.png" },
-    { name: "AustiraVSWels", image: "/upl.png" },
-  ];
+  const [slides, setSlides] = useState([{ name: "AustraliaVSAfrica", image: "/icc-final.jpg" },
+  { name: "NewZealandVSZimbabwe", image: "/eng-newzee.jpg" },
+  { name: "AustiraVSWels", image: "/wta-osaka.png" },])
   const extendedSlides = [...slides, ...slides]; // for seamless loop feel
 
+  async function fetchSlides() {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_PORT}/api/admin/fetchSlides`,
+      { cache: "no-store" } // prevent caching
+    );
+
+    let data = await res.json();
+    if (data.ok && data.data?.length>0) {
+      setSlides([...data.data]);
+    }
+   
+  }
   // Measure the actual slide width (once ready) and keep it updated
   useLayoutEffect(() => {
     if (!firstSlideRef.current) return;
@@ -53,6 +63,11 @@ export default function InfiniteSlider() {
     }, 2000);
     return () => clearInterval(id);
   }, [isHovered, slides.length]);
+
+  useEffect(() => {
+    fetchSlides();
+  }, [])
+
 
   // Apply transform using the real measured slide width
   useEffect(() => {
