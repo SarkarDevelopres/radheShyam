@@ -38,6 +38,7 @@ function Setting() {
 
     const [isMaintiance, setIsMaintiance] = useState(false);
     const [maintianceReason, setMaintianceReason] = useState("");
+    const [maintianceHeading, setMaintianceHeading] = useState("");
     const [maintianceTime, setMaintianceTime] = useState(0);
     const btnSpan = useRef(null);
     const btnRef = useRef(null);
@@ -57,6 +58,7 @@ function Setting() {
                     btnSpan.current.style.marginLeft = "60px";
                     setMaintianceTime(res.duration);
                     setMaintianceReason(res.string);
+                    setMaintianceHeading(res.heading);
                 }
             }
         } catch (error) {
@@ -96,6 +98,7 @@ function Setting() {
                     "isOn": isMaintiance,
                     "duration": parseFloat(maintianceTime),
                     "string": maintianceReason,
+                    "heading": maintianceHeading,
                 })
             });
             // "2025-09-22T13:43:12.372Z"
@@ -106,6 +109,7 @@ function Setting() {
                 setIsMaintiance(res.data.isOn);
                 setMaintianceTime(res.data.duration);
                 setMaintianceReason(res.data.string);
+                setMaintianceHeading(res.data.heading);
             }
             else {
                 toast.error(`${res.message}`);
@@ -154,10 +158,16 @@ function Setting() {
                     <div className={styles.containerDiv}>
                         <h3>Maintaince Mode</h3>
                         <div className={`${styles.detailsDataList} ${styles.maintainceBox}`}>
-                            <div className={styles.individualDataComp}>
+                            {/* <div className={styles.individualDataComp}>
                                 <p>Maintenance Duration </p>
                                 <div>
                                     <input placeholder="Input in sec" value={maintianceTime} onChange={(e) => setMaintianceTime(e.target.value)} />
+                                </div>
+                            </div> */}
+                            <div className={styles.individualDataComp}>
+                                <p>Maintenance Heading </p>
+                                <div>
+                                    <input placeholder="Type reason" value={maintianceHeading} onChange={(e) => setMaintianceHeading(e.target.value)} />
                                 </div>
                             </div>
                             <div className={styles.individualDataComp}>
@@ -169,6 +179,7 @@ function Setting() {
                             <div className={styles.individualDataComp}>
                                 <p>Maintenance Duration</p>
                                 <div className={styles.maintainceDiv}>
+                                     <input placeholder="Input in sec" value={maintianceTime} onChange={(e) => setMaintianceTime(e.target.value)} style={{width:"25%"}} />
                                     <button
                                         className={styles.maintainceDivBtn}
                                         onClick={toggelMaintance}

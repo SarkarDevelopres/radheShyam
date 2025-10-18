@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar"
 import { Spinner } from "react-bootstrap";
 import Footer from "./Footer";
 
-function MaintainanceScreen({ duration, startedAt, string }) {
+function MaintainanceScreen({ duration, startedAt, string, heading }) {
     const [remaining, setRemaining] = useState(0);
 
     useEffect(() => {
@@ -39,14 +39,15 @@ function MaintainanceScreen({ duration, startedAt, string }) {
                     justifyContent: "center",
                     flexDirection: "column",
                     alignItems: "center",
-                    padding: "200px 50px"
+                    padding: "100px 50px"
                 }}
             >
 
-                <Spinner style={{ height: "50px", width: "50px" }} />
-                <h1 style={{ color: "#02D4F4", textAlign: "center", margin: "20px 0px" }}>
-                    {string}
+                <Spinner style={{ height: "80px", width: "80px" }} />
+                <h1 style={{ color: "#02D4F4", textAlign: "center", marginTop: "20px" }}>
+                    {heading}
                 </h1>
+                <p style={{ color: "#02D4F4", textAlign: "center", margin: "10px 0px 20px 0px" }}>{string}</p>
                 <h3 style={{color: "#02D4F4"}}>Remaining time: {hours}:{minutes}:{seconds}</h3>
             </div>
             <Footer maintainance={true}/>

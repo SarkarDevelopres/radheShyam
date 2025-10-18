@@ -48,6 +48,7 @@ export default async function RootLayout({ children }) {
   let duration = 1;
   let startedAt = null;
   let string = "";
+  let heading = "";
   let no = null;
   try {
     no = await getNumber();
@@ -58,9 +59,10 @@ export default async function RootLayout({ children }) {
     if (jsonResponse.ok) {
       maintainceMode = jsonResponse.isMaintenance;
       if (maintainceMode) {
-        duration = jsonResponse.duration
-        startedAt = jsonResponse.startedAt
-        string = jsonResponse.string
+        duration = jsonResponse.duration;
+        startedAt = jsonResponse.startedAt;
+        string = jsonResponse.string;
+        heading = jsonResponse.heading;
       }
     }
 
@@ -72,9 +74,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} />}
+        {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} heading={heading}/>}
         {!maintainceMode && <ClientShell number={no}>{children}</ClientShell>}
-        {/* <ClientShell number={no}>{children}</ClientShell> */}
+        <ClientShell number={no}>{children}</ClientShell>
       </body>
     </html>
   );
