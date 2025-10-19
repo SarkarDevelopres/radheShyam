@@ -76,7 +76,7 @@ export default async function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {maintainceMode && <MaintainanceScreen duration={duration} startedAt={startedAt} string={string} heading={heading}/>}
         {!maintainceMode && <ClientShell number={no}>{children}</ClientShell>}
-        <ClientShell number={no}>{children}</ClientShell>
+        {/* <ClientShell number={no}>{children}</ClientShell> */}
       </body>
     </html>
   );

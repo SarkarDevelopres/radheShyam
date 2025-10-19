@@ -16,6 +16,19 @@ export function GameLogComponent({ sl, id, name, players, fee, status, dateTime 
         </tr>
     )
 }
+export function SportsLogComponent({ sl, id, name, players, fee, status, dateTime }) {
+    return (
+        <tr>
+            <td>{sl+200}</td>
+            <td>{name}</td>
+            <td>{id}</td>
+            <td>{players}</td>
+            <td>{fee}</td>
+            <td>{status}</td>
+            <td>{dateTime}</td>
+        </tr>
+    )
+}
 
 export function GameComponent({ name, backImage }) {
     return (
@@ -242,7 +255,7 @@ function Games() {
             <div className={styles.adminMainContent}>
                 <h2>Bets</h2>
                 <div className={styles.bigContainer}>
-                    <h3>Bets Logs</h3>
+                    <h3>Casino Bets Logs</h3>
                     <div className={styles.gameLogContainer} style={{height:"10000px"}}>
                         <table className={styles.gameLogTable} style={{height:"100px"}}>
                             <thead>
@@ -260,6 +273,31 @@ function Games() {
                                 {
                                     gameLogs.map((e, index) => {
                                         return <GameLogComponent key={index} sl={index} id={e.gameID} name={e.name} players={e.players} fee={e.fee} status={e.status} dateTime={e.createdAt} />
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className={styles.bigContainer}>
+                    <h3>Sports Bets Logs</h3>
+                    <div className={styles.gameLogContainer} style={{height:"10000px"}}>
+                        <table className={styles.gameLogTable} style={{height:"100px"}}>
+                            <thead>
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>UserName</th>
+                                    <th>Team Name</th>
+                                    <th>Amount</th>
+                                    <th>Lay/Back</th>
+                                    <th>Odds</th>
+                                    <th>Date-Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    gameLogs.map((e, index) => {
+                                        return <SportsLogComponent key={index} sl={index} id={e.gameID} name={e.name} players={e.players} fee={e.fee} status={e.status} dateTime={e.createdAt} />
                                     })
                                 }
                             </tbody>
