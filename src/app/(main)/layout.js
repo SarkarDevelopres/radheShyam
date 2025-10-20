@@ -65,6 +65,12 @@ export default async function RootLayout({ children }) {
         heading = jsonResponse.heading;
       }
     }
+    else{
+      maintainceMode = true;
+      duration = 12;
+      heading= "Maintenance Going On";
+      string= "Server is being internally rewrired.";
+    }
 
   } catch (e) {
     console.error("getNumber failed:", e);
