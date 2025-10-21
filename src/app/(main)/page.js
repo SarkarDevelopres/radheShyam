@@ -90,10 +90,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchData("cricket");
-    fetchData("soccer");
     fetchData("tennis");
-    fetchData("baseball");
-    fetchData("basketball");
   }, [])
 
   return (
