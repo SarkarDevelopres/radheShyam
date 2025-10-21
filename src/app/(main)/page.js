@@ -7,7 +7,7 @@ import GameCard from '@components/GameCard';
 
 
 export function SportsSection({ sportName, image, matchList }) {
-  const router = useRouter() 
+  const router = useRouter()
   return (
     <div className={styles.sportsSection}>
       <div className={styles.sportsSectionHeader}>
@@ -15,14 +15,14 @@ export function SportsSection({ sportName, image, matchList }) {
         <img src={image} />
       </div>
       <div className={styles.sportsSectionBody}>
-        { sportName=="Cricket" || sportName=="Tennis"?
+        {sportName == "Cricket" || sportName == "Tennis" ?
           matchList.map((e, i) => {
             return <div key={i}>
               <p>{`${e.teamHome.name} vs ${e.teamAway.name}`}</p>
-              <button onClick={()=>router.push(`/sports`)}>Bet Now</button>
+              <button onClick={() => router.push(`/sports`)}>Bet Now</button>
             </div>
           })
-          :<p>By October you will have all 5 sports, thanks for you patience!</p>
+          : <p>By October you will have all 5 sports, thanks for you patience!</p>
         }
       </div>
     </div>
@@ -38,15 +38,21 @@ export default function Home() {
     { name: "7updown", image: "7updown.webp" },
     { name: "dragontiger", image: "dragontiger.webp" },
     { name: "amarakbaranthony", image: "aaa.png" },
-    { name: "andarbahar", image: "andarbahar.webp", isNew:true },
-    { name: "aviator", image: "aviator-icon.png", isNew:true },
+    // { name: "andarbahar", image: "andarbahar.webp", isNew: true },
+    // { name: "aviator", image: "aviator-icon.png", isNew: true },
+    // { name: "matka", image: "matka.jpg", isNew: true },
+    // { name: "teenpattit20", image: "teenpatti20.jpg", isNew: true },
+    // { name: "roulette", image: "roulette.jpg", isNew: true },
+    // { name: "twocardteenpatti", image: "twocardteenpatti.jpg", isNew: true },
+    // { name: "racetwo17", image: "race17.jpg", isNew: true },
+    // { name: "war", image: "war.jpg", isNew: true },
   ])
   const [oddsData, setOddsData] = useState({
-    cricket:[],
-    soccer:[],
-    tennis:[],
-    basketball:[],
-    baseball:[],
+    cricket: [],
+    soccer: [],
+    tennis: [],
+    basketball: [],
+    baseball: [],
   });
 
   const fetchData = async (sports) => {
@@ -56,20 +62,20 @@ export default function Home() {
 
     let res = await req.json();
     if (res.success) {
-      if (sports=="cricket") {
+      if (sports == "cricket") {
         setOddsData((p) => ({ ...p, cricket: [...res.data] }));
 
       }
-      else if (sports=="soccer") {
+      else if (sports == "soccer") {
         setOddsData((p) => ({ ...p, soccer: [...res.data] }));
       }
-      else if (sports=="tennis") {
+      else if (sports == "tennis") {
         setOddsData((p) => ({ ...p, tennis: [...res.data] }));
       }
-      else if (sports=="basketball") {
+      else if (sports == "basketball") {
         setOddsData((p) => ({ ...p, basketball: [...res.data] }));
       }
-      else if (sports=="baseball") {
+      else if (sports == "baseball") {
         setOddsData((p) => ({ ...p, baseball: [...res.data] }));
       }
     }
@@ -115,13 +121,14 @@ export default function Home() {
               return <GameCard key={i} name={e.name} image={e.image} isNew={e.isNew} />
             })
           }
+          <button onClick={()=>router.push('/games')}>View More</button>
         </div>
       </section>
-      <SportsSection sportName={"Cricket"} image={"/cricketicon.png"} matchList={oddsData.cricket}/>
-      <SportsSection sportName={"Football"} image={"/fotballicon.png"} matchList={oddsData.soccer}/>
-      <SportsSection sportName={"Tennis"} image={"/tennisicon.png"} matchList={oddsData.tennis}/>
-      <SportsSection sportName={"Basketball"} image={"/basketballicon.png"} matchList={oddsData.basketball}/>
-      <SportsSection sportName={"Baseball"} image={"/baseballicon.png"} matchList={oddsData.baseball}/>
+      <SportsSection sportName={"Cricket"} image={"/cricketicon.png"} matchList={oddsData.cricket} />
+      <SportsSection sportName={"Football"} image={"/fotballicon.png"} matchList={oddsData.soccer} />
+      <SportsSection sportName={"Tennis"} image={"/tennisicon.png"} matchList={oddsData.tennis} />
+      <SportsSection sportName={"Basketball"} image={"/basketballicon.png"} matchList={oddsData.basketball} />
+      <SportsSection sportName={"Baseball"} image={"/baseballicon.png"} matchList={oddsData.baseball} />
     </div>
   );
 }
