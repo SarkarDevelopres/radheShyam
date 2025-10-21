@@ -141,7 +141,7 @@ function ClientView({ initialData }) {
                         <Spinner style={{ marginBottom: "20px" }} />
                         <h4>{`${activeSports} is still being added`}</h4>
                         <p style={{ fontSize: "10px" }}>
-                            We're adding the rest 4 sports, thanks for your patience!
+                           {" We're adding the rest 4 sports, thanks for your patience!"}
                         </p>
                     </div>
                 )}
