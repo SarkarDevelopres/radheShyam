@@ -150,10 +150,10 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
             }} />
           </div>
           {amount && odds ? <span style={{ color: !lay ? "rgba(0, 243, 0, 1)" : "red" }}>
-          {!lay
-            ? ((odds - 1) * amount).toFixed(2) // back profit
-            : ((odds - 1) * amount).toFixed(2) // lay liability
-          }
+            {!lay
+              ? ((odds - 1) * amount).toFixed(2) // back profit
+              : ((odds - 1) * amount).toFixed(2) // lay liability
+            }
           </span> : <span></span>
           }
         </div>
@@ -389,11 +389,11 @@ function CricketLiveComp() {
       })
       setIsLoading(false);
 
-      if (res.matchData.game_state?.code != 3) {
-        setGameState({ ...res.matchData.game_state })
-        if (res.matchData.game_state?.code != 1) {
-          setGameEnd(true)
-        }
+      if (res.matchData.game_state?.code !== 0 && res.matchData.game_state?.code !== 3) {
+        setGameState({ ...res.matchData.game_state });
+        setGameEnd(true);
+      } else {
+        setGameEnd(false);
       }
       console.log(res.matchData.game_state);
 
@@ -432,52 +432,58 @@ function CricketLiveComp() {
 
   }
   const takeBackBet = async () => {
-    const confirmed = confirm("Are you sure you want to Cashout ?");
 
-    if (confirmed) {
+    if (openBets.length > 0) {
+      const confirmed = confirm("Are you sure you want to Cashout ?");
 
-      let oddsBook = {};
+      if (confirmed) {
 
-      for (const outcome of oddsData[0].outcomes) {
-        oddsBook[outcome.name] = {
-          back: parseFloat(outcome.price),
-          lay: parseFloat((parseFloat(outcome.price) / 0.99).toFixed(2))
-        };
-      }
+        let oddsBook = {};
+
+        for (const outcome of oddsData[0].outcomes) {
+          oddsBook[outcome.name] = {
+            back: parseFloat(outcome.price),
+            lay: parseFloat((parseFloat(outcome.price) / 0.99).toFixed(2))
+          };
+        }
 
 
-      if (typeof window === "undefined") return false;
-      let userToken = localStorage.getItem("userToken");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`,
-        },
-        body: JSON.stringify({
-          token: userToken,
-          matchId: metaData.matchId,
-          oddsBook: oddsBook
-        }),
-      });
-
-      const payload = await response.json();
-      if (!payload.ok) {
-        toast.error(`${payload.message}`)
-        return;
-      }
-
-      if (payload.ok) {
-        console.log(response);
-        let matchId = localStorage.getItem("matchId");
+        if (typeof window === "undefined") return false;
         let userToken = localStorage.getItem("userToken");
-        toast.success(`${payload.message}`);
-        fetchBets(userToken, matchId)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userToken}`,
+          },
+          body: JSON.stringify({
+            token: userToken,
+            matchId: metaData.matchId,
+            oddsBook: oddsBook
+          }),
+        });
+
+        const payload = await response.json();
+        if (!payload.ok) {
+          toast.error(`${payload.message}`)
+          return;
+        }
+
+        if (payload.ok) {
+          console.log(response);
+          let matchId = localStorage.getItem("matchId");
+          let userToken = localStorage.getItem("userToken");
+          toast.success(`${payload.message}`);
+          fetchBets(userToken, matchId)
+        }
+
       }
-
     }
-
+    else {
+      toast.error("No open bets to cash out !")
+    }
   }
+  
   useEffect(() => {
     let id = localStorage.getItem("matchId");
     let status = localStorage.getItem("status");
@@ -797,7 +803,7 @@ function CricketLiveComp() {
         <div className={styles.backLayNameBar}>
           <div>
             <span onClick={() => {
-              console.log(gameState);
+              console.log(gameEnd);
             }}>Back</span>
             <span>Lay</span>
           </div>

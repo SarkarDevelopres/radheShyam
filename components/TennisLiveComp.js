@@ -245,55 +245,58 @@ function TennisLiveComp() {
 
     }
 
-    const takeBackBet = async () => {
-        const confirmed = confirm("Are you sure you want to Cashout ?");
-
-        if (noBets) toast.error("undefined");
-
-        if (confirmed) {
-
-            let oddsBook = {};
-
-            for (const outcome of oddsData[0].outcomes) {
-                oddsBook[outcome.name] = {
-                    back: parseFloat(outcome.price),
-                    lay: parseFloat((parseFloat(outcome.price) / 0.99).toFixed(2))
-                };
-            }
-
-
-            if (typeof window === "undefined") return false;
-            let userToken = localStorage.getItem("userToken");
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userToken}`,
-                },
-                body: JSON.stringify({
-                    token: userToken,
-                    matchId: metaData.matchId,
-                    oddsBook: oddsBook
-                }),
-            });
-
-            const payload = await response.json();
-            if (!payload.ok) {
-                toast.error(`${payload.message}`)
-                return;
-            }
-
-            if (payload.ok) {
-                console.log(response);
-                let matchId = localStorage.getItem("matchId");
-                let userToken = localStorage.getItem("userToken");
-                toast.success(`${payload.message}`);
-                fetchBets(userToken, matchId)
-            }
-
-        }
-
-    }
+     const takeBackBet = async () => {
+   
+       if (openBets.length > 0) {
+         const confirmed = confirm("Are you sure you want to Cashout ?");
+   
+         if (confirmed) {
+   
+           let oddsBook = {};
+   
+           for (const outcome of oddsData[0].outcomes) {
+             oddsBook[outcome.name] = {
+               back: parseFloat(outcome.price),
+               lay: parseFloat((parseFloat(outcome.price) / 0.99).toFixed(2))
+             };
+           }
+   
+   
+           if (typeof window === "undefined") return false;
+           let userToken = localStorage.getItem("userToken");
+           const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/take`, {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+               'Authorization': `Bearer ${userToken}`,
+             },
+             body: JSON.stringify({
+               token: userToken,
+               matchId: metaData.matchId,
+               oddsBook: oddsBook
+             }),
+           });
+   
+           const payload = await response.json();
+           if (!payload.ok) {
+             toast.error(`${payload.message}`)
+             return;
+           }
+   
+           if (payload.ok) {
+             console.log(response);
+             let matchId = localStorage.getItem("matchId");
+             let userToken = localStorage.getItem("userToken");
+             toast.success(`${payload.message}`);
+             fetchBets(userToken, matchId)
+           }
+   
+         }
+       }
+       else {
+         toast.error("No open bets to cash out !")
+       }
+     }
 
     useEffect(() => {
         let id = localStorage.getItem("matchId");
