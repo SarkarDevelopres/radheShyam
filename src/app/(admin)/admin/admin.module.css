@@ -146,6 +146,7 @@
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: #2e2d2f;
   margin: 20px 0px;
 }
@@ -636,7 +637,7 @@ input:checked + .slider::before {
   transition: background-color 0.3s;
 }
 
-.individualDataComp .buttonSpan {
+.buttonSpan {
   display: block;
   width: 20px;
   height: 20px;
@@ -645,7 +646,7 @@ input:checked + .slider::before {
   transition: margin-left 0.3s;
 }
 
-.individualDataComp .buttonSpan.spanOn {
+.buttonSpan.spanOn {
   margin-left: 25px;
 }
 
