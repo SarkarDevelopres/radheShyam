@@ -70,7 +70,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
       deductAmnt = Math.round(liability);
     }
 
-    console.log(amnt);
+    // console.log(amnt);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/place`, {
       method: 'POST',
@@ -101,7 +101,7 @@ export function OddsMatchComp({ f, meta = "", bookmaker = "", market = "", fetch
     }
 
     if (payload.ok) {
-      console.log(response);
+      // console.log(response);
 
       toast.success(`Bet Placed for ${amnt}!`);
       setShowStake(false);
@@ -370,10 +370,14 @@ function CricketLiveComp() {
     });
 
     let res = await req.json();
-    console.log(res);
+    // console.log(res);
 
     if (res.success) {
       setOddsData([res.data]);
+      console.log("Outcome: ", res.data);
+
+
+
       setMetaData({ ...res.meta });
       setMatchData({ ...res.matchData })
       setSessionOdds([...res.data.sessionOdds])
@@ -396,10 +400,19 @@ function CricketLiveComp() {
         setGameEnd(false);
       }
       console.log(res.matchData.game_state);
+      if (res?.data?.outcomes.length) {
+        for (let i = 0; i < res.data.outcomes.length; i++) {
+          let oddPrice = res.data.outcomes[i].price;
+          if (oddPrice == null) {
+            setGameEnd(true)
+            break
+          }
+        }
+      }
 
     }
     else {
-      console.log(res);
+      // console.log(res);
 
       router.refresh();
     }
@@ -419,7 +432,7 @@ function CricketLiveComp() {
     });
 
     const payload = await response.json();
-    console.log(payload);
+    // console.log(payload);
     if (payload.ok) {
       setOpenBets([...payload.data])
       if (payload.profitLoss.length > 0) {
@@ -470,7 +483,7 @@ function CricketLiveComp() {
         }
 
         if (payload.ok) {
-          console.log(response);
+          // console.log(response);
           let matchId = localStorage.getItem("matchId");
           let userToken = localStorage.getItem("userToken");
           toast.success(`${payload.message}`);
@@ -483,7 +496,7 @@ function CricketLiveComp() {
       toast.error("No open bets to cash out !")
     }
   }
-  
+
   useEffect(() => {
     let id = localStorage.getItem("matchId");
     let status = localStorage.getItem("status");
@@ -505,7 +518,7 @@ function CricketLiveComp() {
       });
       socket.emit("watch:join", id);
       socket.on("watch:joined", (d) => {
-        console.log(d.data);
+        // console.log(d.data);
 
         if (d?.data) {
           if (d?.data?.data?.liveScore) {
@@ -594,7 +607,7 @@ function CricketLiveComp() {
           if (d.data.gameState.stateCode != 3) {
             setGameState(d.data.gameState)
           }
-          console.log("Live score update:", d.data)
+          // console.log("Live score update:", d.data)
         }
         if (d.kind === "ball") {
           // console.log("Ball update:", d.data)
@@ -798,7 +811,7 @@ function CricketLiveComp() {
       <div className={styles.oddsDiv}>
         <div className={styles.header}>
           <h3>Match Odds</h3>
-          {!completed && <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>}
+          {!completed && !gameEnd && <button onClick={takeBackBet} style={{ color: "white" }}>cashout</button>}
         </div>
         <div className={styles.backLayNameBar}>
           <div>
