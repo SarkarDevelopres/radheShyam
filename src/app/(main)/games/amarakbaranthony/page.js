@@ -271,6 +271,12 @@ export default function AmarAkbarAnthonyPage() {
   const [loading, setLoading] = useState(true);
   const [isLocked, setLocked] = useState(false);
 
+  const [viewers, setViewers] = useState(1);
+  const [winners, setWinners] = useState(0);
+  const [losers, setLosers] = useState(0);
+
+  const [lastGameResult, setLastGameResult] = useState([])
+
   const normalizePick = (p) => {
     const P = String(p || "").toUpperCase();
     if (P === "UP") return "HIGH";
@@ -336,6 +342,20 @@ export default function AmarAkbarAnthonyPage() {
       canvasRef.current.style.backgroundColor = "#0b1920";
       roundIdRef.current = payload?._id || payload?.id || roundIdRef.current;
       setRound(payload);
+      setViewers(payload.viewers);
+      setLosers(0);
+      setWinners(0);
+      if (payload.resultList) {
+        let cardImgList = [];
+        for (let i = 0; i < payload.resultList.length; i++) {
+          if (payload.resultList[i] == "ANDAR") {
+            cardImgList.push('/andar-card.png')
+          } else {
+            cardImgList.push('/bahar-card.png')
+          }
+        }
+        setLastGameResult([...cardImgList]);
+      }
       aaaRef.current?.startRound();
     });
 
@@ -503,6 +523,12 @@ export default function AmarAkbarAnthonyPage() {
             : "Waiting for round..."}
         </div>
       </div>
+      <div className={styles.metaRow}>
+        {lastGameResult.length == 0
+          ? "Entered Mid Game, Wait until Round Ends"
+          : ""}
+      </div>
+
 
       <div className={styles.gameBody}>
         <div className={styles.gameDisplay}>

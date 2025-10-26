@@ -354,6 +354,8 @@ export default function AndarBaharPage() {
   const [winners, setWinners] = useState(0);
   const [losers, setLosers] = useState(0);
 
+  const [lastGameResult, setLastGameResult] = useState([])
+
   const [options] = useState(["ANDAR", "BAHAR"]);
   const [options2] = useState(["ANDAR BLACK", "ANDAR RED"]);
   const [options3] = useState(["BAHAR BLACK", "BAHAR RED"]);
@@ -391,12 +393,23 @@ export default function AndarBaharPage() {
     });
 
     socket.on("round:start", (payload) => {
-      console.log("START: ", payload);
+      // console.log("START: ", payload);
       canvasRef.current.style.backgroundColor = "#0b1920";
       abRef.current?.startRound();
       setViewers(payload.viewers);
       setLosers(0);
       setWinners(0);
+      if (payload.resultList) {
+        let cardImgList = [];
+        for (let i = 0; i < payload.resultList.length; i++) {
+          if (payload.resultList[i] == "ANDAR") {
+            cardImgList.push('/andar-card.png')
+          } else {
+            cardImgList.push('/bahar-card.png')
+          }
+        }
+        setLastGameResult([...cardImgList]);
+      }
       setLoading(false);
 
 
@@ -527,6 +540,11 @@ export default function AndarBaharPage() {
             : `Closes in ${fmtSec(lockMs)}s`
           : "Waiting for round..."}
       </div>
+      <div className={styles.metaRow}>
+        {lastGameResult.length==0
+          ? "Entered Mid Game, Wait until Round Ends"
+          : ""}
+      </div>
 
       <div className={styles.gameBody}>
         <div className={styles.gameDisplay}>
@@ -537,21 +555,26 @@ export default function AndarBaharPage() {
           )}
           <canvas className={styles.canvas} ref={canvasRef} />
           <div className={styles.playingViewersDiv}>
-            <div style={{color:"#057a22ff"}}>
+            <div style={{ color: "#057a22ff" }}>
               <span>Won:</span>
-              <IoPerson/>
+              <IoPerson />
               <span>{winners}</span>
             </div>
-            <div style={{width:"100px", color:"#fff"}}>
+            <div style={{ width: "100px", color: "#fff" }}>
               <span>Playing:</span>
-              <IoPerson/>
+              <IoPerson />
               <span>{viewers}</span>
             </div>
-            <div style={{color:"#740d0dff"}}>
+            <div style={{ color: "#740d0dff" }}>
               <span>Lost:</span>
-              <IoPerson/>
+              <IoPerson />
               <span>{losers}</span>
             </div>
+          </div>
+          <div className={styles.playingViewersDiv}>
+            {lastGameResult.length > 0 ? lastGameResult.map((e, i) => (
+              <img key={i} src={e} alt="result card" width={20} />
+            )) : <sapn>Fetching previous game results...</sapn>}
           </div>
         </div>
 
