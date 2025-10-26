@@ -363,6 +363,8 @@ const icons5 = [
             canvasRef.current.style.backgroundColor = "#0b1920";
             hlRef.current?.startRound();
             const rid = payload?._id || payload?.id || payload?.roundId;
+            console.log("Round Id: ",rid);
+            
             if (rid) {
                 roundIdRef.current = rid;
                 setRound({ id: rid, ...payload });

@@ -55,7 +55,7 @@ function Setting() {
                 setIsMaintiance(res.isMaintenance);
                 if (res.isMaintenance) {
                     btnRef.current.style.backgroundColor = "#009320ff";
-                    btnSpan.current.style.marginLeft = "60px";
+                    btnSpan.current.style.marginLeft = "40px";
                     setMaintianceTime(res.duration);
                     setMaintianceReason(res.string);
                     setMaintianceHeading(res.heading);
@@ -69,7 +69,7 @@ function Setting() {
     const toggelMaintance = () => {
         if (!isMaintiance) {
             btnRef.current.style.backgroundColor = "#009320ff";
-            btnSpan.current.style.marginLeft = "60px";
+            btnSpan.current.style.marginLeft = "40px";
             setIsMaintiance(true)
         } else {
             setIsMaintiance(false)
