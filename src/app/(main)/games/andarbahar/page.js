@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BetOptions } from "../7updown/page";
 import { GiSpikedDragonHead, GiTigerHead, GiClubs, GiSpades, GiHearts, GiDiamonds } from "react-icons/gi";
+import { IoPerson } from "react-icons/io5";
 import { TbPlayCardOff } from "react-icons/tb";
 import Spinner from "react-bootstrap/Spinner";
 
@@ -349,6 +350,10 @@ export default function AndarBaharPage() {
   const [isLocked, setLocked] = useState(true);
   const [loading, setLoading] = useState(true);
 
+  const [viewers, setViewers] = useState(1);
+  const [winners, setWinners] = useState(0);
+  const [losers, setLosers] = useState(0);
+
   const [options] = useState(["ANDAR", "TIE", "BAHAR"]);
   const [options2] = useState(["ANDAR BLACK", "ANDAR RED"]);
   const [options3] = useState(["BAHAR BLACK", "BAHAR RED"]);
@@ -389,7 +394,9 @@ export default function AndarBaharPage() {
       console.log("START: ", payload);
       canvasRef.current.style.backgroundColor = "#0b1920";
       abRef.current?.startRound();
-      setLocked(false);
+      setViewers(payload.viewers);
+      setLosers(0);
+      setWinners(0);
       setLoading(false);
 
 
@@ -447,6 +454,9 @@ export default function AndarBaharPage() {
 
       setTimeout(() => abRef.current?.showResult(andarKey, baharKey, winner), 700);
 
+      setWinners(payload.winners)
+      setLosers(payload.losers)
+
       try {
         if (canvasRef.current && abRef.current.state.userPick) {
           canvasRef.current.style.transition = "background-color 300ms ease";
@@ -499,6 +509,7 @@ export default function AndarBaharPage() {
       (res) => {
         if (!res?.ok) return toast.error(res?.error || "Failed");
         toast.success(`Bet ${bet} ₹${amnt} placed`);
+        setLocked(true);
         abRef.current.setPick(market)
         setBet(null); setAmnt(0);
       }
@@ -525,6 +536,23 @@ export default function AndarBaharPage() {
             </div>
           )}
           <canvas className={styles.canvas} ref={canvasRef} />
+          <div className={styles.playingViewersDiv}>
+            <div style={{color:"#057a22ff"}}>
+              <span>Won:</span>
+              <IoPerson/>
+              <span>{winners}</span>
+            </div>
+            <div style={{width:"100px", color:"#fff"}}>
+              <span>Playing:</span>
+              <IoPerson/>
+              <span>{viewers}</span>
+            </div>
+            <div style={{color:"#740d0dff"}}>
+              <span>Lost:</span>
+              <IoPerson/>
+              <span>{losers}</span>
+            </div>
+          </div>
         </div>
 
         <div className={styles.betDisplay}>
