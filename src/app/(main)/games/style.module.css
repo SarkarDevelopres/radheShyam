@@ -213,6 +213,7 @@
 .spinnerDiv {
   width: 50%;
   aspect-ratio: 1;
+  height: auto;
   font-size: 5rem;
   position: absolute;
   top: 25%;
