@@ -354,7 +354,7 @@ export default function AndarBaharPage() {
   const [winners, setWinners] = useState(0);
   const [losers, setLosers] = useState(0);
 
-  const [options] = useState(["ANDAR", "TIE", "BAHAR"]);
+  const [options] = useState(["ANDAR", "BAHAR"]);
   const [options2] = useState(["ANDAR BLACK", "ANDAR RED"]);
   const [options3] = useState(["BAHAR BLACK", "BAHAR RED"]);
   const [options4] = useState(["ANDAR CLUBS", "ANDAR HEARTS", "ANDAR SPADES", "ANDAR DIAMONDS"]);
@@ -568,7 +568,6 @@ export default function AndarBaharPage() {
                 setAmnt={setAmnt}
                 onPlaceBet={placeBet}
                 optionArray={options}
-                icon={icons1}
                 isLocked={isLocked}
               />
             ))}

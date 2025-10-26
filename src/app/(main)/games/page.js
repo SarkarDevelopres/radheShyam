@@ -8,6 +8,7 @@ function Games() {
     { name: "7updown", image: "7updown.webp" },
     { name: "dragontiger", image: "dragontiger.webp" },
     { name: "amarakbaranthony", image: "aaa.png" },
+    { name: "andarbaharlite", image: "andarbaharlite.png" },
     { name: "andarbahar", image: "andarbahar.webp", isNew: true },
     { name: "matka", image: "matka.jpg", isNew: true },
     { name: "roulette", image: "roulette.jpg", isNew: true },
