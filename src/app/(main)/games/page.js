@@ -10,13 +10,13 @@ function Games() {
     { name: "amarakbaranthony", image: "aaa.png" },
     { name: "andarbaharlite", image: "andarbaharlite.png" },
     { name: "andarbahar", image: "andarbahar.webp"},
-    { name: "matka", image: "matka.jpg", isNew: true },
-    { name: "roulette", image: "roulette.jpg", isNew: true },
-    { name: "war", image: "war.jpg", isNew: true },
     { name: "teenpatti2020", image: "teenpatti20.jpg", },
     { name: "teenpattipoint", image: "twocardteenpatti.jpg"},
+    { name: "matka", image: "matka.jpg", isNew: true },
+    { name: "aviator", image: "aviator-icon.png"},
+    { name: "roulette", image: "roulette.jpg", isNew: true },
+    { name: "war", image: "war.jpg", isNew: true },
     { name: "racetwo17", image: "race17.jpg", isNew: true },
-    { name: "aviator", image: "aviator-icon.png", isNew: true },
   ])
   return (
     <div className={styles.mainDiv}>

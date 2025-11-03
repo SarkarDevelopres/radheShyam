@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { FaLock } from "react-icons/fa";
 import styles from "../style.module.css";
 import { io } from "socket.io-client";
+import { toast } from "react-toastify";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 const GAME = "AVIATOR";
@@ -13,6 +15,7 @@ export default function AviatorGame() {
   const rafRef = useRef(null);
   const resetRef = useRef(null);
   const multiplierRef = useRef(1);
+  const displayMultiplierRef = useRef(1);
   const socketRef = useRef(null);
   const crashRef = useRef(null);
 
@@ -166,11 +169,17 @@ export default function AviatorGame() {
       if (!crashed) {
         // normal ascending + oscillation, multiplier simulated by time
         // multiplierRef.current = Math.min(50, 1 + t / 500); // fake multiplier for demo
+        // Smoothly move displayMultiplier toward the true multiplier
+        const target = multiplierRef.current;
+        const current = displayMultiplierRef.current;
 
-        const multiplier = multiplierRef.current;
-        baseY = h * 0.6 - Math.log(multiplier + 1) * 150;
+        // interpolation factor: smaller = smoother, larger = faster (0.1 → 0.3)
+        displayMultiplierRef.current += (target - current) * 0.15;
+
+        const multiplier = displayMultiplierRef.current;
+        baseY = h * 0.7 - Math.log(multiplier + 1) * 150;
         planeY = baseY - Math.sin(t / 200) * 28;
-        planeX = w * 0.1 + Math.log(multiplier + 1) * 50;
+        planeX = w * 0.01 + Math.log(multiplier + 1) * 50;
       } else {
         // --- Crash physics ---
         // gravity grows to feel sharp fall
@@ -222,7 +231,7 @@ export default function AviatorGame() {
       // draw multiplier text (top-left)
       ctx.font = "bold 48px Poppins, sans-serif";
       ctx.fillStyle = "#fff";
-      ctx.fillText(`${multiplierRef.current.toFixed(2)}x`, 50, 100);
+      ctx.fillText(`${displayMultiplierRef.current.toFixed(2)}x`, 50, 100);
 
       // when plane is completely below screen, consider it gone
       if (planeY - 200 > h && crashed) {
@@ -252,19 +261,19 @@ export default function AviatorGame() {
     window.addEventListener("resize", onResize);
 
     function resetGame() {
-    crashed = false;
-    planeGone = false;
-    alpha = 1;
-    rotation = 0;
-    vx = 0;
-    vy = 0;
-    explosionParticles = [];
-    multiplierRef.current = 1; // reset multiplier
-    planeX = w * 0.1;
-    planeY = h * 0.6;
-  }
+      crashed = false;
+      planeGone = false;
+      alpha = 1;
+      rotation = 0;
+      vx = 0;
+      vy = 0;
+      explosionParticles = [];
+      multiplierRef.current = 1; // reset multiplier
+      planeX = w * 0.1;
+      planeY = h * 0.6;
+    }
 
-  resetRef.current = resetGame;
+    resetRef.current = resetGame;
 
     // cleanup
     return () => {
@@ -287,26 +296,22 @@ export default function AviatorGame() {
 
       console.log("START: ", payload);
       setViewers(payload.viewers);
-      // setLoading(false);
-
-
-      const rid = payload?._doc?._id;
-      // console.log("ROOM ID: ", rid);
+      const rid = payload?._id;
 
       // if (rid) roundRef.current = rid;
-      setRound({ id: rid, ...payload._doc });
+      setRound({ id: rid, ...payload });
     });
 
     socket.on("aviator:update", (multiplier) => {
-      console.log("Multiplier Data: ",multiplier);
-      
+      console.log("Multiplier Data: ", multiplier);
+
       multiplierRef.current = multiplier.multiplier;
     });
 
     socket.on("aviator:crash", (data) => {
-      console.log("Crashed: ",data);
-      
-      crashRef.current();
+      console.log("Crashed: ", data);
+
+      crashRef?.current();
       setIsCrashed(true)
       setLocked(true)
 
@@ -325,9 +330,71 @@ export default function AviatorGame() {
     };
   }, []);
 
+  function getUid() {
+    if (typeof window === "undefined") return null;
+    let userToken = localStorage.getItem("userToken");
+    return userToken;
+  }
+
+  const onPlaceBet = async () => {
+    if (!amnt && displayMultiplierRef.current === 1) {
+      toast.error("Cannot place bets");
+    }
+    const uid = getUid();
+    if (!uid) {
+      toast.error("Log-In to place bets");
+    }
+    let market = Number(displayMultiplierRef.current.toFixed(2));
+    socketRef.current.emit(
+      "bet:aviator",
+      {
+        userId: uid, // replace with your actual authenticated id
+        roundId: round.id,
+        game: GAME,
+        tableId: TABLE_ID,
+        market: market, // 'UP' | 'DOWN' | 'SEVEN'
+        stake: Number(amnt),
+      },
+      (res) => {
+        if (!res?.ok) {
+          toast.error(res?.error || "Failed to place bet.");
+          return;
+        }
+        setBet(null);
+        toast.success(`Bet placed on ${market} for ${amnt}.`, {
+          autoClose: 3000,
+          pauseOnFocusLoss: false,
+        });
+        setAmnt(0);
+      }
+    );
+  }
+
+  const takeBackBet = async () => {
+    let uid = getUid();
+    let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/cashInAviator`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${uid}`,
+      },
+      body: JSON.stringify({
+        "userToken": uid,
+        "roundId": round.id
+      })
+    });
+    let res = await req.json();
+    if (res.ok) {
+      toast.success(`${res.message}`);
+    }
+    else{
+      toast.error(`${res.message}`)
+    }
+  }
+
 
   return (
-    <div className="w-screen h-screen overflow-hidden position-relative">
+    <div style={{width: "100%", minHeight:600, height:"100%", overflow: 'hidden', position: 'relative'}}>
       <canvas ref={canvasRef} className="w-full h-full" />
       <div className={styles.totalPlaying}>{viewers}</div>
       <div className={styles.aviatorBettingArea}>
@@ -345,21 +412,25 @@ export default function AviatorGame() {
           </div>
           <div className={styles.placeBtn}>
             <button
-              // onClick={async () => {
-              //   await onPlaceBet();
-              // }}
+              onClick={async () => {
+                await onPlaceBet();
+              }}
               style={{ backgroundColor: "#0ac900ff", padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
             >
-              Place Bet
+              {
+                locked ? <FaLock /> : "Place Bet"
+              }
             </button>
 
             <button
               style={{ backgroundColor: "#0ac900ff", padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
-              onClick={() => {
+              onClick={async () => {
+                await takeBackBet()
                 setBet(null);
               }}
-            >
-              Cash In
+            >{
+                locked ? <FaLock /> : "Cash In"
+              }
             </button>
           </div>
         </div>
