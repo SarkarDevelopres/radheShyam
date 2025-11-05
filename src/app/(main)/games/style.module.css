@@ -357,3 +357,9 @@
   background: #003d5cb9;
   border-radius: 5px;
 }
+.aviatorRecentResults{
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #021B79;
+}

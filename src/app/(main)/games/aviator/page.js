@@ -75,7 +75,8 @@ export default function AviatorGame() {
   const stopBgRef = useRef(null);
   const startBgRef = useRef(null);
 
-  const [userList, setUserList] = useState([])
+  const [userList, setUserList] = useState([]);
+  const [resultList, setResultList] = useState([2.3, 4.5, 3.3, 2.1, 1.2, 1.4]);
 
 
   useEffect(() => {
@@ -233,9 +234,11 @@ export default function AviatorGame() {
         displayMultiplierRef.current += (target - current) * 0.15;
 
         const multiplier = displayMultiplierRef.current;
-        baseY = h * 0.7 - Math.log(multiplier + 1) * 150;
+        const logNormalized = Math.log(multiplier + 1) - Math.log(2); // remove starting offset
+
+        baseY = h * 0.5 - logNormalized * 200;  // climbs higher, but starts same height
         planeY = baseY - Math.sin(t / 200) * 20;
-        planeX = w * 0.01 + Math.log(multiplier + 1) * 50;
+        planeX = w * 0.01 + logNormalized * 100;
       } else {
         // --- Crash physics ---
         // gravity grows to feel sharp fall
@@ -367,7 +370,10 @@ export default function AviatorGame() {
       setLocked(false);
       resetRef.current();
       // if (rid) roundRef.current = rid;
-      setRoundEndAt(payload?.betsCloseAt)
+      setRoundEndAt(payload?.betsCloseAt);
+      if (payload.result) {
+        setResultList([...payload?.result])
+      }
       setRound({ id: rid, ...payload });
     });
 
@@ -528,6 +534,15 @@ export default function AviatorGame() {
 
   return (
     <div>
+      <div className={styles.aviatorRecentResults}>
+        {
+          resultList.map((e, i) => {
+            const hue = Math.floor(Math.random() * (280 - 240 + 1)) + 240;
+            const color = `hsl(${hue}, 100%, 60%)`;
+            return <span key={i} style={{ color: color, fontWeight: 600, fontSize: 18 }}>{`${e}x`}</span>
+          })
+        }
+      </div>
       <div style={{ width: "100%", minHeight: 600, height: "100%", overflow: 'hidden', position: 'relative' }}>
         <canvas ref={canvasRef} className="w-full h-full" />
         {/* <div className={styles.totalPlaying}>{viewers}</div> */}
