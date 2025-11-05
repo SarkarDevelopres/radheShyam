@@ -71,7 +71,6 @@ export default async function RootLayout({ children }) {
       heading= "Maintenance Going On";
       string= "Server is being internally rewrired.";
     }
-sds
   } catch (e) {
     console.error("getNumber failed:", e);
     // no stays null; ClientShell can show a fallback

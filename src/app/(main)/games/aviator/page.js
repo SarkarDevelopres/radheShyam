@@ -4,13 +4,56 @@ import { FaLock } from "react-icons/fa";
 import styles from "../style.module.css";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_PORT;
 const GAME = "AVIATOR";
 const TABLE_ID = "table-1";
 
+export const fakeUsernames = [
+  "SkyJumper", "CodeNomad", "PixelDrift", "AeroNova", "FrostByte", "LunaScope", "JetStreamX", "EmberEdge", "NexusRider", "QuantumWolf",
+  "BytePilot", "ZephyrZone", "NeonPulse", "CloudHiker", "TurboEcho", "SonicTide", "DreamForge", "StarRift", "VortexCore", "NovaLine",
+  "ShadowStrike", "GhostReign", "HeadshotGuru", "ApexTiger", "NightCraze", "Sn1perSoul", "RapidBlaze", "ToxicRush", "InfernoX", "DriftViper",
+  "HexHunter", "VenomNova", "SteelSpectre", "ZeroLag", "BulletByte", "CyberClash", "WildRacer", "MysticFang", "Gl1tchMode", "FrostRogue",
+  "LazyLatte", "HappyNibbles", "SleepyCloud", "CookieOrbit", "ChillVibesOnly", "MangoSpark", "SillyGoose", "TinyGalaxy", "StarryMint", "QuirkQueen",
+  "CozyBandit", "PinkParadox", "DramaLlama", "SushiDreamer", "BananaBloop", "RainyDaze", "LostInLoFi", "BobaKnight", "KawaiiByte", "CosmicDonut",
+  "BlockChainer", "HashMiner", "NeuralNode", "ByteSmith", "GPUFiend", "StackTracer", "MetaGhost", "CryptoPilot", "Web3Wizard", "NFTitan",
+  "QuantumBug", "AIOverlord", "DeFiDrifter", "CloudLooper", "LogicLoop", "RustReactor", "KernelKid", "NodeKnight", "LambdaLad", "SudoSoul",
+  "Rahul_09", "Aarav_X", "KiraChan", "Anjali_777", "Zoya_22", "RajTechie", "ArmanLive", "TanviSpark", "AyushPlayz", "SnehaDev",
+  "Neo47", "Blaze_101", "Xeno999", "ZaraByte", "DevanshOp", "Luna_808", "Maverick09", "PriyaNova", "KaiStorm", "RohanFlyer",
+  "GameNirvana", "EchoKnight", "ShadowNova", "CrimsonDusk", "SolarNova", "NexusPrime", "TurboWolf", "ViperSoul", "RoguePulse", "CosmoDrift",
+  "NightRider", "AceOfSky", "ThunderTrek", "PixelRacer", "AstroSpark", "DriftByte", "QuantumAce", "SkyTrekker", "LunaRogue", "StarlineX",
+  "FrostKnight", "GlitchPulse", "RapidEdge", "ZeroFang", "NovaDrift", "SkySpectre", "BlitzCore", "MetaVortex", "EchoStrike", "ByteViper",
+  "CoffeeZombie", "WittyPanda", "LazyKoala", "BubbleMuffin", "DreamyOwl", "TinyPhoenix", "JellyPops", "SnackQueen", "MangoMocha", "SleepyFawn",
+  "SoftComet", "CheerfulChai", "PastaDreamer", "SundaeStorm", "SunnySprout", "SillyCactus", "ComfyPenguin", "BubbleLush", "ChocoRipple", "DoodleStar",
+  "DataDaemon", "LogicPilot", "ScriptMage", "DevDroid", "BugSmasher", "StackSorcerer", "NullNinja", "QueryKing", "CodeYoda", "KernelGhost",
+  "CacheWizard", "APINinja", "ServerSamurai", "LambdaLord", "ScriptedSoul", "CloudVortex", "NodeWizard", "PatchMaster", "DevSpectre", "LoopGuru",
+  "CryptoQueen", "BitRider", "WalletWarrior", "HashLord", "DappDrifter", "MetaMiner", "NFTNomad", "defi@342", "TokenTiger", "SatoshiSage",
+  "ChainCoder", "WalletWhale", "MintMage", "Web3Knight", "CryptoFalcon", "BlockWolf", "MetaGhosty", "HodlHawk", "TokenNinja", "CoinCraft",
+  "Rajesh_99", "Vikram007", "SnehaPlayz", "Tanisha_08", "ArjunOp", "KavyaLive", "RaviXP", "NehaSpark", "IshaanTech", "PoojaNova",
+  "Manish_X", "SimranByte", "Tanishq_22", "Aditi_777", "YashGamez", "NishaDev", "Ankit_Pro", "SonalPlayz", "Rehan_89", "TaraNova",
+  "KabirX", "DiyaOp", "VaniTech", "KaranLive", "Meera_09", "AryanByte", "IraPlayz", "HarshDev", "RidhiNova", "KrishX",
+  "OmTechie", "NitinOp", "Aanya_777", "LakshNova", "AarohiPlayz", "Ishan_21", "SiaByte", "AdvikDev", "MihirLive", "AanyaSpark"
+];
+
+function getRandomUsernames(sourceArray) {
+  // pick a random number between 10–25
+  const count = Math.floor(Math.random() * (25 - 5 + 1)) + 10;
+
+  // copy and shuffle the array (Fisher–Yates shuffle)
+  const shuffled = [...sourceArray];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // return first N unique names
+  return shuffled.slice(0, count).map(name => name.toLowerCase());
+}
+
 
 export default function AviatorGame() {
+  const router = useRouter();
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
   const resetRef = useRef(null);
@@ -25,6 +68,15 @@ export default function AviatorGame() {
   const [viewers, setViewers] = useState(2);
   const [round, setRound] = useState({});
   const [isCrashed, setIsCrashed] = useState(false);
+  const [userExists, setUserExists] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [roundEndAt, setRoundEndAt] = useState(null);
+  const isRoundEndedRef = useRef(false);
+  const stopBgRef = useRef(null);
+  const startBgRef = useRef(null);
+
+  const [userList, setUserList] = useState([])
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -91,8 +143,15 @@ export default function AviatorGame() {
 
     // Trigger crash: call from socket event or button
     function triggerCrash() {
+      const crashSound = new Audio("/sounds/crash.mp3");
+      crashSound.volume = 0.8; // adjust volume (0 to 1)
       if (crashed || planeGone) return;
       crashed = true;
+      try {
+        crashSound.play().catch(err => console.log("Audio play blocked:", err));
+      } catch (err) {
+        console.error("Error playing crash sound:", err);
+      }
 
       // initial stall impulse (slightly up) then gravity takes over
       vy = -2 - Math.random() * 2;
@@ -101,9 +160,6 @@ export default function AviatorGame() {
       spawnExplosion(planeX + 75, planeY); // explosion at plane nose
     }
     crashRef.current = triggerCrash;
-    // For demo: crash on click
-    canvas.addEventListener("click", () => triggerCrash());
-
     function updateExplosion() {
       for (let p of explosionParticles) {
         p.x += p.vx;
@@ -178,7 +234,7 @@ export default function AviatorGame() {
 
         const multiplier = displayMultiplierRef.current;
         baseY = h * 0.7 - Math.log(multiplier + 1) * 150;
-        planeY = baseY - Math.sin(t / 200) * 28;
+        planeY = baseY - Math.sin(t / 200) * 20;
         planeX = w * 0.01 + Math.log(multiplier + 1) * 50;
       } else {
         // --- Crash physics ---
@@ -229,8 +285,8 @@ export default function AviatorGame() {
       }
 
       // draw multiplier text (top-left)
-      ctx.font = "bold 48px Poppins, sans-serif";
-      ctx.fillStyle = "#fff";
+      ctx.font = "italic bold 60px Poppins, sans-serif";
+      ctx.fillStyle = isRoundEndedRef.current ? "#e40000" : "#fff"; // 🔴 red if round ended
       ctx.fillText(`${displayMultiplierRef.current.toFixed(2)}x`, 50, 100);
 
       // when plane is completely below screen, consider it gone
@@ -269,8 +325,8 @@ export default function AviatorGame() {
       vy = 0;
       explosionParticles = [];
       multiplierRef.current = 1; // reset multiplier
-      planeX = w * 0.1;
-      planeY = h * 0.6;
+      planeX = w * 0.4;
+      planeY = h * 0.8;
     }
 
     resetRef.current = resetGame;
@@ -278,13 +334,21 @@ export default function AviatorGame() {
     // cleanup
     return () => {
       window.removeEventListener("resize", onResize);
-      canvas.removeEventListener("click", triggerCrash);
       cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   useEffect(() => {
 
+    let uid = getUid();
+    let userName = localStorage.getItem("userName");
+
+    if (uid && userName) {
+      setUserName(userName);
+      setUserExists(true);
+    }
+
+    setUserList(getRandomUsernames(fakeUsernames));
     const socket = io(SERVER_URL, { transports: ["websocket"], autoConnect: true });
     socketRef.current = socket;
 
@@ -293,12 +357,17 @@ export default function AviatorGame() {
     });
 
     socket.on("round:start", (payload) => {
-
+      setUserList(getRandomUsernames(fakeUsernames));
+      startBgRef?.current();
       console.log("START: ", payload);
       setViewers(payload.viewers);
       const rid = payload?._id;
-
+      isRoundEndedRef.current = false;
+      setIsCrashed(false);
+      setLocked(false);
+      resetRef.current();
       // if (rid) roundRef.current = rid;
+      setRoundEndAt(payload?.betsCloseAt)
       setRound({ id: rid, ...payload });
     });
 
@@ -309,9 +378,9 @@ export default function AviatorGame() {
     });
 
     socket.on("aviator:crash", (data) => {
-      console.log("Crashed: ", data);
-
       crashRef?.current();
+      stopBgRef?.current();
+      console.log("Crashed: ", data);
       setIsCrashed(true)
       setLocked(true)
 
@@ -321,14 +390,50 @@ export default function AviatorGame() {
       if (!isCrashed) {
         crashRef.current();
       }
-      setLocked(false);
-      resetRef.current();
+      isRoundEndedRef.current = true;
     });
 
     return () => {
       socket.off(); socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    const bgMusic = new Audio("/sounds/flight_bg.mp3");
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+
+    // ✅ Start only after first user interaction (required by browser policy)
+    const startAudio = () => {
+      bgMusic.play().catch(() => { });
+      window.removeEventListener("click", startAudio);
+    };
+    window.addEventListener("click", startAudio);
+
+    // ✅ Create a function to fade out later (not immediately)
+    const fadeOut = () => {
+      const fade = setInterval(() => {
+        if (bgMusic.volume > 0.05) {
+          bgMusic.volume -= 0.05;
+        } else {
+          clearInterval(fade);
+          bgMusic.pause();
+        }
+      }, 100);
+    };
+
+    // store the function so you can trigger it from crashRef or sockets
+    stopBgRef.current = fadeOut;
+    startBgRef.current = startAudio;
+
+    return () => {
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+      window.removeEventListener("click", startAudio);
+    };
+  }, []);
+
+
 
   function getUid() {
     if (typeof window === "undefined") return null;
@@ -337,12 +442,26 @@ export default function AviatorGame() {
   }
 
   const onPlaceBet = async () => {
+    if (locked) {
+      toast.warn("Round Locked !");
+      return;
+    }
     if (!amnt && displayMultiplierRef.current === 1) {
       toast.error("Cannot place bets");
     }
     const uid = getUid();
     if (!uid) {
       toast.error("Log-In to place bets");
+    }
+    if (roundEndAt) {
+      let timeNow = new Date().getTime();
+      if (timeNow >= roundEndAt) {
+        toast.error("Round already ended !");
+        router.reload()
+      }
+    }
+    if (!roundEndAt) {
+      toast.error("Bets cannot be placed !");
     }
     let market = Number(displayMultiplierRef.current.toFixed(2));
     socketRef.current.emit(
@@ -371,6 +490,20 @@ export default function AviatorGame() {
   }
 
   const takeBackBet = async () => {
+    if (locked) {
+      toast.warn("Round Locked !");
+      return;
+    }
+    if (roundEndAt) {
+      let timeNow = new Date().getTime();
+      if (timeNow >= roundEndAt) {
+        toast.error("Round already ended !");
+        router.reload()
+      }
+    }
+    if (!roundEndAt) {
+      toast.error("Cashout not possible !");
+    }
     let uid = getUid();
     let req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_PORT}/api/bets/cashInAviator`, {
       method: 'POST',
@@ -387,52 +520,73 @@ export default function AviatorGame() {
     if (res.ok) {
       toast.success(`${res.message}`);
     }
-    else{
+    else {
       toast.error(`${res.message}`)
     }
   }
 
 
   return (
-    <div style={{width: "100%", minHeight:600, height:"100%", overflow: 'hidden', position: 'relative'}}>
-      <canvas ref={canvasRef} className="w-full h-full" />
-      <div className={styles.totalPlaying}>{viewers}</div>
-      <div className={styles.aviatorBettingArea}>
-        <div className={styles.stakeDiv}>
-          <div className={styles.stakeChoice}>
-            {[20, 50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000].map((amt) => (
+    <div>
+      <div style={{ width: "100%", minHeight: 600, height: "100%", overflow: 'hidden', position: 'relative' }}>
+        <canvas ref={canvasRef} className="w-full h-full" />
+        {/* <div className={styles.totalPlaying}>{viewers}</div> */}
+        <div className={styles.aviatorBettingArea}>
+          <div className={styles.stakeDiv}>
+            <div className={styles.stakeChoice}>
+              {[20, 50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000].map((amt) => (
+                <button
+                  key={amt}
+                  onClick={() => setAmnt(amt)}
+                  className={amnt === amt ? styles.selectedStake : styles.aviatorButtons}
+                >
+                  {amt}
+                </button>
+              ))}
+            </div>
+            <div className={styles.placeBtn}>
               <button
-                key={amt}
-                onClick={() => setAmnt(amt)}
-                className={amnt === amt ? styles.selectedStake : ""}
+                onClick={async () => {
+                  await onPlaceBet();
+                }}
+                style={{ backgroundColor: `${locked ? "#00188eff" : "#0ac900ff"}`, padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
               >
-                {amt}
+                {
+                  locked ? <FaLock /> : "Place Bet"
+                }
               </button>
-            ))}
-          </div>
-          <div className={styles.placeBtn}>
-            <button
-              onClick={async () => {
-                await onPlaceBet();
-              }}
-              style={{ backgroundColor: "#0ac900ff", padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
-            >
-              {
-                locked ? <FaLock /> : "Place Bet"
-              }
-            </button>
 
-            <button
-              style={{ backgroundColor: "#0ac900ff", padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
-              onClick={async () => {
-                await takeBackBet()
-                setBet(null);
-              }}
-            >{
-                locked ? <FaLock /> : "Cash In"
-              }
-            </button>
+              <button
+                style={{ backgroundColor: `${locked ? "#00188eff" : "#0ac900ff"}`, padding: 10, borderRadius: 10, color: "#ffffffff", fontWeight: 600, fontSize: 22, border: "none", outline: "none" }}
+                onClick={async () => {
+                  await takeBackBet()
+                  setBet(null);
+                }}
+              >{
+                  locked ? <FaLock /> : "Cash In"
+                }
+              </button>
+            </div>
           </div>
+        </div>
+      </div>
+      <div className={styles.aviatorUsersBox}>
+        <h3>{`Now Playing: ${userList.length > 0 && userExists ? userList.length + 1 : userList.length && !userExists ? userList.length : 0}`}</h3>
+        <div className={styles.aviatorUsersList}>
+          {
+            userExists ? <div>
+              <span>{userName.slice(0, 1)}</span>
+              <p>{userName}</p>
+            </div> : <></>
+          }
+          {
+            userList.map((e, i) => {
+              return <div key={i}>
+                <span>{e.slice(0, 1)}</span>
+                <p>{e}</p>
+              </div>
+            })
+          }
         </div>
       </div>
     </div>
