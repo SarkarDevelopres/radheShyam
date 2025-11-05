@@ -178,10 +178,14 @@ class AndarBaharCanvas {
   }
 
   showJoker(faceKey) {
+    console.log(faceKey);
+
     this.state.phase = "revealJoker";
-    this._animateFlip(this.slotJ, () => {
-      this.state.joker = faceKey;
-    });
+    setTimeout(() => {
+      this._animateFlip(this.slotJ, () => {
+        this.state.joker = faceKey;
+      });
+    }, 300);
   }
 
   showResult(andarKey, baharKey, winner) {
@@ -541,7 +545,7 @@ export default function AndarBaharPage() {
           : "Waiting for round..."}
       </div>
       <div className={styles.metaRow}>
-        {lastGameResult.length==0
+        {lastGameResult.length == 0
           ? "Entered Mid Game, Wait until Round Ends"
           : ""}
       </div>
