@@ -10,9 +10,9 @@ export default function InfiniteSlider() {
   const [isHovered, setIsHovered] = useState(false);
   const [slideWidth, setSlideWidth] = useState(0);
 
-  const [slides, setSlides] = useState([{ name: "AustraliaVSAfrica", image: "/icc-final.jpg" },
-  { name: "NewZealandVSZimbabwe", image: "/eng-newzee.jpg" },
-  { name: "AustiraVSWels", image: "/wta-osaka.png" },])
+  const [slides, setSlides] = useState([{ name: "AustraliaVSAfrica", image: "/slide-1.jpg" },
+  { name: "NewZealandVSZimbabwe", image: "/slide-2.jpg" },
+  { name: "AustiraVSWels", image: "/slide-3.jpg" },])
   const extendedSlides = [...slides, ...slides]; // for seamless loop feel
 
   async function fetchSlides() {

@@ -15,7 +15,7 @@ export function SportsSection({ sportName, image, matchList }) {
         <img src={image} />
       </div>
       <div className={styles.sportsSectionBody}>
-        {sportName == "Cricket" || sportName == "Tennis" ?
+        {/* {sportName == "Cricket" || sportName == "Tennis" ?
           matchList.map((e, i) => {
             return <div key={i}>
               <p>{`${e.teamHome.name} vs ${e.teamAway.name}`}</p>
@@ -23,7 +23,8 @@ export function SportsSection({ sportName, image, matchList }) {
             </div>
           })
           : <p>By October you will have all 5 sports, thanks for you patience!</p>
-        }
+        } */}
+        <p>Very soon you will have all 5 sports, thanks for you patience!</p>
       </div>
     </div>
   )
@@ -38,14 +39,11 @@ export default function Home() {
     { name: "7updown", image: "7updown.webp" },
     { name: "dragontiger", image: "dragontiger.webp" },
     { name: "amarakbaranthony", image: "aaa.png" },
-    // { name: "andarbahar", image: "andarbahar.webp", isNew: true },
-    // { name: "aviator", image: "aviator-icon.png", isNew: true },
-    // { name: "matka", image: "matka.jpg", isNew: true },
-    // { name: "teenpattit20", image: "teenpatti20.jpg", isNew: true },
-    // { name: "roulette", image: "roulette.jpg", isNew: true },
-    // { name: "twocardteenpatti", image: "twocardteenpatti.jpg", isNew: true },
-    // { name: "racetwo17", image: "race17.jpg", isNew: true },
-    // { name: "war", image: "war.jpg", isNew: true },
+    { name: "andarbaharlite", image: "andarbaharlite.png" },
+    { name: "andarbahar", image: "andarbahar.webp"},
+    { name: "teenpatti2020", image: "teenpatti20.jpg", },
+    { name: "teenpattipoint", image: "twocardteenpatti.jpg"},
+    { name: "aviator", image: "aviator-icon.png"},
   ])
   const [oddsData, setOddsData] = useState({
     cricket: [],

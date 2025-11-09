@@ -27,7 +27,7 @@ function ClientView({ initialData }) {
             tennis.current.style.color = "#02D4F4";
             capsule.current.style.left = "0%";
             setActiveSports("Cricket");
-            fetchData("cricket");
+            // fetchData("cricket");
         }
         else if (v == "football") {
             football.current.style.color = "#00224E";
@@ -35,7 +35,7 @@ function ClientView({ initialData }) {
             tennis.current.style.color = "#02D4F4";
             capsule.current.style.left = "20%";
             setActiveSports("Football");
-            fetchData("soccer");
+            // fetchData("soccer");
         }
         else if (v == 'tennis') {
             tennis.current.style.color = "#00224E";
@@ -43,7 +43,7 @@ function ClientView({ initialData }) {
             football.current.style.color = "#02D4F4";
             capsule.current.style.left = "40%";
             setActiveSports("Tennis")
-            fetchData("tennis");
+            // fetchData("tennis");
         }
         else if (v == 'basketball') {
             tennis.current.style.color = "#00224E";
@@ -51,7 +51,7 @@ function ClientView({ initialData }) {
             football.current.style.color = "#02D4F4";
             capsule.current.style.left = "60%";
             setActiveSports("Basketball")
-            fetchData("basketball");
+            // fetchData("basketball");
         }
         else if (v == 'baseball') {
             tennis.current.style.color = "#00224E";
@@ -59,7 +59,7 @@ function ClientView({ initialData }) {
             football.current.style.color = "#02D4F4";
             capsule.current.style.left = "80%";
             setActiveSports("Baseball")
-            fetchData("baseball");
+            // fetchData("baseball");
         }
     }
 
@@ -119,7 +119,25 @@ function ClientView({ initialData }) {
             </div>
             <h3>{activeSports}</h3>
             <div className={styles.betsList}>
-                {activeSports === "Cricket" || activeSports === "Tennis" ? (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "70px 10px",
+                        width: "100%",
+                        borderRadius: "10px",
+                        backgroundColor: "#012167",
+                    }}
+                >
+                    <Spinner style={{ marginBottom: "20px" }} />
+                    <h4>{`${activeSports} is still being added`}</h4>
+                    <p style={{ fontSize: "10px" }}>
+                        {" We're adding the all sports, thanks for your patience!"}
+                    </p>
+                </div>
+                {/* {activeSports === "Cricket" || activeSports === "Tennis" ? (
                     <div className={styles.oddsGroup}>
                         {oddsData.map((e, i) => (
                             <OddComponent key={i} data={e} sport={activeSports} />
@@ -144,7 +162,7 @@ function ClientView({ initialData }) {
                            {" We're adding the rest 4 sports, thanks for your patience!"}
                         </p>
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     )
